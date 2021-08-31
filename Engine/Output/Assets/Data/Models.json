@@ -1,0 +1,29 @@
+{
+	"Models":
+	[
+		{
+			"ModelStringID": "Chest",
+			"ModelPath": "Assets/Art/Models/Chest/Particle_Chest.fbx",
+			"TexturePath": "Assets/Art/Models/Chest/Particle_Chest_D.dds",
+			"NormalMapPath": "Assets/Art/Models/Chest/Particle_Chest_N.dds",
+			"MaterialMapPath": "Assets/Art/Models/Chest/Particle_Chest_M.dds",
+			"HeightMapPath": ""
+		},
+		{
+			"ModelStringID": "Head",
+			"ModelPath": "Assets/Art/Models/Head/mHead.fbx",
+			"TexturePath": "Assets/Art/Models/Head/mHead_d.dds",
+			"NormalMapPath": "Assets/Art/Models/Head/mHead_n.dds",
+			"MaterialMapPath": "Assets/Art/Models/Head/mHead_r.dds",
+			"HeightMapPath": ""
+		},
+		{
+			"ModelStringID": "GarlicMan",
+			"ModelPath": "Assets/Art/Models/GarlicMan/GarlicMan.fbx",
+			"TexturePath": "Assets/Art/Models/GarlicMan/GarlicMan_D.dds",
+			"NormalMapPath": "Assets/Art/Models/GarlicMan/GarlicMan_N.dds",
+			"MaterialMapPath": "Assets/Art/Models/GarlicMan/GarlicMan_R.dds",
+			"HeightMapPath": "Assets/Art/Models/GarlicMan/GarlicMan_H.dds"
+		}
+	]
+}
