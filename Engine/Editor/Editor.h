@@ -2,6 +2,8 @@
 
 namespace Editor 
 {
+	class CEditorInterface;
+
 	class CEditor 
 	{
 	public:
@@ -15,6 +17,7 @@ namespace Editor
 		void Destroy();
 
 	private:
+		CEditorInterface* myEditorInterface = nullptr;
 
 	};
 }

@@ -13,7 +13,7 @@ namespace Editor
 		~CEditorInterface();
 
 		bool Init(CWindowHandler* aWindowHandler, CDirectX11Framework* aFrameWork);
-	
+
 		void BeginFrame();
 		void EndFrame();
 
@@ -25,7 +25,7 @@ namespace Editor
 	private:
 		void SetDarkThemeColors();
 		void SetLightThemeColors();
-		
+
 		void CreateSceneHierarchy();
 		void CreateSceneViewport();
 		void CreateGameViewport();

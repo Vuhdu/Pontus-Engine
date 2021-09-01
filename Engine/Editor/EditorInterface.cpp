@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "EditorInterface.h"
 
 #include "WindowHandler.h"
@@ -140,12 +140,12 @@ void Editor::CEditorInterface::DrawInterface()
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("New")) 
-			{ 
-				INFO_PRINT("New"); 
+			if (ImGui::MenuItem("New"))
+			{
+				INFO_PRINT("New");
 			}
-			if (ImGui::MenuItem("Open", "CTRL + O")) 
-			{ 
+			if (ImGui::MenuItem("Open", "CTRL + O"))
+			{
 				INFO_PRINT("Open");
 			}
 			ImGui::EndMenu();
@@ -181,7 +181,7 @@ void Editor::CEditorInterface::DrawInterface()
 				}
 				ImGui::EndMenu();
 			}
-			if (ImGui::BeginMenu("Render Mode")) 
+			if (ImGui::BeginMenu("Render Mode"))
 			{
 				if (ImGui::MenuItem("Solid"))
 				{
@@ -220,7 +220,7 @@ void Editor::CEditorInterface::EndFrame()
 	}
 
 	ImGui::Render();
-	
+
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 	ImGuiIO& io = ImGui::GetIO();
