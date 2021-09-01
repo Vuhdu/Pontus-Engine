@@ -172,7 +172,7 @@
     <ProjectReference Include="..\CommonUtilities\CommonUtilities.vcxproj">
       <Project>{972d6914-eb07-4907-a127-1e789a985e41}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\Editor\Editor.vcxproj">
+    <ProjectReference Include="..\Engine\Editor\Editor.vcxproj">
       <Project>{18f87ff7-cfd4-4d44-a2ed-8dd05906a4a5}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Engine\Engine.vcxproj">

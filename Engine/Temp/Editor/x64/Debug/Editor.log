@@ -1,1 +1,13 @@
-﻿C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Source\Editor\Editor.vcxproj : error MSB4025: The project file could not be loaded. Could not find a part of the path 'C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Source\Editor\Editor.vcxproj'.
+﻿  pch.cpp
+  AssetBrowser.cpp
+  DebugLog.cpp
+  Editor.cpp
+  EditorInterface.cpp
+  EditorWindow.cpp
+  GameViewport.cpp
+  Inspector.cpp
+  SceneHierarchy.cpp
+  SceneViewport.cpp
+  Viewport.cpp
+  Generating Code...
+  Editor.vcxproj -> C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Lib\Editor_Debug.lib
