@@ -13,15 +13,15 @@
 #include "imgui-docking/imgui_impl_dx11.h"
 #include "imgui-docking/imgui_impl_win32.h"
 
-#include <vector>
-#include <string>
-#include <array>
+//#include <vector>
+//#include <string>
+//#include <array>
 
-#include "MainSingleton.h"
-#include "ErrorManager.h"
+//#include "MainSingleton.h"
+//#include "ErrorManager.h"
 
-#include "Vector.h"
-#include "Matrix.h"
-#include "Mathcu.hpp"
+//#include "Vector.h"
+//#include "Matrix.h"
+//#include "Mathcu.hpp"
 
 #endif //PCH_H

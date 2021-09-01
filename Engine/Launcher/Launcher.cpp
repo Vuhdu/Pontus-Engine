@@ -3,7 +3,6 @@
 
 #include "Engine.h"
 #include "Game.h"
-#include "Editor.h"
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
@@ -11,12 +10,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
     hPrevInstance;
     lpCmdLine;
     nCmdShow;
-
-    Editor::CEditor* editor = new Editor::CEditor();
-    if (!editor->Init())
-    {
-        return EXIT_FAILURE;
-    }
 
     CEngine* engine = new CEngine();
     if (!engine->Init())

@@ -14,6 +14,11 @@ namespace CommonUtilities
 }
 namespace CU = CommonUtilities;
 
+namespace Editor
+{
+	class CEditor;
+}
+
 class CEngine 
 {
 public:
@@ -29,6 +34,7 @@ private:
 	void CloseConsole();
 
 private:
+	Editor::CEditor* myEditor = nullptr;
 	CGraphicsEngine* myGraphicsEngine = nullptr;
 
 	CU::InputHandler* myInput = nullptr;

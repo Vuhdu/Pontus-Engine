@@ -2,19 +2,26 @@
 #include "Editor.h"
 #include "EditorInterface.h"
 
-bool Editor::CEditor::Init()
-{
-	myEditorInterface = new CEditorInterface();
+#include "WindowHandler.h"
+#include "DirectX11Framework.h"
 
-	return myEditorInterface != nullptr;
-}
-
-void Editor::CEditor::Update()
-{
-	
-}
-
-void Editor::CEditor::Destroy()
+Editor::CEditor::~CEditor()
 {
 	SAFE_DELETE(myEditorInterface);
+}
+
+bool Editor::CEditor::Init(CWindowHandler* aWindowHandler, CDirectX11Framework* aFrameWork)
+{
+	myEditorInterface = new CEditorInterface();
+	return myEditorInterface->Init(aWindowHandler, aFrameWork);
+}
+
+void Editor::CEditor::BeginFrame()
+{
+	myEditorInterface->BeginFrame();
+}
+
+void Editor::CEditor::EndFrame()
+{
+	myEditorInterface->EndFrame();
 }

@@ -2,7 +2,11 @@
 #include "WindowHandler.h"
 #include "DirectX11Framework.h"
 #include "ForwardRenderer.h"
-#include "EditorInterface.h"
+
+namespace Editor 
+{
+	class CEditor;
+}
 
 class CGraphicsEngine
 { 
@@ -11,6 +15,7 @@ public:
 	~CGraphicsEngine();
 
 	bool Init(CWindowHandler::SWindowData aWindowData);
+	bool InitEditorInterface(Editor::CEditor* anEditor);
 
 	void BeginFrame();
 	void RenderFrame();
@@ -22,7 +27,5 @@ private:
 	CWindowHandler myWindowHandler;
 	CDirectX11Framework myFrameWork;
 	CForwardRenderer myForwardRenderer;
-
-	Editor::CEditorInterface myEditorInterface;
 
 };

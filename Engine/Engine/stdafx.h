@@ -14,4 +14,4 @@
 
 #include "nlohmann/json.hpp"
 
-#define SAFE_DELETE(aPointer) delete aPointer; aPointer = nullptr;
+#define SAFE_DELETE(aPointer) if (aPointer) { delete aPointer; aPointer = nullptr; }

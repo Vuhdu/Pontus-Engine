@@ -1,5 +1,8 @@
 #pragma once
 
+class CWindowHandler;
+class CDirectX11Framework;
+
 namespace Editor 
 {
 	class CEditorInterface;
@@ -8,13 +11,12 @@ namespace Editor
 	{
 	public:
 		CEditor() = default;
-		~CEditor() = default;
+		~CEditor();
 
-		bool Init();
+		bool Init(CWindowHandler* aWindowHandler, CDirectX11Framework* aFrameWork);
 
-		void Update();
-
-		void Destroy();
+		void BeginFrame();
+		void EndFrame();
 
 	private:
 		CEditorInterface* myEditorInterface = nullptr;
