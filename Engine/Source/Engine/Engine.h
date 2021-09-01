@@ -37,7 +37,6 @@ private:
 	CEngine();
 	~CEngine();
 
-	// Singleton Getters/Setters
 public:
 	static bool Start(SCreateParameters* someCreateParameters);
 	static bool Run();
