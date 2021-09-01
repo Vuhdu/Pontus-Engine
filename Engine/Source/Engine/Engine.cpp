@@ -245,7 +245,7 @@ bool CEngine::InternalRun()
 
 void CEngine::SetRenderMode(const eRenderMode& aRenderMode)
 {
-    myFramework->SetRenderMode(aRenderMode);
+    myInstance->myFramework->SetRenderMode(aRenderMode);
 }
 
 CEngine* CEngine::GetInstance()

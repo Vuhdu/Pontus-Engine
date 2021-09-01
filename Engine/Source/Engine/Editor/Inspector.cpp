@@ -7,7 +7,7 @@ void Editor::CInspector::Draw()
 {
 	if (ImGui::Button("Add Component"))
 	{
-		CEngine::GetInstance()->SetClearColor({ 1.0f, 1.0f, 1.0f, 1.0f });
+		CEngine::SetClearColor({ 1.0f, 1.0f, 1.0f, 1.0f });
 	}
 
 	/*

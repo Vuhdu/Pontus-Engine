@@ -45,13 +45,13 @@ bool CGraphicsEngine::InitEditorInterface(Editor::CEditor* anEditor)
 
 void CGraphicsEngine::BeginFrame()
 {
-	static auto& color = CEngine::GetInstance()->GetClearColor();
+	static auto& color = CEngine::GetClearColor();
 	myFrameWork.BeginFrame({ color.x, color.y, color.z, color.w });
 }
 
 void CGraphicsEngine::RenderFrame()
 {
-	auto scene = CEngine::GetInstance()->GetScene();
+	auto scene = CEngine::GetScene();
 
 	CEnvironmentLight* environmentLight = scene->GetEnvironmentLight();
 	CCamera* editorCamera = scene->GetEditorCamera();

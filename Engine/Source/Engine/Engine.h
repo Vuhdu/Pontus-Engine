@@ -42,20 +42,20 @@ public:
 	static bool Start(SCreateParameters* someCreateParameters);
 	static bool Run();
 
-	CErrorManager*		GetErrorManager() { return myInstance->myErrorManager; };
-	CModelFactory*		GetModelFactory() { return myInstance->myModelFactory; };
-	CCameraFactory*		GetCameraFactory() { return myInstance->myCameraFactory; };
-	CLightFactory*		GetLightFactory() { return myInstance->myLightFactory; };
-	CModelHandler*		GetModelHandler() { return myInstance->myModelHandler; };
-	CScene*				GetScene() { return myInstance->myScene; };
+	static CErrorManager*		GetErrorManager() { return myInstance->myErrorManager; };
+	static CModelFactory*		GetModelFactory() { return myInstance->myModelFactory; };
+	static CCameraFactory*		GetCameraFactory() { return myInstance->myCameraFactory; };
+	static CLightFactory*		GetLightFactory() { return myInstance->myLightFactory; };
+	static CModelHandler*		GetModelHandler() { return myInstance->myModelHandler; };
+	static CScene*				GetScene() { return myInstance->myScene; };
 
-	CU::InputHandler*	GetInput() { return myInstance->myInput; };
-	CU::Timer*			GetTimer() { return myInstance->myTimer; };
+	static CU::InputHandler*	GetInput() { return myInstance->myInput; };
+	static CU::Timer*			GetTimer() { return myInstance->myTimer; };
 
-	void				SetRenderMode(const eRenderMode& aRenderMode);
+	static void					SetRenderMode(const eRenderMode& aRenderMode);
 
-	void				SetClearColor(const CU::Vector4f& aClearColor) { myClearColor = aClearColor; };
-	const				CU::Vector4f& GetClearColor() const { return myClearColor; };
+	static void					SetClearColor(const CU::Vector4f& aClearColor) { myInstance->myClearColor = aClearColor; };
+	static const				CU::Vector4f& GetClearColor() { return myInstance->myClearColor; };
 
 	static CEngine* GetInstance();
 

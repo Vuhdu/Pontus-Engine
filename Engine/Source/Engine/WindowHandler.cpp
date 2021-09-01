@@ -23,7 +23,7 @@ LRESULT CALLBACK CWindowHandler::WinProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ WP
 
     static CWindowHandler* windowHandler = nullptr;
 
-    if (CEngine::GetInstance()->GetInput()->UpdateEvents(uMsg, wParam, lParam))
+    if (CEngine::GetInput()->UpdateEvents(uMsg, wParam, lParam))
     {
         return 0;
     }

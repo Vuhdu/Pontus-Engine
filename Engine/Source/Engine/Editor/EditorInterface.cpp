@@ -185,11 +185,11 @@ void Editor::CEditorInterface::DrawInterface()
 			{
 				if (ImGui::MenuItem("Solid"))
 				{
-					CEngine::GetInstance()->SetRenderMode(eRenderMode::Solid);
+					CEngine::SetRenderMode(eRenderMode::Solid);
 				}
 				if (ImGui::MenuItem("Wireframe"))
 				{
-					CEngine::GetInstance()->SetRenderMode(eRenderMode::Wireframe);
+					CEngine::SetRenderMode(eRenderMode::Wireframe);
 				}
 				ImGui::EndMenu();
 			}
@@ -319,7 +319,7 @@ void Editor::CEditorInterface::CreateSceneHierarchy()
 {
 	auto hierarchy = TryCreateWindow<CSceneHierarchy>("Scene Hierarchy");
 
-	hierarchy->SetActiveScene(CEngine::GetInstance()->GetScene());
+	hierarchy->SetActiveScene(CEngine::GetScene());
 
 	myGUIWindows.push_back(hierarchy);
 }
