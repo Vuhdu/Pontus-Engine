@@ -10,6 +10,8 @@ public:
 		int myY = 0;
 		int myWidth = 0;
 		int myHeight = 0;
+		std::wstring myName = L"";
+		CU::Vector4f myClearColor = { 0.0f, 0.0f, 0.0f, 0.0f };
 	};
 
 	CWindowHandler();
@@ -18,7 +20,6 @@ public:
 	static LRESULT CALLBACK WinProc(_In_ HWND hwnd, _In_ UINT uMsg, _In_ WPARAM wParam, _In_ LPARAM lParam);
 
 	bool Init(SWindowData aWindowData);
-
 
 	HWND GetHWND() const;
 

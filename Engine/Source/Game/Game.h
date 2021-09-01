@@ -1,16 +1,18 @@
 #pragma once
 
+struct SCreateParameters;
+
 class CGame 
 {
 public:
-	CGame() = default;
+	CGame(SCreateParameters* someCreateParameters);
 	~CGame() = default;
 
-	bool Init();
+	void InitCallback();
 
-	void Update();
-
-	void Destroy();
+	void UpdateCallback();
 
 private:
+	bool myUpdateHasPassed = false;
+
 };

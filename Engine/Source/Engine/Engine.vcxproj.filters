@@ -143,6 +143,9 @@
     <ClCompile Include="imgui-docking\imgui_widgets.cpp">
       <Filter>Imgui</Filter>
     </ClCompile>
+    <ClCompile Include="CreateParameters.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -243,6 +246,9 @@
     </ClInclude>
     <ClInclude Include="imgui-docking\imstb_truetype.h">
       <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateParameters.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

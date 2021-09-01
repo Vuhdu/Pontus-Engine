@@ -2,6 +2,7 @@
 #include "framework.h"
 
 #include "Engine.h"
+#include "CreateParameters.h"
 
 #include "JsonParser.h"
 #include "GraphicsEngine.h"
@@ -22,7 +23,7 @@
 
 #include "Editor.h"
 
-bool CEngine::Init() 
+bool CEngine::Init(SCreateParameters* someCreateParameters)
 {
     InitConsole();
     JsonParser::GetInstance().Init();
@@ -33,11 +34,24 @@ bool CEngine::Init()
         return false;
     }
 
+    myCreateParameters = someCreateParameters;
+
+    const CU::Vector4f clearColor = {
+        myCreateParameters->ClearColor[0],
+        myCreateParameters->ClearColor[1],
+        myCreateParameters->ClearColor[2],
+        myCreateParameters->ClearColor[3]
+    };
+
     CWindowHandler::SWindowData windowData;
-    windowData.myX = 100;
-    windowData.myY = 100;
-    windowData.myWidth = 1920;
-    windowData.myHeight = 1080;
+    windowData.myX = myCreateParameters->WindowPosition[0];
+    windowData.myY = myCreateParameters->WindowPosition[1];
+    windowData.myWidth = myCreateParameters->WindowResolution[0];
+    windowData.myHeight = myCreateParameters->WindowResolution[1];
+    windowData.myName = myCreateParameters->ApplicationName;
+    windowData.myClearColor = clearColor;
+
+    MainSingleton::GetInstance()->SetClearColor(clearColor);
 
     myGraphicsEngine = new CGraphicsEngine();
     if (!myGraphicsEngine->Init(windowData))
@@ -124,52 +138,72 @@ bool CEngine::Init()
     myInput = MainSingleton::GetInstance()->GetInput();
     myTimer = MainSingleton::GetInstance()->GetTimer();
 
-    return true;
+    myEngineIsRunning = true;
+    return myEngineIsRunning;
 }
 
-void CEngine::Update()
+bool CEngine::Run()
 {
-    myGraphicsEngine->BeginFrame();
-    myEditor->BeginFrame();
+    myCreateParameters->InitCallback();
 
-    myTimer->Update();
+    MSG windowsMessage = { 0 };
 
-    myEditorCamera->Update(myTimer->GetDeltaTime());
-    myEditorCamera->HandleMovement(*myInput, myTimer->GetDeltaTime());
-
-    
-    static bool turn = true;
-
-    auto dir = mySpotLight->GetDirection();
-    if (turn)
+    while (myEngineIsRunning)
     {
-        dir.x += myTimer->GetDeltaTime() * .25f;
-        if (dir.x > 0.6f)
+        while (PeekMessage(&windowsMessage, 0, 0, 0, PM_REMOVE))
         {
-            turn = !turn;
+            TranslateMessage(&windowsMessage);
+            DispatchMessage(&windowsMessage);
+
+            if (windowsMessage.message == WM_QUIT)
+            {
+                myEngineIsRunning = false;
+            }
         }
-    }
-    else
-    {
-        dir.x -= myTimer->GetDeltaTime() * .25f;
-        if (dir.x < -0.6f)
+        myGraphicsEngine->BeginFrame();
+        myEditor->BeginFrame();
+
+        myTimer->Update();
+
+        myEditorCamera->Update(myTimer->GetDeltaTime());
+        myEditorCamera->HandleMovement(*myInput, myTimer->GetDeltaTime());
+
+
+        static bool turn = true;
+
+        auto dir = mySpotLight->GetDirection();
+        if (turn)
         {
-            turn = !turn;
+            dir.x += myTimer->GetDeltaTime() * .25f;
+            if (dir.x > 0.6f)
+            {
+                turn = !turn;
+            }
         }
+        else
+        {
+            dir.x -= myTimer->GetDeltaTime() * .25f;
+            if (dir.x < -0.6f)
+            {
+                turn = !turn;
+            }
+        }
+        mySpotLight->SetDirection(dir);
+
+
+        myMainCamera->Update(myTimer->GetDeltaTime());
+
+        myHead->Rotate({ 0.0f, 0.01f, 0.0f });
+        myHead2->Rotate({ 0.0f, -0.01f, 0.0f });
+
+
+        myCreateParameters->UpdateCallback();
+        myGraphicsEngine->RenderFrame();
+
+        myEditor->EndFrame();
+        myGraphicsEngine->EndFrame();
     }
-    mySpotLight->SetDirection(dir);
-    
-
-    myMainCamera->Update(myTimer->GetDeltaTime());
-
-    myHead->Rotate({ 0.0f, 0.01f, 0.0f });
-    myHead2->Rotate({ 0.0f, -0.01f, 0.0f });
-
-    
-    myGraphicsEngine->RenderFrame();
-
-    myEditor->EndFrame();
-    myGraphicsEngine->EndFrame();
+    return 0;
 }
 
 void CEngine::Destroy()

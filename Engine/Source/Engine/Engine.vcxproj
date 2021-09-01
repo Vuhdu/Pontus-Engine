@@ -218,6 +218,7 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraFactory.cpp" />
+    <ClCompile Include="CreateParameters.cpp" />
     <ClCompile Include="DirectX11Framework.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="EnvironmentLight.cpp" />
@@ -252,6 +253,7 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraFactory.h" />
+    <ClInclude Include="CreateParameters.h" />
     <ClInclude Include="DirectX11Framework.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="EnvironmentLight.h" />

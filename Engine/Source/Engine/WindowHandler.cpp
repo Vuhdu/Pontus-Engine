@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "WindowHandler.h"
-#include "MainSingleton.h"
 #include "InputHandler.h"
 
 // Forward declare message handler from imgui_impl_win32.cpp
@@ -54,7 +53,7 @@ bool CWindowHandler::Init(SWindowData aWindowData)
 
     myWindowData = aWindowData;
 
-    myWindowHandle = CreateWindow(L"TillämpadGrafikprogrammering", L"My Awesome Game",
+    myWindowHandle = CreateWindow(L"TillämpadGrafikprogrammering", aWindowData.myName.c_str(),
         WS_OVERLAPPEDWINDOW | WS_POPUP | WS_VISIBLE,
         aWindowData.myX, aWindowData.myY, aWindowData.myWidth, aWindowData.myHeight,
         nullptr, nullptr, nullptr, this);

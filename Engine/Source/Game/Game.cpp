@@ -1,17 +1,28 @@
 #include "pch.h"
 #include "Game.h"
 
-bool CGame::Init() 
+#include "CreateParameters.h"
+
+CGame::CGame(SCreateParameters* someCreateParameters)
 {
-	return true;
+	someCreateParameters->InitCallback = [this] { InitCallback(); };
+	someCreateParameters->UpdateCallback = [this] { UpdateCallback(); };
+	someCreateParameters->WindowResolution = { 1920, 1080 };
+	someCreateParameters->WindowPosition = { 100, 100 };
+	someCreateParameters->ClearColor = { 1.0f, 0.5f, 0.25f, 1.0f };
 }
 
-void CGame::Update() 
+void CGame::InitCallback()
 {
-
+	INFO_PRINT("Initialized Game");
+	myUpdateHasPassed = false;
 }
 
-void CGame::Destroy()
+void CGame::UpdateCallback() 
 {
-
+	if (!myUpdateHasPassed)
+	{
+		INFO_PRINT("Updating Game");
+		myUpdateHasPassed = true;
+	}
 }

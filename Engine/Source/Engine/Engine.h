@@ -7,6 +7,8 @@ class CCamera;
 class CSpotLight;
 class CModelInstance;
 
+struct SCreateParameters;
+
 namespace CommonUtilities 
 {
 	class InputHandler;
@@ -25,8 +27,8 @@ public:
 	CEngine() = default;
 	~CEngine() = default;
 
-	bool Init();
-	void Update();
+	bool Init(SCreateParameters* someCreateParameters);
+	bool Run();
 	void Destroy();
 
 private:
@@ -34,6 +36,10 @@ private:
 	void CloseConsole();
 
 private:
+	bool myEngineIsRunning = true;
+
+	SCreateParameters* myCreateParameters = nullptr;
+
 	Editor::CEditor* myEditor = nullptr;
 	CGraphicsEngine* myGraphicsEngine = nullptr;
 
