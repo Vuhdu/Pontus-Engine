@@ -172,9 +172,6 @@
     <ProjectReference Include="..\CommonUtilities\CommonUtilities.vcxproj">
       <Project>{972d6914-eb07-4907-a127-1e789a985e41}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\DirectXTK\DirectXTK_Desktop_2019.vcxproj">
-      <Project>{e0b52ae7-e160-4d32-bf3f-910b785e5a8e}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\Engine\Engine.vcxproj">
       <Project>{9ce10f59-e572-4f2e-a2e1-c2e04ab5b36c}</Project>
     </ProjectReference>
