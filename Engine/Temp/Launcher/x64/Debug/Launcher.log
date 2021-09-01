@@ -1,2 +1,2 @@
-﻿  Launcher.cpp
-  Launcher.vcxproj -> C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Output\Launcher_Debug.exe
+﻿  LINK : C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Source\..\Bin\Launcher_Debug.exe not found or not built by the last incremental link; performing full link
+  Launcher.vcxproj -> C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Bin\Launcher_Debug.exe

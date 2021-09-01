@@ -2,21 +2,21 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Output\Launcher_Debug.exe</FullPath>
+      <FullPath>C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Bin\Launcher_Debug.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
-      <FullPath>C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Source\Output\Shaders\CubePixelShader.cso</FullPath>
+      <FullPath>C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Bin\Shaders\CubePixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Source\Output\Shaders\CubeVertexShader.cso</FullPath>
+      <FullPath>C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Bin\Shaders\CubeVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Source\Output\Shaders\PixelShader.cso</FullPath>
+      <FullPath>C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Bin\Shaders\PixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Source\Output\Shaders\VertexShader.cso</FullPath>
+      <FullPath>C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Bin\Shaders\VertexShader.cso</FullPath>
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />
