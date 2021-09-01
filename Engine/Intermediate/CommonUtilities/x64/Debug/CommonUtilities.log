@@ -1,7 +1,2 @@
-﻿  pch.cpp
-  CommonUtilities.cpp
-  InputHandler.cpp
-  Random.cpp
-  Timer.cpp
-  Generating Code...
+﻿  CommonUtilities.cpp
   CommonUtilities.vcxproj -> C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Lib\CommonUtilities_Debug.lib

@@ -6,11 +6,11 @@ public:
 	CGame() = default;
 	~CGame() = default;
 
-	void Init() {};
+	bool Init();
 
-	void Update() {};
+	void Update();
 
-	void Destroy() {};
+	void Destroy();
 
 private:
 };
