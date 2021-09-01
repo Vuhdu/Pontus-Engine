@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "Viewport.h"
 
-#include "MainSingleton.h"
 #include "WindowHandler.h"
 #include "DirectX11Framework.h"
 

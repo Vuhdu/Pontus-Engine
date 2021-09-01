@@ -6,7 +6,10 @@
 
 void Editor::CSceneHierarchy::Draw()
 {
-	auto selectedGo = MainSingleton::GetInstance()->GetSelectedGameObject();
+	return;
+	/*
+
+	auto selectedGo = CEngine::GetInstance()->GetSelectedGameObject();
 	auto go = myActiveScene->GetGameObjects();
 
 	for (int i = 0; i < go.size(); i++)
@@ -17,7 +20,7 @@ void Editor::CSceneHierarchy::Draw()
 
 		if (ImGui::IsItemClicked())
 		{
-			MainSingleton::GetInstance()->SetSelectedGameObject(go[i]);
+			CEngine::GetInstance()->SetSelectedGameObject(go[i]);
 		}
 
 		ImGui::PushID(i);
@@ -28,7 +31,6 @@ void Editor::CSceneHierarchy::Draw()
 				INFO_PRINT("Toggled \"%s\" open", go[i]->GetName().c_str());
 			}
 
-			/*
 			for (int ii = 0; ii < 3; ii++)
 			{
 				ImGui::PushID(ii);
@@ -38,11 +40,11 @@ void Editor::CSceneHierarchy::Draw()
 				}
 				ImGui::PopID();
 			}
-			*/
 			ImGui::TreePop();
 		}
 		ImGui::PopID();
 	}
+	*/
 }
 
 void Editor::CSceneHierarchy::SetActiveScene(CScene* anActiveScene)

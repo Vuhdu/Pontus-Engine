@@ -1,11 +1,12 @@
 #pragma once
 
-#include "MainSingleton.h"
+#include "Engine.h"
 #include "ErrorManager.h"
 
 #include "Vector.h"
 #include "Matrix.h"
 #include "Mathcu.hpp"
+#include "InputHandler.h"
 
 #include <array>
 #include <vector>

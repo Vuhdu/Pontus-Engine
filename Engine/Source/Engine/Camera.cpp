@@ -1,12 +1,6 @@
 #include "pch.h"
 #include "Camera.h"
 
-#include "MainSingleton.h"
-
-#include "Mathcu.hpp"
-#include "InputHandler.h"
-
-
 CCamera::CCamera()
 {
 }

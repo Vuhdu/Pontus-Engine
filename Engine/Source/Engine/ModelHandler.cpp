@@ -4,7 +4,6 @@
 #include "Model.h"
 #include "ModelInstance.h"
 
-#include "MainSingleton.h"
 #include "ModelFactory.h"
 #include "JsonParser.h"
 

@@ -156,5 +156,6 @@ namespace CommonUtilities
 	}
 
 	using Vector3f = CommonUtilities::Vector3<float>;
+	using Vector3i = CommonUtilities::Vector3<int>;
 }
 namespace CU = CommonUtilities;

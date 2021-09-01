@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "GraphicsEngine.h"
-#include "MainSingleton.h"
 #include "Scene.h"
 #include "PointLight.h"
 #include "SpotLight.h"
@@ -46,13 +45,13 @@ bool CGraphicsEngine::InitEditorInterface(Editor::CEditor* anEditor)
 
 void CGraphicsEngine::BeginFrame()
 {
-	static auto& color = MainSingleton::GetInstance()->GetClearColor();
+	static auto& color = CEngine::GetInstance()->GetClearColor();
 	myFrameWork.BeginFrame({ color.x, color.y, color.z, color.w });
 }
 
 void CGraphicsEngine::RenderFrame()
 {
-	auto scene = MainSingleton::GetInstance()->GetScene();
+	auto scene = CEngine::GetInstance()->GetScene();
 
 	CEnvironmentLight* environmentLight = scene->GetEnvironmentLight();
 	CCamera* editorCamera = scene->GetEditorCamera();

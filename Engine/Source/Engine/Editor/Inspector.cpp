@@ -5,7 +5,13 @@
 
 void Editor::CInspector::Draw()
 {
-	auto selectedGo = MainSingleton::GetInstance()->GetSelectedGameObject();
+	if (ImGui::Button("Add Component"))
+	{
+		CEngine::GetInstance()->SetClearColor({ 1.0f, 1.0f, 1.0f, 1.0f });
+	}
+
+	/*
+	auto selectedGo = CEngine::GetInstance()->GetSelectedGameObject();
 
 	if (!selectedGo)
 	{
@@ -25,9 +31,5 @@ void Editor::CInspector::Draw()
 		ImGui::Text("Rotation: [x: %.2f, y: %.2f, z: %.2f ]", rot.x, rot.y, rot.z);
 		ImGui::Text("Scale: [x: %.1f, y: %.1f, z: %.1f ]", scale.x, scale.y, scale.z);
 	}
-
-	if (ImGui::Button("Add Component"))
-	{
-		MainSingleton::GetInstance()->SetClearColor({ 1.0f, 1.0f, 1.0f, 1.0f });
-	}
+	*/
 }
