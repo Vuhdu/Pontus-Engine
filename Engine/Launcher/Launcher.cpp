@@ -18,7 +18,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
     }
 
     CGame* game = new CGame();
-    game->Init();
+    if (!game->Init())
+    {
+        return EXIT_FAILURE;
+    }
 
     bool shouldRun = true;
     MSG windowsMessage = { 0 };

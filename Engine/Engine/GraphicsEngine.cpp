@@ -1,9 +1,10 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "GraphicsEngine.h"
 #include "MainSingleton.h"
 #include "Scene.h"
 #include "PointLight.h"
 #include "SpotLight.h"
+#include "Editor.h"
 
 CGraphicsEngine::CGraphicsEngine()
 {
@@ -31,19 +32,22 @@ bool CGraphicsEngine::Init(CWindowHandler::SWindowData aWindowData)
 		return false;
 	}
 
-	if (!myEditorInterface.Init(&myWindowHandler, &myFrameWork))
+    return true;
+}
+
+bool CGraphicsEngine::InitEditorInterface(Editor::CEditor* anEditor)
+{
+	if (!anEditor->Init(&myWindowHandler, &myFrameWork))
 	{
 		return false;
 	}
-
-    return true;
+	return true;
 }
 
 void CGraphicsEngine::BeginFrame()
 {
 	static auto& color = MainSingleton::GetInstance()->GetClearColor();
 	myFrameWork.BeginFrame({ color.x, color.y, color.z, color.w });
-	myEditorInterface.BeginFrame();
 }
 
 void CGraphicsEngine::RenderFrame()
@@ -79,7 +83,6 @@ void CGraphicsEngine::RenderFrame()
 
 void CGraphicsEngine::EndFrame()
 {
-	myEditorInterface.EndFrame();
 	myFrameWork.EndFrame();
 }
 

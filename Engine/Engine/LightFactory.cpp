@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "LightFactory.h"
 #include "EnvironmentLight.h"
 #include "Inc/DDSTextureLoader.h"

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "framework.h"
 
 #include "Engine.h"
@@ -20,6 +20,8 @@
 #include "Timer.h"
 #include "InputHandler.h"
 
+#include "Editor.h"
+
 bool CEngine::Init() 
 {
     InitConsole();
@@ -39,6 +41,12 @@ bool CEngine::Init()
 
     myGraphicsEngine = new CGraphicsEngine();
     if (!myGraphicsEngine->Init(windowData))
+    {
+        return EXIT_FAILURE;
+    }
+    
+    myEditor = new Editor::CEditor();
+    if (!myGraphicsEngine->InitEditorInterface(myEditor))
     {
         return EXIT_FAILURE;
     }
@@ -122,6 +130,7 @@ bool CEngine::Init()
 void CEngine::Update()
 {
     myGraphicsEngine->BeginFrame();
+    myEditor->BeginFrame();
 
     myTimer->Update();
 
@@ -156,7 +165,10 @@ void CEngine::Update()
     myHead->Rotate({ 0.0f, 0.01f, 0.0f });
     myHead2->Rotate({ 0.0f, -0.01f, 0.0f });
 
+    
     myGraphicsEngine->RenderFrame();
+
+    myEditor->EndFrame();
     myGraphicsEngine->EndFrame();
 }
 

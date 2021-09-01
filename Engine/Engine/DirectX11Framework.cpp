@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "DirectX11Framework.h"
 
 CDirectX11Framework::CDirectX11Framework()

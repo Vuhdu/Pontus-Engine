@@ -1,4 +1,17 @@
 #include "pch.h"
-#include "framework.h"
 #include "Game.h"
 
+bool CGame::Init() 
+{
+	return true;
+}
+
+void CGame::Update() 
+{
+
+}
+
+void CGame::Destroy()
+{
+
+}

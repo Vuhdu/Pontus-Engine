@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "Light.h"
 
 void CLight::SetPosition(const CU::Vector3f& aPosition)

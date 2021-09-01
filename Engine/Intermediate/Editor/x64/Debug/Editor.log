@@ -1,0 +1,13 @@
+﻿  pch.cpp
+  AssetBrowser.cpp
+  DebugLog.cpp
+  Editor.cpp
+  EditorInterface.cpp
+  EditorWindow.cpp
+  GameViewport.cpp
+  Inspector.cpp
+  SceneHierarchy.cpp
+  SceneViewport.cpp
+  Viewport.cpp
+  Generating Code...
+  Editor.vcxproj -> C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Lib\Editor_Debug.lib

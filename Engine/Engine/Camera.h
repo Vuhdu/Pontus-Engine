@@ -30,9 +30,6 @@ public:
 	CU::Matrix4x4f	GetProjection() { return myProjection; }
 
 private:
-	void DebugDrawImgui();
-
-private:
 	CU::Matrix4x4f myTransform;
 	CU::Matrix4x4f myProjection;
 
