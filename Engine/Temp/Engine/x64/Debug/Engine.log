@@ -1,0 +1,7 @@
+﻿  compilation object save succeeded; see C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Bin\Shaders\CubePixelShader.cso
+  compilation object save succeeded; see C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Bin\Shaders\CubeVertexShader.cso
+  compilation object save succeeded; see C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Bin\Shaders\PixelShader.cso
+C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Source\Engine\VertexShader.hlsl(3,17-38): warning X3578: Output value 'main' is not completely initialized
+  
+  compilation object save succeeded; see C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Bin\Shaders\VertexShader.cso
+  Engine.vcxproj -> C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Lib\Engine_Debug.lib

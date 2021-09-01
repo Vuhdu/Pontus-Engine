@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs />
+  <ContentFiles>
+    <ContentFile>
+      <FullPath>C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Bin\Shaders\CubePixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Bin\Shaders\CubeVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Bin\Shaders\PixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Bin\Shaders\VertexShader.cso</FullPath>
+    </ContentFile>
+  </ContentFiles>
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
+</Project>
