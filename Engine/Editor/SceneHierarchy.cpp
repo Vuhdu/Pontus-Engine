@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "SceneHierarchy.h"
 
 #include "Scene.h"

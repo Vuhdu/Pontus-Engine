@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "Camera.h"
 
 #include "MainSingleton.h"
@@ -81,7 +81,6 @@ void CCamera::SetPosition(const CU::Vector3f aPosition)
 void CCamera::Update(const float aDeltaTime)
 {
 	aDeltaTime;
-	// DebugDrawImgui();
 }
 
 void CCamera::HandleMovement(CU::InputHandler& anInputHandler, const float aDeltaTime)
@@ -164,62 +163,4 @@ void CCamera::Rotate(const CU::Vector3f aRotation)
 	myTransform *= CU::Matrix4x4f::CreateRotationAroundZ(aRotation.z);
 
 	SetPosition(position);
-}
-
-void CCamera::DebugDrawImgui()
-{
-	const float PAD = 10.0f;
-	static int corner = 0;
-
-	bool p_open = true;
-	auto flags = 
-		ImGuiWindowFlags_NoDecoration | 
-		ImGuiWindowFlags_AlwaysAutoResize | 
-		ImGuiWindowFlags_NoSavedSettings | 
-		ImGuiWindowFlags_NoFocusOnAppearing | 
-		ImGuiWindowFlags_NoNav;
-
-	if (corner != -1)
-	{
-		const ImGuiViewport* viewport = ImGui::GetMainViewport();
-		ImVec2 work_pos = viewport->WorkPos;
-		ImVec2 work_size = viewport->WorkSize;
-		ImVec2 window_pos, window_pos_pivot;
-
-		window_pos.x = (corner & 1) ? (work_pos.x + work_size.x - PAD) : (work_pos.x + PAD);
-		window_pos.y = (corner & 2) ? (work_pos.y + work_size.y - PAD) : (work_pos.y + PAD);
-		window_pos_pivot.x = (corner & 1) ? 1.0f : 0.0f;
-		window_pos_pivot.y = (corner & 2) ? 1.0f : 0.0f;
-		ImGui::SetNextWindowPos(window_pos, ImGuiCond_Always, window_pos_pivot);
-		flags |= ImGuiWindowFlags_NoMove;
-	}
-
-	ImGui::SetNextWindowBgAlpha(0.35f);
-	ImGui::Begin("CameraOverlay", &p_open, flags);
-	{
-		ImGui::Text("Camera");
-		ImGui::Separator();
-		ImGui::Text("Movement: WASD");
-		ImGui::Text("Rotate: Arrow keys");
-		ImGui::Separator();
-
-		const CU::Vector3f position = myTransform.Position();
-		const CU::Vector3f eulerAngles = myTransform.EulerAngles();
-		const CU::Vector3f scale = myTransform.Scale();
-
-		ImGui::Text("Position: [x: %.f, y: %.f, z: %.f]", position.x, position.y, position.z);
-		ImGui::Text("Rotation: [x: %.f, y: %.f, z: %.f]", eulerAngles.x, eulerAngles.y, eulerAngles.z);
-		ImGui::Text("Scale: [x: %.1f, y: %.1f, z: %.1f]", scale.x, scale.y, scale.z);
-
-		if (ImGui::BeginPopupContextWindow())
-		{
-			if (ImGui::MenuItem("Custom", NULL, corner == -1)) corner = -1;
-			if (ImGui::MenuItem("Top-left", NULL, corner == 0)) corner = 0;
-			if (ImGui::MenuItem("Top-right", NULL, corner == 1)) corner = 1;
-			if (ImGui::MenuItem("Bottom-left", NULL, corner == 2)) corner = 2;
-			if (ImGui::MenuItem("Bottom-right", NULL, corner == 3)) corner = 3;
-			ImGui::EndPopup();
-		}
-	}
-	ImGui::End();
 }

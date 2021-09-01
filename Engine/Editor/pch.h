@@ -9,19 +9,22 @@
 
 // add headers that you want to pre-compile here
 #include "framework.h"
+
+#include <vector>
+#include <string>
+#include <array>
+
+#include "MainSingleton.h"
+#include "ErrorManager.h"
+
+#include "Vector.h"
+#include "Matrix.h"
+#include "Mathcu.hpp"
+
 #include "imgui-docking/imgui.h"
 #include "imgui-docking/imgui_impl_dx11.h"
 #include "imgui-docking/imgui_impl_win32.h"
 
-//#include <vector>
-//#include <string>
-//#include <array>
-
-//#include "MainSingleton.h"
-//#include "ErrorManager.h"
-
-//#include "Vector.h"
-//#include "Matrix.h"
-//#include "Mathcu.hpp"
+#define SAFE_DELETE(aPointer) if (aPointer) { delete aPointer; aPointer = nullptr; }
 
 #endif //PCH_H

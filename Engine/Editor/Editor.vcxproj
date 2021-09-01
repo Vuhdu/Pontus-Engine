@@ -163,16 +163,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\Engine\imgui-docking\glfw3.h" />
-    <ClInclude Include="..\Engine\imgui-docking\glfw3native.h" />
-    <ClInclude Include="..\Engine\imgui-docking\imconfig.h" />
-    <ClInclude Include="..\Engine\imgui-docking\imgui.h" />
-    <ClInclude Include="..\Engine\imgui-docking\imgui_impl_dx11.h" />
-    <ClInclude Include="..\Engine\imgui-docking\imgui_impl_win32.h" />
-    <ClInclude Include="..\Engine\imgui-docking\imgui_internal.h" />
-    <ClInclude Include="..\Engine\imgui-docking\imstb_rectpack.h" />
-    <ClInclude Include="..\Engine\imgui-docking\imstb_textedit.h" />
-    <ClInclude Include="..\Engine\imgui-docking\imstb_truetype.h" />
     <ClInclude Include="AssetBrowser.h" />
     <ClInclude Include="DebugLog.h" />
     <ClInclude Include="Editor.h" />
@@ -187,13 +177,6 @@
     <ClInclude Include="Viewport.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Engine\imgui-docking\imgui.cpp" />
-    <ClCompile Include="..\Engine\imgui-docking\imgui_demo.cpp" />
-    <ClCompile Include="..\Engine\imgui-docking\imgui_draw.cpp" />
-    <ClCompile Include="..\Engine\imgui-docking\imgui_impl_dx11.cpp" />
-    <ClCompile Include="..\Engine\imgui-docking\imgui_impl_win32.cpp" />
-    <ClCompile Include="..\Engine\imgui-docking\imgui_tables.cpp" />
-    <ClCompile Include="..\Engine\imgui-docking\imgui_widgets.cpp" />
     <ClCompile Include="AssetBrowser.cpp" />
     <ClCompile Include="DebugLog.cpp" />
     <ClCompile Include="Editor.cpp" />
@@ -201,7 +184,10 @@
     <ClCompile Include="EditorWindow.cpp" />
     <ClCompile Include="GameViewport.cpp" />
     <ClCompile Include="Inspector.cpp" />
-    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="SceneHierarchy.cpp" />
     <ClCompile Include="SceneViewport.cpp" />
     <ClCompile Include="Viewport.cpp" />

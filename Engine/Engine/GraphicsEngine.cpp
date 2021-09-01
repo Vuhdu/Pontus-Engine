@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "GraphicsEngine.h"
 #include "MainSingleton.h"
 #include "Scene.h"

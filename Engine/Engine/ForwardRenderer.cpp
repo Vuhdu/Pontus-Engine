@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "ForwardRenderer.h"
 #include "DirectX11Framework.h"
 #include "Camera.h"

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "SpotLight.h"
 
 void CSpotLight::SetDirection(const CU::Vector3f& aDirection)

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "ModelFactory.h"
 #include "DirectX11Framework.h"
 #include "Inc/DDSTextureLoader.h"

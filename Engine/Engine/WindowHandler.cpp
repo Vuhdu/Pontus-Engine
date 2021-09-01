@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "WindowHandler.h"
 #include "MainSingleton.h"
 #include "InputHandler.h"

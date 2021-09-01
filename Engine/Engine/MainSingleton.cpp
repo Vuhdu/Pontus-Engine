@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "pch.h"
 #include "MainSingleton.h"
 
 #include "Timer.h"

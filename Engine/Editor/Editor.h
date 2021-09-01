@@ -1,4 +1,5 @@
 #pragma once
+#include <functional>
 
 class CWindowHandler;
 class CDirectX11Framework;

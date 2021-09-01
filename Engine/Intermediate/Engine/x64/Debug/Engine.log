@@ -1,10 +1,2 @@
-﻿  AssetBrowser.cpp
-  Camera.cpp
-  CameraFactory.cpp
-  DebugLog.cpp
-  DirectX11Framework.cpp
-  EditorInterface.cpp
-  EditorWindow.cpp
-  Engine.cpp
-  Generating Code...
+﻿  Camera.cpp
   Engine.vcxproj -> C:\Users\pontus.fredriksson3\Desktop\Pontus-Engine\Pontus-Engine\Engine\Lib\Engine_Debug.lib
