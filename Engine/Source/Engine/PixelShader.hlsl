@@ -17,14 +17,14 @@ float3 GammaToLinear(float3 aColor)
 
 float3 PixelShader_Albedo(VertexOutput aInput)
 {
-	float3 albedo = albedoTexture.Sample(defaultSampler, aInput.myUV.xy).rgb;
+	float3 albedo = albedoTexture.Sample(defaultSampler, aInput.myUV0.xy).rgb;
 	return albedo;
 	//return GammaToLinear(albedo);
 }
 
 float3 PixelShader_Normal(VertexOutput aInput)
 {
-	float3 normal = float3(normalTexture.Sample(defaultSampler, aInput.myUV.xy).wy, 0);
+	float3 normal = float3(normalTexture.Sample(defaultSampler, aInput.myUV0.xy).wy, 0);
 
 	normal = 2.0 * normal - 1.0;
 	normal.z = sqrt(1.0 - saturate(normal.x * normal.x + normal.y * normal.y));
@@ -43,7 +43,7 @@ float3 PixelShader_Normal(VertexOutput aInput)
 
 float3 PixelShader_Material(VertexOutput aInput)
 {
-	return materialTexture.Sample(defaultSampler, aInput.myUV.xy).rgb;
+	return materialTexture.Sample(defaultSampler, aInput.myUV0.xy).rgb;
 }
 
 float PixelShader_Metalness(VertexOutput aInput)
@@ -63,7 +63,7 @@ float PixelShader_Emissive(VertexOutput aInput)
 
 float PixelShader_AmbientOcclusion(VertexOutput aInput)
 {
-	return normalTexture.Sample(defaultSampler, aInput.myUV.xy).b;
+	return normalTexture.Sample(defaultSampler, aInput.myUV0.xy).b;
 }
 
 float bias(float value, float b)

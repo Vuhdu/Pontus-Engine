@@ -10,7 +10,7 @@ CGame::CGame(SCreateParameters* someCreateParameters)
 {
 	someCreateParameters->InitCallback = [this] { InitCallback(); };
 	someCreateParameters->UpdateCallback = [this] { UpdateCallback(); };
-	someCreateParameters->WindowResolution = { 1920, 1080 };
+	someCreateParameters->WindowResolution = { 1280, 720 };
 	someCreateParameters->WindowPosition = { 100, 100 };
 	someCreateParameters->ClearColor = { 0.25f, 0.75f, 0.75f, 1.0f };
 	someCreateParameters->ApplicationName = L"My Awesome Game";

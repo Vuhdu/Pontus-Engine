@@ -9,8 +9,14 @@ SamplerState defaultSampler			: register(s0);
 struct VertexInput
 {
 	float4 myPosition		:	POSITION;
-	float4 myColor			:	COLOR;
-	float2 myUV				:	UV;
+	float4 myVxColor0		:	COLOR0;
+	float4 myVxColor1		:	COLOR1;
+	float4 myVxColor2		:	COLOR2;
+	float4 myVxColor3		:	COLOR3;
+	float2 myUV0			:	UV0;
+	float2 myUV1			:	UV1;
+	float2 myUV2			:	UV2;
+	float2 myUV3			:	UV3;
 	float4 myNormal			:	NORMAL;
 	float4 myTangent		:	TANGENT;
 	float4 myBinormal		:	BINORMAL;
@@ -20,8 +26,15 @@ struct VertexOutput
 {
 	float4 myPosition		:	SV_POSITION;
 	float4 myWorldPosition	:	WORLDPOSITION;
-	float4 myColor			:	COLOR;
-	float2 myUV				:	UV;
+	float myDepth			:	DEPTH;
+	float4 myColor0			:	COLOR0;
+	float4 myColor1			:	COLOR1;
+	float4 myColor2			:	COLOR2;
+	float4 myColor3			:	COLOR3;
+	float2 myUV0			:	UV0;
+	float2 myUV1			:	UV1;
+	float2 myUV2			:	UV2;
+	float2 myUV3			:	UV3;
 	float4 myNormal			:	NORMAL;
 	float4 myTangent		:	TANGENT;
 	float4 myBinormal		:	BINORMAL;
@@ -72,4 +85,13 @@ cbuffer ObjectBuffer : register(b1)
 		float OuterAngle;
 		float Trash;
 	} mySpotLights[8];
+}
+
+cbuffer ShaderBuffer : register(b2)
+{
+	float SB_DeltaTime;
+	float SB_LifeTime;
+	float2 padding;
+	float3 SB_Extents;
+	float SB_Radius;
 }

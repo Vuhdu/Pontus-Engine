@@ -30,12 +30,7 @@ std::vector<CModel*> CModelFactory::GetCube()
 {
 	HRESULT result;
 
-	struct Vertex
-	{
-		float x, y, z, w;
-		float r, g, b, a;
-		float u, v;
-	} vertices[24] =
+	SVertex vertices[24] =
 	{
 		//Back
 		{ 1, -1, 1, 1, 1, 0, 1, 1, 0, 0 },
@@ -181,16 +176,16 @@ std::vector<CModel*> CModelFactory::GetCube()
 	}
 
 	CModel::SModelData modelData;
-	modelData.myNumberOfVertecies = sizeof(vertices) / sizeof(Vertex);
-	modelData.myNumberOfIndices = sizeof(indices) / sizeof(unsigned int);
-	modelData.myStride = sizeof(Vertex);
-	modelData.myOffset = 0;
-	modelData.myVertexBuffer = vertexBuffer;
-	modelData.myIndexBuffer = indexBuffer;
-	modelData.myVertexShader = vertexShader;
-	modelData.myPixelShader = pixelShader;
-	modelData.myPrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	modelData.myInputLayout = inputLayout;
+	modelData.myMesh.myNumVertices = sizeof(vertices) / sizeof(SVertex);
+	modelData.myMesh.myNumIndices = sizeof(indices) / sizeof(unsigned int);
+	modelData.myMesh.myStride = sizeof(SVertex);
+	modelData.myMesh.myOffset = 0;
+	modelData.myMesh.myVertexBuffer = vertexBuffer;
+	modelData.myMesh.myIndexBuffer = indexBuffer;
+	modelData.myMesh.myVertexShader = vertexShader;
+	modelData.myMesh.myPixelShader = pixelShader;
+	modelData.myMesh.myPrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	modelData.myMesh.myInputLayout = inputLayout;
 	modelData.myTexture[0] = shaderResourceView;
 	model->Init(modelData);
 

@@ -83,16 +83,6 @@ std::vector<CModel*> CModelHandler::LoadModels(const std::string& aModelPath, co
 
 	const int numberOfMeshes = scene->mNumMeshes;
 
-	struct Vertex
-	{
-		float x, y, z, w;			// positions
-		float r, g, b, a;			// colors
-		float u, v;					// uv
-		float nx, ny, nz, nw;		// normals
-		float tx, ty, tz, tw;		// tangent
-		float bx, by, bz, bw;		// binormal
-	};
-
 	for (int meshIndex = 0; meshIndex < numberOfMeshes; meshIndex++)
 	{
 		auto mesh = meshes[meshIndex];
@@ -101,7 +91,7 @@ std::vector<CModel*> CModelHandler::LoadModels(const std::string& aModelPath, co
 		const unsigned int numberOfFaces = mesh->mNumFaces;
 		const unsigned int numberOfIndices = numberOfFaces * 3;
 
-		std::vector<Vertex> vertices;
+		std::vector<SVertex> vertices;
 		vertices.reserve(numberOfVertices);
 		vertices.resize(numberOfVertices);
 
@@ -127,21 +117,21 @@ std::vector<CModel*> CModelHandler::LoadModels(const std::string& aModelPath, co
 
 			if (mesh->GetNumColorChannels() > 0)
 			{
-				vertices[vertexIndex].r = colors[0][vertexIndex].r;
-				vertices[vertexIndex].g = colors[0][vertexIndex].g;
-				vertices[vertexIndex].b = colors[0][vertexIndex].b;
-				vertices[vertexIndex].a = colors[0][vertexIndex].a;
+				vertices[vertexIndex].r0 = colors[0][vertexIndex].r;
+				vertices[vertexIndex].g0 = colors[0][vertexIndex].g;
+				vertices[vertexIndex].b0 = colors[0][vertexIndex].b;
+				vertices[vertexIndex].a0 = colors[0][vertexIndex].a;
 			}
 			else 
 			{
-				vertices[vertexIndex].r = 1.0f;
-				vertices[vertexIndex].g = 1.0f;
-				vertices[vertexIndex].b = 1.0f;
-				vertices[vertexIndex].a = 1.0f;
+				vertices[vertexIndex].r0 = 1.0f;
+				vertices[vertexIndex].g0 = 1.0f;
+				vertices[vertexIndex].b0 = 1.0f;
+				vertices[vertexIndex].a0 = 1.0f;
 			}
 
-			vertices[vertexIndex].u = UV[0][vertexIndex].x;
-			vertices[vertexIndex].v = UV[0][vertexIndex].y;
+			vertices[vertexIndex].u0 = UV[0][vertexIndex].x;
+			vertices[vertexIndex].v0 = UV[0][vertexIndex].y;
 
 			vertices[vertexIndex].nx = normals[vertexIndex].x;
 			vertices[vertexIndex].ny = normals[vertexIndex].y;
@@ -233,7 +223,13 @@ std::vector<CModel*> CModelHandler::LoadModels(const std::string& aModelPath, co
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "COLOR", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "COLOR", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "COLOR", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "UV", 1, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "UV", 2, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "UV", 3, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "TANGENT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "BINORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
@@ -287,16 +283,16 @@ std::vector<CModel*> CModelHandler::LoadModels(const std::string& aModelPath, co
 		}
 
 		CModel::SModelData modelData;
-		modelData.myNumberOfVertecies = numberOfVertices;
-		modelData.myNumberOfIndices = numberOfIndices;
-		modelData.myStride = sizeof(Vertex);
-		modelData.myOffset = 0;
-		modelData.myVertexBuffer = vertexBuffer;
-		modelData.myIndexBuffer = indexBuffer;
-		modelData.myVertexShader = vertexShader;
-		modelData.myPixelShader = pixelShader;
-		modelData.myPrimitiveTopology = static_cast<unsigned int>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		modelData.myInputLayout = inputLayout;
+		modelData.myMesh.myNumVertices = numberOfVertices;
+		modelData.myMesh.myNumIndices = numberOfIndices;
+		modelData.myMesh.myStride = sizeof(SVertex);
+		modelData.myMesh.myOffset = 0;
+		modelData.myMesh.myVertexBuffer = vertexBuffer;
+		modelData.myMesh.myIndexBuffer = indexBuffer;
+		modelData.myMesh.myVertexShader = vertexShader;
+		modelData.myMesh.myPixelShader = pixelShader;
+		modelData.myMesh.myPrimitiveTopology = static_cast<unsigned int>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		modelData.myMesh.myInputLayout = inputLayout;
 		modelData.myTexture[0] = albedoShaderResourceView;
 		modelData.myTexture[1] = normalShaderResourceView;
 		modelData.myTexture[2] = materialShaderResourceView;

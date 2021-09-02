@@ -238,6 +238,8 @@
     <ClCompile Include="JsonParser.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LightFactory.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelFactory.cpp" />
     <ClCompile Include="ModelHandler.cpp" />
@@ -274,6 +276,8 @@
     <ClInclude Include="JsonParser.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LightFactory.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelFactory.h" />
     <ClInclude Include="ModelHandler.h" />

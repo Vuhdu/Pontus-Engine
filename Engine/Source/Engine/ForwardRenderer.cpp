@@ -182,20 +182,20 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, const std::
 			memcpy(bufferdata.pData, &myObjectBufferData, sizeof(ObjectBufferData));
 			myContext->Unmap(myObjectBuffer, 0);
 
-			myContext->IASetPrimitiveTopology(static_cast<D3D11_PRIMITIVE_TOPOLOGY>(modelData.myPrimitiveTopology));
-			myContext->IASetInputLayout(modelData.myInputLayout);
-			myContext->IASetVertexBuffers(0, 1, &modelData.myVertexBuffer, &modelData.myStride, &modelData.myOffset);
-			myContext->IASetIndexBuffer(modelData.myIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+			myContext->IASetPrimitiveTopology(static_cast<D3D11_PRIMITIVE_TOPOLOGY>(modelData.myMesh.myPrimitiveTopology));
+			myContext->IASetInputLayout(modelData.myMesh.myInputLayout);
+			myContext->IASetVertexBuffers(0, 1, &modelData.myMesh.myVertexBuffer, &modelData.myMesh.myStride, &modelData.myMesh.myOffset);
+			myContext->IASetIndexBuffer(modelData.myMesh.myIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 			myContext->VSSetConstantBuffers(1, 1, &myObjectBuffer);
 
-			myContext->VSSetShader(modelData.myVertexShader, nullptr, 0);
+			myContext->VSSetShader(modelData.myMesh.myVertexShader, nullptr, 0);
 
 			myContext->PSSetConstantBuffers(1, 1, &myObjectBuffer);
 			myContext->PSSetShaderResources(1, 3, &modelData.myTexture[0]);
-			myContext->PSSetShader(modelData.myPixelShader, nullptr, 0);
+			myContext->PSSetShader(modelData.myMesh.myPixelShader, nullptr, 0);
 
-			myContext->DrawIndexed(modelData.myNumberOfIndices, 0, 0);
+			myContext->DrawIndexed(modelData.myMesh.myNumIndices, 0, 0);
 		}
 		modelCount++;
 	}

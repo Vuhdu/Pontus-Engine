@@ -19,6 +19,9 @@ VertexOutput main( VertexInput input )
     returnValue.myNormal = float4(vertexWorldNormal, 0);
     returnValue.myTangent = float4(vertexWorldTangent, 0);
     returnValue.myBinormal = float4(vertexWorldBinormal, 0);
-    returnValue.myUV = input.myUV;
+    returnValue.myUV0 = input.myUV0;
+    returnValue.myUV1 = input.myUV1;
+    returnValue.myUV2 = input.myUV2;
+    returnValue.myUV3 = input.myUV3;
     return returnValue;
 }
