@@ -1,9 +1,16 @@
 #pragma once
-#pragma comment(lib, "d3d11.lib")
-
 #include "WindowHandler.h"
 
-#include "d3d11.h"
+struct ID3D11DeviceContext;
+struct ID3D11Device;
+struct ID3D11DepthStencilView;
+
+struct ID3D11Texture2D;
+struct ID3D11ShaderResourceView;
+struct ID3D11RenderTargetView;
+
+struct IDXGISwapChain;
+struct ID3D11RasterizerState;
 
 enum class eRenderMode 
 {

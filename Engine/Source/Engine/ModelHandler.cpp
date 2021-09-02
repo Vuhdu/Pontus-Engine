@@ -295,7 +295,7 @@ std::vector<CModel*> CModelHandler::LoadModels(const std::string& aModelPath, co
 		modelData.myIndexBuffer = indexBuffer;
 		modelData.myVertexShader = vertexShader;
 		modelData.myPixelShader = pixelShader;
-		modelData.myPrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		modelData.myPrimitiveTopology = static_cast<unsigned int>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		modelData.myInputLayout = inputLayout;
 		modelData.myTexture[0] = albedoShaderResourceView;
 		modelData.myTexture[1] = normalShaderResourceView;
