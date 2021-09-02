@@ -4,6 +4,7 @@
 #include "Inc/DDSTextureLoader.h"
 #include "PointLight.h"
 #include "SpotLight.h"
+#include "Scene.h"
 
 void CLightFactory::Init(ID3D11Device* aDevice)
 {
@@ -21,15 +22,27 @@ CEnvironmentLight* CLightFactory::CreateEnvironmentLight(const std::wstring& aCu
 		assert(false && "No cube map path could be found.");
 	}
 
-    return new CEnvironmentLight(shaderResourceView);
+	auto environmentLight = new CEnvironmentLight(shaderResourceView);
+
+	CEngine::GetScene()->AddInstance(environmentLight);
+
+	return environmentLight;
 }
 
 CPointLight* CLightFactory::CreatePointLight()
 {
-	return new CPointLight();
+	auto pointLight = new CPointLight();
+	
+	CEngine::GetScene()->AddInstance(pointLight);
+	
+	return pointLight;
 }
 
 CSpotLight* CLightFactory::CreateSpotLight()
 {
-	return new CSpotLight();
+	auto spotLight = new CSpotLight();
+
+	CEngine::GetScene()->AddInstance(spotLight);
+
+	return spotLight;
 }

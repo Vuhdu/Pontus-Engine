@@ -8,6 +8,8 @@
 #include "Model.h"
 #include "ModelInstance.h"
 
+#include "Scene.h"
+
 CModelFactory::CModelFactory()
 {
 	
@@ -203,5 +205,16 @@ CModelInstance* CModelFactory::CreateModel(const char* aModelStringID)
 
 	modelInstance->Init(myModelHandler.GetModelVector(aModelStringID));
 
+	CEngine::GetScene()->AddInstance(modelInstance);
+	
 	return modelInstance;
+}
+
+CModelInstance* CModelFactory::CreateModel(const char* aModelStringID, const CU::Vector3f& aPosition)
+{
+	auto instance = CreateModel(aModelStringID);
+
+	instance->SetPosition(aPosition);
+	
+	return instance;
 }

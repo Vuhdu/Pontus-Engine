@@ -25,16 +25,14 @@ bool CScene::Init()
     return true;
 }
 
-bool CScene::AddInstance(CModelInstance* aModelInstance)
+void CScene::AddInstance(CModelInstance* aModelInstance)
 {
     myModels.push_back(aModelInstance);
-    return true;
 }
 
-bool CScene::AddGameObject(CGameObject* aGameObject)
+void CScene::AddInstance(CGameObject* aGameObject)
 {
     myGameObjects.push_back(aGameObject);
-    return true;
 }
 
 std::vector<CModelInstance*>& CScene::CullModels()
@@ -98,22 +96,22 @@ std::pair<unsigned int, std::array<CSpotLight*, 8>> CScene::CullSpotLights(CMode
     return result;
 }
 
-void CScene::AddEnvironmentLight(CEnvironmentLight* anEnvironmentLight)
+void CScene::AddInstance(CEnvironmentLight* anEnvironmentLight)
 {
     myEnvironmentLight = anEnvironmentLight;
 }
 
-void CScene::AddPointLight(CPointLight* aPointLight)
+void CScene::AddInstance(CPointLight* aPointLight)
 {
     myPointLights.push_back(aPointLight);
 }
 
-void CScene::AddSpotLight(CSpotLight* aSpotLight)
+void CScene::AddInstance(CSpotLight* aSpotLight)
 {
     mySpotLights.push_back(aSpotLight);
 }
 
-void CScene::AddCamera(CCamera* aCamera)
+void CScene::AddInstance(CCamera* aCamera)
 {
     myCameras.push_back(aCamera);
 }

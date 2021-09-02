@@ -103,68 +103,15 @@ bool CEngine::InternalStart(SCreateParameters* someCreateParameters)
     myFramework = myGraphicsEngine->GetFramework();
 
     myModelFactory->Init(myGraphicsEngine->GetFramework()->GetDevice());
-
-    auto chest = myModelFactory->CreateModel("Chest");
-    myHead = myModelFactory->CreateModel("Head");
-    myHead2 = myModelFactory->CreateModel("Head");
-    auto garlicMan = myModelFactory->CreateModel("GarlicMan");
-
-    chest->SetPosition({ 100.0f, -70.0f, 350.0f });
-    myHead->SetPosition({ -100.0f, 35.0f, 350.0f });
-    myHead2->SetPosition({ -100.0f, 105.0f, 350.0f });
-    garlicMan->SetPosition({ 0.0f, 35.0f, 500.0f });
-
-    myScene->AddInstance(chest);
-    myScene->AddInstance(myHead);
-    myScene->AddInstance(myHead2);
-    myScene->AddInstance(garlicMan);
+    myLightFactory->Init(myGraphicsEngine->GetFramework()->GetDevice());
 
     myEditorCamera = myCameraFactory->CreateCamera(90.0f);
     myEditorCamera->SetTransform({ 0.0f, 0.0f, -5.0f }, { 0.0f, 0.0f, 0.0f });
     myMainCamera = myCameraFactory->CreateCamera(90.0f);
     myMainCamera->SetTransform({ 0.0f, 0.0f, -5.0f }, { 0.0f, 0.0f, 0.0f });
 
-    myScene->AddCamera(myEditorCamera);
-    myScene->AddCamera(myMainCamera);
     myScene->SetEditorCamera(myEditorCamera);
     myScene->SetMainCamera(myMainCamera);
-
-    myLightFactory->Init(myGraphicsEngine->GetFramework()->GetDevice());
-    auto light = myLightFactory->CreateEnvironmentLight(L"Assets/Art/CubeMap/cube_1024_preblurred_angle3_Skansen3.dds");
-    light->SetDirection({ 0.0f, 0.0f, -1.0f });
-    light->SetColor({ 0.8f, 0.8f, 0.8f });
-    myScene->AddEnvironmentLight(light);
-
-    CPointLight* redPointLight = myLightFactory->CreatePointLight();
-    redPointLight->SetPosition({ -200.0f, 70.0f, 500.0f });
-    redPointLight->SetColor({ 1.0f, 0.0f, 0.0f });
-    redPointLight->SetRange(2000.0f);
-    redPointLight->SetIntensity(500000.0f);
-    myScene->AddPointLight(redPointLight);
-
-    CPointLight* greenPointLight = myLightFactory->CreatePointLight();
-    greenPointLight->SetPosition({ 0.0f, 70.0f, 350.0f });
-    greenPointLight->SetColor({ 0.0f, 1.0f, 0.0f });
-    greenPointLight->SetRange(200.0f);
-    greenPointLight->SetIntensity(500000.0f);
-    myScene->AddPointLight(greenPointLight);
-
-
-    CPointLight* bluePointLight = myLightFactory->CreatePointLight();
-    bluePointLight->SetPosition({ 200.0f, 70.0f, 350.0f });
-    bluePointLight->SetColor({ 0.0f, 0.0f, 1.0f });
-    bluePointLight->SetRange(200.0f);
-    bluePointLight->SetIntensity(500000.0f);
-    myScene->AddPointLight(bluePointLight);
-
-    mySpotLight = myLightFactory->CreateSpotLight();
-    mySpotLight->SetPosition({ 0.0f, 0.0f, 0.0f });
-    mySpotLight->SetColor({ 1.0f, 0.0f, 1.0f });
-    mySpotLight->SetDirection({ 0.0f, 0.0f, 1.0f });
-    mySpotLight->SetRange(2500.0f);
-    mySpotLight->SetRadius(0.0f, 0.2f);
-    mySpotLight->SetIntensity(50000.0f);
-    myScene->AddSpotLight(mySpotLight);
 
     myEngineIsRunning = true;
     return myEngineIsRunning;
@@ -197,6 +144,7 @@ bool CEngine::InternalRun()
                 myEngineIsRunning = false;
             }
         }
+
         myGraphicsEngine->BeginFrame();
         myEditor->BeginFrame();
 
@@ -204,34 +152,7 @@ bool CEngine::InternalRun()
 
         myEditorCamera->Update(myTimer->GetDeltaTime());
         myEditorCamera->HandleMovement(*myInput, myTimer->GetDeltaTime());
-
-        static bool turn = true;
-
-        auto dir = mySpotLight->GetDirection();
-        if (turn)
-        {
-            dir.x += myTimer->GetDeltaTime() * .25f;
-            if (dir.x > 0.6f)
-            {
-                turn = !turn;
-            }
-        }
-        else
-        {
-            dir.x -= myTimer->GetDeltaTime() * .25f;
-            if (dir.x < -0.6f)
-            {
-                turn = !turn;
-            }
-        }
-        mySpotLight->SetDirection(dir);
-
-
         myMainCamera->Update(myTimer->GetDeltaTime());
-
-        myHead->Rotate({ 0.0f, 0.01f, 0.0f });
-        myHead2->Rotate({ 0.0f, -0.01f, 0.0f });
-
 
         myCreateParameters->UpdateCallback();
         myGraphicsEngine->RenderFrame();
@@ -277,28 +198,3 @@ void CEngine::CloseConsole()
 #endif
 }
 
-/*
-int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
-{
-    hInstance;
-    hPrevInstance;
-    lpCmdLine;
-    nCmdShow;
-    
-    CGameObject* chestObj = new CGameObject("Chest");
-    CGameObject* headObj = new CGameObject("Head");
-    CGameObject* head2Obj = new CGameObject("Head (2)");
-    CGameObject* garlicManObj = new CGameObject("GarlicMan");
-
-    chestObj->SetModelInstance(chest);
-    headObj->SetModelInstance(head);
-    head2Obj->SetModelInstance(head2);
-    garlicManObj->SetModelInstance(garlicMan);
-    
-    scene->AddGameObject(chestObj);
-    scene->AddGameObject(headObj);
-    scene->AddGameObject(head2Obj);
-    scene->AddGameObject(garlicManObj);
-    return 0;
-}
-*/

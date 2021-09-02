@@ -97,7 +97,5 @@ private:
 	CCamera* myMainCamera = nullptr;
 	
 	CSpotLight* mySpotLight = nullptr;
-	CModelInstance* myHead = nullptr;
-	CModelInstance* myHead2 = nullptr;
 
 };

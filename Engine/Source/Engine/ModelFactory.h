@@ -18,6 +18,8 @@ public:
 
 	CModelInstance* CreateModel(const char* aModelStringID);
 
+	CModelInstance* CreateModel(const char* aModelStringID, const CU::Vector3f& aPosition);
+
 private:
 	CModelHandler myModelHandler;
 	ID3D11Device* myDevice = nullptr;

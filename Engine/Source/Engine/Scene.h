@@ -16,8 +16,12 @@ public:
 
 	bool Init();
 
-	bool AddInstance(CModelInstance* aModelInstance);
-	bool AddGameObject(CGameObject* aGameObject);
+	void AddInstance(CModelInstance* aModelInstance);
+	void AddInstance(CEnvironmentLight* anEnvironmentLight);
+	void AddInstance(CPointLight* aPointLight);
+	void AddInstance(CSpotLight* aSpotLight);
+	void AddInstance(CCamera* aCamera);
+	void AddInstance(CGameObject* aGameObject);
 
 	std::vector<CModelInstance*>& CullModels();
 	std::vector<CGameObject*>& GetGameObjects();
@@ -25,10 +29,6 @@ public:
 	std::pair<unsigned int, std::array<CPointLight*, 8>> CullPointLights(CModelInstance* aModelInstance);
 	std::pair<unsigned int, std::array<CSpotLight*, 8>> CullSpotLights(CModelInstance* aModelInstance);
 
-	void AddEnvironmentLight(CEnvironmentLight* anEnvironmentLight);
-	void AddPointLight(CPointLight* aPointLight);
-	void AddSpotLight(CSpotLight* aSpotLight);
-	void AddCamera(CCamera* aCamera);
 	void SetMainCamera(CCamera* aCamera);
 	void SetEditorCamera(CCamera* aCamera);
 

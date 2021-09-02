@@ -2,6 +2,9 @@
 
 struct SCreateParameters;
 
+class CModelInstance;
+class CSpotLight;
+
 class CGame 
 {
 public:
@@ -9,10 +12,12 @@ public:
 	~CGame() = default;
 
 	void InitCallback();
-
 	void UpdateCallback();
 
 private:
-	bool myUpdateHasPassed = false;
+	CModelInstance* myHead = nullptr;
+	CModelInstance* myHead2 = nullptr;
+
+	CSpotLight* mySpotLight = nullptr;
 
 };
