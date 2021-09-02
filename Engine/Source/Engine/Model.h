@@ -1,13 +1,19 @@
 #pragma once
-#include "DirectX11Framework.h"
-#include <array>
+
+struct ID3D11InputLayout;
+struct ID3D11VertexShader;
+struct ID3D11PixelShader;
+struct ID3D11Buffer;
+struct ID3D11ShaderResourceView;
+
+//using D3D11_PRIMITIVE_TOPOLOGY = unsigned int;
 
 class CModel
 {
 public:
 	struct SModelData
 	{
-		D3D11_PRIMITIVE_TOPOLOGY myPrimitiveTopology = {};
+		unsigned int myPrimitiveTopology = {};
 		ID3D11InputLayout* myInputLayout = nullptr;
 		ID3D11Buffer* myVertexBuffer = nullptr;
 		UINT myStride = 0;

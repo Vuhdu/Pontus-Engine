@@ -5,6 +5,8 @@
 #include "SpotLight.h"
 #include "Editor.h"
 
+#include <d3d11.h>
+
 CGraphicsEngine::CGraphicsEngine()
 {
 }

@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "DirectX11Framework.h"
 
+#pragma comment(lib, "d3d11.lib")
+#include <d3d11.h>
+
 CDirectX11Framework::CDirectX11Framework()
 {
 	mySwapChain = nullptr;
