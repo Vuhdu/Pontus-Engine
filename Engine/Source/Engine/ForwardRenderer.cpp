@@ -8,12 +8,15 @@
 #include "PointLight.h"
 #include "SpotLight.h"
 
+#include <d3d11.h>
+
 CForwardRenderer::CForwardRenderer()
 {
 	myContext = nullptr;
 	myFrameBuffer = nullptr;
 	myObjectBuffer = nullptr;
 }
+
 
 CForwardRenderer::~CForwardRenderer()
 {
@@ -179,7 +182,7 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, const std::
 			memcpy(bufferdata.pData, &myObjectBufferData, sizeof(ObjectBufferData));
 			myContext->Unmap(myObjectBuffer, 0);
 
-			myContext->IASetPrimitiveTopology(modelData.myPrimitiveTopology);
+			myContext->IASetPrimitiveTopology(static_cast<D3D11_PRIMITIVE_TOPOLOGY>(modelData.myPrimitiveTopology));
 			myContext->IASetInputLayout(modelData.myInputLayout);
 			myContext->IASetVertexBuffers(0, 1, &modelData.myVertexBuffer, &modelData.myStride, &modelData.myOffset);
 			myContext->IASetIndexBuffer(modelData.myIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
