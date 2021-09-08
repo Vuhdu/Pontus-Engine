@@ -51,6 +51,8 @@ public:
 	static CU::InputHandler*	GetInput() { return myInstance->myInput; };
 	static CU::Timer*			GetTimer() { return myInstance->myTimer; };
 
+	static CDirectX11Framework* GetFramework() { return myInstance->myFramework; };
+
 	static void					SetRenderMode(const eRenderMode& aRenderMode);
 
 	static void					SetClearColor(const CU::Vector4f& aClearColor) { myInstance->myClearColor = aClearColor; };
@@ -99,3 +101,11 @@ private:
 	CSpotLight* mySpotLight = nullptr;
 
 };
+
+namespace DX11
+{
+	static struct ID3D11DeviceContext* Context()
+	{
+		return nullptr;
+	};
+}

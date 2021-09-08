@@ -197,4 +197,3 @@ void CEngine::CloseConsole()
     fclose(stderr);
 #endif
 }
-
