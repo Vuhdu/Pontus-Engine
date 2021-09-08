@@ -43,6 +43,8 @@ public:
 
 	void SetRenderMode(const eRenderMode& aRenderMode);
 
+	void SetFullscreenTexture();
+
 public:
 	ID3D11RenderTargetView* myBackBuffer;
 
@@ -54,6 +56,9 @@ private:
 	IDXGISwapChain* mySwapChain;
 	ID3D11Device* myDevice;
 	ID3D11DeviceContext* myContext;
+
+	ID3D11Texture2D* myFullscreenTexture;
+	ID3D11ShaderResourceView* myFullscreenSRV;
 
 	ID3D11Texture2D* myEditorCameraTexture;
 	ID3D11ShaderResourceView* myEditorCameraResourceView;

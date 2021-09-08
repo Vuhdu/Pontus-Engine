@@ -1,23 +1,29 @@
 #pragma once
 
-class FullscreenTexture
+struct ID3D11RenderTargetView;
+struct ID3D11DepthStencilView;
+
+class CFullscreenTexture
 {
 public:
-	FullscreenTexture() = default;
-	~FullscreenTexture() = default;
+	CFullscreenTexture() = default;
+	~CFullscreenTexture() = default;
 
 	void ClearTexture(CU::Vector4f aClearColor = { 0.0f, 0.0f, 0.0f, 0.0f });
 	void ClearDepth(float aClearDepthValue = 1.0f, unsigned int aClearStencilValue = 0.0f);
-	void SetAsActiveTarget(FullscreenTexture* aDepth = nullptr);
+	void SetAsActiveTarget(CFullscreenTexture* aDepth = nullptr);
 	void SetAsResourceOnSlot(unsigned int aSlot);
 
+	ID3D11RenderTargetView* GetRenderTarget() { return myRenderTarget; }
+	ID3D11DepthStencilView* GetDepthStencil() { return myDepth; }
+
 private:
-	friend class FullscreenTextureFactory;
+	friend class CFullscreenTextureFactory;
 
 	union
 	{
-		struct ID3D11RenderTargetView* myRenderTarget;
-		struct ID3D11DepthStencilView* myDepth;
+		ID3D11RenderTargetView* myRenderTarget;
+		ID3D11DepthStencilView* myDepth;
 	};
 
 	struct ID3D11Texture2D* myTexture = nullptr;

@@ -14,6 +14,8 @@
 #include "ModelFactory.h"
 #include "CameraFactory.h"
 #include "LightFactory.h"
+#include "FullscreenTextureFactory.h"
+
 #include "ModelHandler.h"
 #include "Scene.h"
 
@@ -32,6 +34,7 @@ CEngine::CEngine()
     myLightFactory = new CLightFactory();
     myModelFactory = new CModelFactory();
     myCameraFactory = new CCameraFactory();
+    myFullscreenTextureFactory = new CFullscreenTextureFactory();
 
     myModelHandler = new CModelHandler();
 
@@ -45,6 +48,7 @@ CEngine::~CEngine()
     SAFE_DELETE(myScene);
     SAFE_DELETE(myModelHandler);
     SAFE_DELETE(myCameraFactory);
+    SAFE_DELETE(myFullscreenTextureFactory);
     SAFE_DELETE(myModelFactory);
     SAFE_DELETE(myLightFactory);
     SAFE_DELETE(myInput);
@@ -80,6 +84,12 @@ bool CEngine::InternalStart(SCreateParameters* someCreateParameters)
         myCreateParameters->ClearColor[2],
         myCreateParameters->ClearColor[3]
     };
+
+    myResolution = {
+        myCreateParameters->WindowResolution[0],
+        myCreateParameters->WindowResolution[1]
+    };
+
     CWindowHandler::SWindowData windowData;
     windowData.myX = myCreateParameters->WindowPosition[0];
     windowData.myY = myCreateParameters->WindowPosition[1];
@@ -112,6 +122,8 @@ bool CEngine::InternalStart(SCreateParameters* someCreateParameters)
 
     myScene->SetEditorCamera(myEditorCamera);
     myScene->SetMainCamera(myMainCamera);
+
+    //myFramework->SetFullscreenTexture();
 
     myEngineIsRunning = true;
     return myEngineIsRunning;

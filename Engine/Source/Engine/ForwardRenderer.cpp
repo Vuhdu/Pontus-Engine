@@ -65,26 +65,36 @@ bool CForwardRenderer::Init(CDirectX11Framework* aFramework)
 	return true;
 }
 
-void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, const std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>>& somePointLights, const std::vector<std::pair<unsigned int, std::array<CSpotLight*, 8>>>& someSpotLights, CCamera* aCamera, std::vector<CModelInstance*>& aModelList)
+void CForwardRenderer::SetRenderCamera(CCamera* aCamera)
+{
+	myRenderCamera = aCamera;
+}
+
+void CForwardRenderer::SetEnvironmentLight(CEnvironmentLight* anEnvironmentLight)
+{
+	myEnvironmentLight = anEnvironmentLight;
+}
+
+void CForwardRenderer::Render(const std::vector<CModelInstance*>& aModelList, std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>>& somePointLights, std::vector<std::pair<unsigned int, std::array<CSpotLight*, 8>>>& someSpotLights)
 {
 	HRESULT result;
 	
 	D3D11_MAPPED_SUBRESOURCE bufferdata;
-	myFrameBufferData.myToCamera = CU::Matrix4x4f::GetFastInverse(aCamera->GetTransform());
-	myFrameBufferData.myToProjection = aCamera->GetProjection();
+	myFrameBufferData.myToCamera = CU::Matrix4x4f::GetFastInverse(myRenderCamera->GetTransform());
+	myFrameBufferData.myToProjection = myRenderCamera->GetProjection();
 
 	myFrameBufferData.myCameraPosition = {
-		aCamera->GetPosition().x,
-		aCamera->GetPosition().y,
-		aCamera->GetPosition().z,
+		myRenderCamera->GetPosition().x,
+		myRenderCamera->GetPosition().y,
+		myRenderCamera->GetPosition().z,
 		1.0f
 	};
 
-	myFrameBufferData.myDirectionalLightDirection = anEnvironmentLight->GetDirection();
-	myFrameBufferData.myDirectionalLightColor = anEnvironmentLight->GetColor();
+	myFrameBufferData.myDirectionalLightDirection = myEnvironmentLight->GetDirection();
+	myFrameBufferData.myDirectionalLightColor = myEnvironmentLight->GetColor();
 
 	ID3D11Resource* cubeResource = nullptr;
-	anEnvironmentLight->GetCubeMap()->GetResource(&cubeResource);
+	myEnvironmentLight->GetCubeMap()->GetResource(&cubeResource);
 	ID3D11Texture2D* cubeTexture = reinterpret_cast<ID3D11Texture2D*>(cubeResource);
 	D3D11_TEXTURE2D_DESC cubeDescription = {};
 	cubeTexture->GetDesc(&cubeDescription);
@@ -102,7 +112,7 @@ void CForwardRenderer::Render(CEnvironmentLight* anEnvironmentLight, const std::
 	myContext->Unmap(myFrameBuffer, 0);
 	myContext->VSSetConstantBuffers(0, 1, &myFrameBuffer);
 	myContext->PSSetConstantBuffers(0, 1, &myFrameBuffer);
-	myContext->PSSetShaderResources(0, 1, anEnvironmentLight->GetCubeMapConstPtr());
+	myContext->PSSetShaderResources(0, 1, myEnvironmentLight->GetCubeMapConstPtr());
 
 	int modelCount = 0;
 	for (CModelInstance* instance : aModelList)

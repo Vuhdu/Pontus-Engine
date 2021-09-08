@@ -3,18 +3,18 @@
 
 enum DXGI_FORMAT;
 
-class FullscreenTextureFactory
+class CFullscreenTextureFactory
 {
 public:
-	FullscreenTextureFactory() = default;
-	~FullscreenTextureFactory() = default;
+	CFullscreenTextureFactory() = default;
+	~CFullscreenTextureFactory() = default;
 
-	FullscreenTexture CreateTexture(CU::Vector2ui aSize, DXGI_FORMAT aFormat);
+	CFullscreenTexture CreateTexture(CU::Vector2ui aSize, DXGI_FORMAT aFormat);
+	CFullscreenTexture CreateTexture(ID3D11Texture2D* aTextureTemplate);
 
-	FullscreenTexture CreateDepth(CU::Vector2ui aSize, DXGI_FORMAT aFormat);
+	CFullscreenTexture CreateDepth(CU::Vector2ui aSize, DXGI_FORMAT aFormat);
 
 private:
-	FullscreenTexture CreateTexture(ID3D11Texture2D* aTextureTemplate);
 
 };
 

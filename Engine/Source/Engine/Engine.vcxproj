@@ -192,6 +192,26 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)..\Bin\Shaders\%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)..\Bin\Shaders\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
+    <FxCompile Include="FullscreenShader-Copy.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="FullscreenVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="PixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
@@ -215,6 +235,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CubeShaderStructs.hlsli" />
+    <None Include="FullscreenStructs.hlsli" />
     <None Include="ShaderStructs.hlsli" />
   </ItemGroup>
   <ItemGroup>
@@ -226,6 +247,7 @@
     <ClCompile Include="EnvironmentLight.cpp" />
     <ClCompile Include="ErrorManager.cpp" />
     <ClCompile Include="ForwardRenderer.cpp" />
+    <ClCompile Include="FullscreenRenderer.cpp" />
     <ClCompile Include="FullscreenTexture.cpp" />
     <ClCompile Include="FullscreenTextureFactory.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -266,6 +288,7 @@
     <ClInclude Include="ErrorManager.h" />
     <ClInclude Include="ForwardRenderer.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="FullscreenRenderer.h" />
     <ClInclude Include="FullscreenTexture.h" />
     <ClInclude Include="FullscreenTextureFactory.h" />
     <ClInclude Include="GameObject.h" />

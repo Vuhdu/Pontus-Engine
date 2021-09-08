@@ -4,7 +4,7 @@
 
 #include <d3d11.h>
 
-void FullscreenTexture::ClearTexture(CU::Vector4f aClearColor)
+void CFullscreenTexture::ClearTexture(CU::Vector4f aClearColor)
 {
 	CEngine::GetFramework()->GetContext()->ClearRenderTargetView(
 		myRenderTarget, 
@@ -12,7 +12,7 @@ void FullscreenTexture::ClearTexture(CU::Vector4f aClearColor)
 	);
 }
 
-void FullscreenTexture::ClearDepth(float aClearDepthValue, unsigned int aClearStencilValue)
+void CFullscreenTexture::ClearDepth(float aClearDepthValue, unsigned int aClearStencilValue)
 {
 	CEngine::GetFramework()->GetContext()->ClearDepthStencilView(
 		myDepth, 
@@ -22,7 +22,7 @@ void FullscreenTexture::ClearDepth(float aClearDepthValue, unsigned int aClearSt
 	);
 }
 
-void FullscreenTexture::SetAsActiveTarget(FullscreenTexture* aDepth)
+void CFullscreenTexture::SetAsActiveTarget(CFullscreenTexture* aDepth)
 {
 	if (aDepth)
 	{
@@ -43,7 +43,7 @@ void FullscreenTexture::SetAsActiveTarget(FullscreenTexture* aDepth)
 	CEngine::GetFramework()->GetContext()->RSSetViewports(1, myViewport);
 }
 
-void FullscreenTexture::SetAsResourceOnSlot(unsigned int aSlot)
+void CFullscreenTexture::SetAsResourceOnSlot(unsigned int aSlot)
 {
 	CEngine::GetFramework()->GetContext()->PSSetShaderResources(aSlot, 1, &mySRV);
 }

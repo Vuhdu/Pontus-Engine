@@ -9,6 +9,8 @@ class CDirectX11Framework;
 class CModelFactory;
 class CCameraFactory;
 class CLightFactory;
+class CFullscreenTextureFactory;
+
 class CErrorManager;
 class CModelHandler;
 class CScene;
@@ -41,12 +43,13 @@ public:
 	static bool Start(SCreateParameters* someCreateParameters);
 	static bool Run();
 
-	static CErrorManager*		GetErrorManager() { return myInstance->myErrorManager; };
-	static CModelFactory*		GetModelFactory() { return myInstance->myModelFactory; };
-	static CCameraFactory*		GetCameraFactory() { return myInstance->myCameraFactory; };
-	static CLightFactory*		GetLightFactory() { return myInstance->myLightFactory; };
-	static CModelHandler*		GetModelHandler() { return myInstance->myModelHandler; };
-	static CScene*				GetScene() { return myInstance->myScene; };
+	static CErrorManager*				GetErrorManager() { return myInstance->myErrorManager; };
+	static CModelFactory*				GetModelFactory() { return myInstance->myModelFactory; };
+	static CCameraFactory*				GetCameraFactory() { return myInstance->myCameraFactory; };
+	static CLightFactory*				GetLightFactory() { return myInstance->myLightFactory; };
+	static CFullscreenTextureFactory*	GetFullscreenTextureFactory() { return myInstance->myFullscreenTextureFactory; };
+	static CModelHandler*				GetModelHandler() { return myInstance->myModelHandler; };
+	static CScene*						GetScene() { return myInstance->myScene; };
 
 	static CU::InputHandler*	GetInput() { return myInstance->myInput; };
 	static CU::Timer*			GetTimer() { return myInstance->myTimer; };
@@ -57,6 +60,9 @@ public:
 
 	static void					SetClearColor(const CU::Vector4f& aClearColor) { myInstance->myClearColor = aClearColor; };
 	static const				CU::Vector4f& GetClearColor() { return myInstance->myClearColor; };
+
+	static const				CU::Vector2ui& GetResolution() { return myInstance->myResolution; };
+
 
 	static CEngine* GetInstance();
 
@@ -75,6 +81,7 @@ private:
 	Editor::CEditor* myEditor = nullptr;
 
 private:
+	CU::Vector2ui myResolution = { 1280, 720 };
 	CU::Vector4f myClearColor = { 0.2f, 0.2f, 0.2f, 1.0f };
 	
 	CU::InputHandler* myInput = nullptr;
@@ -83,6 +90,7 @@ private:
 	CModelFactory* myModelFactory = nullptr;
 	CCameraFactory* myCameraFactory = nullptr;
 	CLightFactory* myLightFactory = nullptr;
+	CFullscreenTextureFactory* myFullscreenTextureFactory = nullptr;
 	
 	CErrorManager* myErrorManager = nullptr;
 
@@ -101,11 +109,3 @@ private:
 	CSpotLight* mySpotLight = nullptr;
 
 };
-
-namespace DX11
-{
-	static struct ID3D11DeviceContext* Context()
-	{
-		return nullptr;
-	};
-}

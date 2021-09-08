@@ -4,7 +4,7 @@
 
 #include <d3d11.h>
 
-FullscreenTexture FullscreenTextureFactory::CreateTexture(CU::Vector2ui aSize, DXGI_FORMAT aFormat)
+CFullscreenTexture CFullscreenTextureFactory::CreateTexture(CU::Vector2ui aSize, DXGI_FORMAT aFormat)
 {
     HRESULT result;
     D3D11_TEXTURE2D_DESC desc = { 0 };
@@ -24,7 +24,7 @@ FullscreenTexture FullscreenTextureFactory::CreateTexture(CU::Vector2ui aSize, D
     result = CEngine::GetFramework()->GetDevice()->CreateTexture2D(&desc, nullptr, &texture);
     assert(SUCCEEDED(result));
 
-    FullscreenTexture textureResult = CreateTexture(texture);
+    CFullscreenTexture textureResult = CreateTexture(texture);
 
     ID3D11ShaderResourceView* SRV;
     result = CEngine::GetFramework()->GetDevice()->CreateShaderResourceView(texture, nullptr, &SRV);
@@ -34,7 +34,7 @@ FullscreenTexture FullscreenTextureFactory::CreateTexture(CU::Vector2ui aSize, D
     return textureResult;
 }
 
-FullscreenTexture FullscreenTextureFactory::CreateTexture(ID3D11Texture2D* aTextureTemplate)
+CFullscreenTexture CFullscreenTextureFactory::CreateTexture(ID3D11Texture2D* aTextureTemplate)
 {
     HRESULT result;
 
@@ -63,14 +63,59 @@ FullscreenTexture FullscreenTextureFactory::CreateTexture(ID3D11Texture2D* aText
         );
     }
 
-    FullscreenTexture textureResult;
+    CFullscreenTexture textureResult;
     textureResult.myTexture = aTextureTemplate;
     textureResult.myRenderTarget = RTV;
     textureResult.myViewport = viewport;
     return textureResult;
 }
 
-FullscreenTexture FullscreenTextureFactory::CreateDepth(CU::Vector2ui aSize, DXGI_FORMAT aFormat)
+CFullscreenTexture CFullscreenTextureFactory::CreateDepth(CU::Vector2ui aSize, DXGI_FORMAT aFormat)
 {
-    return FullscreenTexture();
+    HRESULT result;
+    D3D11_TEXTURE2D_DESC desc = { 0 };
+    desc.Width = aSize.x;
+    desc.Height = aSize.y;
+    desc.MipLevels = 1;
+    desc.ArraySize = 1;
+    desc.Format = aFormat;
+    desc.SampleDesc.Count = 1;
+    desc.SampleDesc.Quality = 0;
+    desc.Usage = D3D11_USAGE_DEFAULT;
+    desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    desc.CPUAccessFlags = 0;
+    desc.MiscFlags = 0;
+
+    ID3D11Texture2D* texture;
+    result = CEngine::GetFramework()->GetDevice()->CreateTexture2D(
+        &desc, 
+        nullptr, 
+        &texture
+    );
+    assert(SUCCEEDED(result));
+
+    ID3D11DepthStencilView* DSV;
+    result = CEngine::GetFramework()->GetDevice()->CreateDepthStencilView(
+        texture,
+        nullptr,
+        &DSV
+    );
+    assert(SUCCEEDED(result));
+
+    D3D11_VIEWPORT* viewport = new D3D11_VIEWPORT(
+        {
+            0,
+            0,
+            static_cast<float>(aSize.x),
+            static_cast<float>(aSize.y),
+            0,
+            1
+        }
+    );
+
+    CFullscreenTexture textureResult;
+    textureResult.myTexture = texture;
+    textureResult.myDepth = DSV;
+    textureResult.myViewport = viewport;
+    return textureResult;
 }

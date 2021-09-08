@@ -4,6 +4,8 @@
 #pragma comment(lib, "d3d11.lib")
 #include <d3d11.h>
 
+#include "FullscreenTextureFactory.h"
+
 CDirectX11Framework::CDirectX11Framework()
 {
 	mySwapChain = nullptr;
@@ -33,6 +35,9 @@ CDirectX11Framework::~CDirectX11Framework()
 	myContext = nullptr;
 	myBackBuffer = nullptr;
 	myDepthBuffer = nullptr;
+
+	myFullscreenTexture = nullptr;
+	myFullscreenSRV = nullptr;
 
 	myEditorCameraTexture = nullptr;
 	myEditorCameraResourceView = nullptr;
@@ -151,6 +156,7 @@ bool CDirectX11Framework::Init(CWindowHandler* aWindowHandler)
 	{
 		return false;
 	}
+
 	return true;
 }
 
@@ -226,6 +232,15 @@ void CDirectX11Framework::SetRenderMode(const eRenderMode& aRenderMode)
 		ERROR_PRINT("No valid rendermode was entered.");
 		break;
 	}
+}
+
+void CDirectX11Framework::SetFullscreenTexture()
+{
+	CFullscreenTexture fullscreenTexture =
+		CEngine::GetFullscreenTextureFactory()->CreateTexture(CEngine::GetResolution(), DXGI_FORMAT::DXGI_FORMAT_A8_UNORM);
+	fullscreenTexture.SetAsActiveTarget();
+	fullscreenTexture.SetAsResourceOnSlot(0);
+	myBackBuffer = fullscreenTexture.GetRenderTarget();
 }
 
 bool CDirectX11Framework::InitEditorCameraRenderTarget(const CWindowHandler& aWindowHandler)

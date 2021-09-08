@@ -18,7 +18,10 @@ public:
 
 	bool Init(CDirectX11Framework* aFramework);
 
-	void Render(CEnvironmentLight* anEnvironmentLight, const std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>>& somePointLights, const std::vector<std::pair<unsigned int, std::array<CSpotLight*, 8>>>& someSpotLights, CCamera* aCamera, std::vector<CModelInstance*>& aModelList);
+	void SetRenderCamera(CCamera* aCamera);
+	void SetEnvironmentLight(CEnvironmentLight* anEnvironmentLight);
+
+	void Render(const std::vector<CModelInstance*>& aModelList, std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>>& somePointLights, std::vector<std::pair<unsigned int, std::array<CSpotLight*, 8>>>& someSpotLights);
 
 private:
 	struct FrameBufferData
@@ -64,6 +67,9 @@ private:
 	ID3D11Buffer* myObjectBuffer = nullptr;
 	ID3D11Buffer* myFrameBuffer = nullptr;
 	ID3D11DeviceContext* myContext = nullptr;
+
+	CCamera* myRenderCamera = nullptr;
+	CEnvironmentLight* myEnvironmentLight = nullptr;
 
 };
 
