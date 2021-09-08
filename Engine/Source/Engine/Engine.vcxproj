@@ -245,6 +245,7 @@
     <ClCompile Include="ModelHandler.cpp" />
     <ClCompile Include="ModelInstance.cpp" />
     <ClCompile Include="PointLight.cpp" />
+    <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="pch.cpp">
@@ -283,6 +284,7 @@
     <ClInclude Include="ModelHandler.h" />
     <ClInclude Include="ModelInstance.h" />
     <ClInclude Include="PointLight.h" />
+    <ClInclude Include="RenderManager.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SpotLight.h" />
