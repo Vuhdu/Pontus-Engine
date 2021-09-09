@@ -9,8 +9,10 @@
 
 #include <d3d11.h>
 
-bool RenderManager::Init(CDirectX11Framework* aFramework)
+bool CRenderManager::Init(CDirectX11Framework* aFramework)
 {
+	myFramework = aFramework;
+
 	if (!myForwardRenderer.Init(aFramework))
 	{
 		return false;
@@ -34,11 +36,17 @@ bool RenderManager::Init(CDirectX11Framework* aFramework)
 	myBackBuffer = factory->CreateTexture(backBufferTexture);
 	myIntermediateDepth = factory->CreateDepth(resolution, DXGI_FORMAT::DXGI_FORMAT_D32_FLOAT);
 	myIntermediateTexture = factory->CreateTexture(resolution, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
+	
+	myHalfsizeTexture = factory->CreateTexture(resolution, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
+	myQuartersizeTexture = factory->CreateTexture(resolution, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
+	myBlurTexture1 = factory->CreateTexture(resolution, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
+	myBlurTexture2 = factory->CreateTexture(resolution, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
+	myLuminanceTexture = factory->CreateTexture(resolution, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
 
     return true;
 }
 
-void RenderManager::Render()
+void CRenderManager::Render()
 {
 	myBackBuffer.ClearTexture();
 	myIntermediateTexture.ClearTexture();
@@ -47,10 +55,10 @@ void RenderManager::Render()
 	myIntermediateTexture.SetAsActiveTarget(&myIntermediateDepth);
 
 	auto scene = CEngine::GetScene();
-	CCamera* renderCamera = scene->GetMainCamera();
+	CCamera* mainCamera = scene->GetMainCamera();
+	CCamera* editorCamera = scene->GetEditorCamera();
 	CEnvironmentLight* environmentLight = scene->GetEnvironmentLight();
 
-	myForwardRenderer.SetRenderCamera(renderCamera);
 	myForwardRenderer.SetEnvironmentLight(environmentLight);
 
 	const std::vector<CModelInstance*> models = scene->CullModels();
@@ -63,5 +71,67 @@ void RenderManager::Render()
 		spotLights.push_back(scene->CullSpotLights(model));
 	}
 
+	ID3D11RenderTargetView* sceneView = myFramework->GetEditorCameraRenderTargetView();
+	ID3D11RenderTargetView* gameView = myFramework->GetMainCameraRenderTargetView();
+
+	myFramework->GetContext()->OMSetRenderTargets(1, &sceneView, myFramework->GetDepthBuffer());
+	myForwardRenderer.SetRenderCamera(editorCamera);
 	myForwardRenderer.Render(models, pointLights, spotLights);
+	myFramework->GetContext()->ClearDepthStencilView(myFramework->GetDepthBuffer(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+	myFramework->GetContext()->OMSetRenderTargets(1, &gameView, myFramework->GetDepthBuffer());
+	myForwardRenderer.SetRenderCamera(mainCamera);
+	myForwardRenderer.Render(models, pointLights, spotLights);
+	myFramework->GetContext()->ClearDepthStencilView(myFramework->GetDepthBuffer(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+	myFramework->GetContext()->OMSetRenderTargets(1, &myFramework->myBackBuffer, myFramework->GetDepthBuffer());
+
+	// Luminance
+	myLuminanceTexture.SetAsActiveTarget();
+	myIntermediateTexture.SetAsResourceOnSlot(0);
+	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::LUMINANCE);
+
+	// Downsamples
+	myHalfsizeTexture.SetAsActiveTarget();
+	myLuminanceTexture.SetAsResourceOnSlot(0);
+	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::COPY);
+
+	myQuartersizeTexture.SetAsActiveTarget();
+	myHalfsizeTexture.SetAsResourceOnSlot(0);
+	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::COPY);
+
+	myBlurTexture1.SetAsActiveTarget();
+	myQuartersizeTexture.SetAsResourceOnSlot(0);
+	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::COPY);
+
+	// Gaussian Blurs
+	myBlurTexture2.SetAsActiveTarget();
+	myBlurTexture1.SetAsResourceOnSlot(0);
+	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::GAUSSIANHORIZONTAL);
+
+	myBlurTexture1.SetAsActiveTarget();
+	myBlurTexture2.SetAsResourceOnSlot(0);
+	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::GAUSSIANVERTICAL);
+
+	myBlurTexture2.SetAsActiveTarget();
+	myBlurTexture1.SetAsResourceOnSlot(0);
+	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::GAUSSIANHORIZONTAL);
+
+	myBlurTexture1.SetAsActiveTarget();
+	myBlurTexture2.SetAsResourceOnSlot(0);
+	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::GAUSSIANVERTICAL);
+
+	// Bloom
+	myQuartersizeTexture.SetAsActiveTarget();
+	myBlurTexture1.SetAsResourceOnSlot(0);
+	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::COPY);
+
+	myHalfsizeTexture.SetAsActiveTarget();
+	myQuartersizeTexture.SetAsResourceOnSlot(0);
+	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::COPY);
+
+	myBackBuffer.SetAsActiveTarget();
+	myIntermediateTexture.SetAsResourceOnSlot(0);
+	myHalfsizeTexture.SetAsResourceOnSlot(1);
+	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::BLOOM);
 }

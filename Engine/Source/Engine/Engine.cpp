@@ -86,8 +86,8 @@ bool CEngine::InternalStart(SCreateParameters* someCreateParameters)
     };
 
     myResolution = {
-        myCreateParameters->WindowResolution[0],
-        myCreateParameters->WindowResolution[1]
+        static_cast<unsigned int>(myCreateParameters->WindowResolution[0]),
+        static_cast<unsigned int>(myCreateParameters->WindowResolution[1])
     };
 
     CWindowHandler::SWindowData windowData;
@@ -99,21 +99,21 @@ bool CEngine::InternalStart(SCreateParameters* someCreateParameters)
     windowData.myClearColor = myClearColor;
 
     myGraphicsEngine = new CGraphicsEngine();
+    myFramework = myGraphicsEngine->GetFramework();
+
     if (!myGraphicsEngine->Init(windowData))
     {
         return EXIT_FAILURE;
     }
+
+    myLightFactory->Init(myFramework->GetDevice());
+    myModelFactory->Init(myFramework->GetDevice());
 
     myEditor = new Editor::CEditor();
     if (!myGraphicsEngine->InitEditorInterface(myEditor))
     {
         return EXIT_FAILURE;
     }
-
-    myFramework = myGraphicsEngine->GetFramework();
-
-    myModelFactory->Init(myGraphicsEngine->GetFramework()->GetDevice());
-    myLightFactory->Init(myGraphicsEngine->GetFramework()->GetDevice());
 
     myEditorCamera = myCameraFactory->CreateCamera(90.0f);
     myEditorCamera->SetTransform({ 0.0f, 0.0f, -5.0f }, { 0.0f, 0.0f, 0.0f });
@@ -122,8 +122,6 @@ bool CEngine::InternalStart(SCreateParameters* someCreateParameters)
 
     myScene->SetEditorCamera(myEditorCamera);
     myScene->SetMainCamera(myMainCamera);
-
-    //myFramework->SetFullscreenTexture();
 
     myEngineIsRunning = true;
     return myEngineIsRunning;

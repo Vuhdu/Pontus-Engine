@@ -10,7 +10,7 @@ bool CFullscreenRenderer::Init()
     HRESULT result;
 
     std::ifstream vsFile;
-    vsFile.open("FullscreenVS.cso", std::ios::binary);
+    vsFile.open("Shaders/FullscreenVS.cso", std::ios::binary);
     std::string vsData = { std::istreambuf_iterator<char>(vsFile), std::istreambuf_iterator<char>() };
     result = CEngine::GetFramework()->GetDevice()->CreateVertexShader(vsData.data(), vsData.size(), nullptr, &myVertexShader);
     vsFile.close();
@@ -21,11 +21,11 @@ bool CFullscreenRenderer::Init()
     }
     
     std::array<std::string, Shader::COUNT> shaderPaths;
-    shaderPaths[Shader::COPY] = "FullscreenPS-Copy.cso";
-    shaderPaths[Shader::LUMINANCE] = "FullscreenPS-Luminance.cso";
-    shaderPaths[Shader::GAUSSIANHORIZONTAL] = "FullscreenPS-GaussianH.cso";
-    shaderPaths[Shader::GAUSSIANVERTICAL] = "FullscreenPS-GaussianV.cso";
-    shaderPaths[Shader::BLOOM] = "FullscreenPS-Bloom.cso";
+    shaderPaths[Shader::COPY] = "Shaders/FullscreenPS-Copy.cso";
+    shaderPaths[Shader::LUMINANCE] = "Shaders/FullscreenPS-Luminance.cso";
+    shaderPaths[Shader::GAUSSIANHORIZONTAL] = "Shaders/FullscreenPS-GaussianH.cso";
+    shaderPaths[Shader::GAUSSIANVERTICAL] = "Shaders/FullscreenPS-GaussianV.cso";
+    shaderPaths[Shader::BLOOM] = "Shaders/FullscreenPS-Bloom.cso";
         
     for (unsigned int i = 0; i < Shader::COUNT; i++)
     {

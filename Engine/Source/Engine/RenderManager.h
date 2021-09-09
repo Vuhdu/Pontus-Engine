@@ -6,21 +6,29 @@
 
 class CDirectX11Framework;
 
-class RenderManager
+class CRenderManager
 {
 public:
-	RenderManager() = default;
-	~RenderManager() = default;
+	CRenderManager() = default;
+	~CRenderManager() = default;
 
 	bool Init(CDirectX11Framework* aFramework);
 	void Render();
 
 private:
-	CForwardRenderer myForwardRenderer;
-	CFullscreenRenderer myFullscreenRenderer;
+	CDirectX11Framework* myFramework = nullptr;
+
+	CForwardRenderer myForwardRenderer = {};
+	CFullscreenRenderer myFullscreenRenderer = {};
 
 	CFullscreenTexture myBackBuffer;
 	CFullscreenTexture myIntermediateDepth;
 	CFullscreenTexture myIntermediateTexture;
+
+	CFullscreenTexture myLuminanceTexture;
+	CFullscreenTexture myHalfsizeTexture;
+	CFullscreenTexture myQuartersizeTexture;
+	CFullscreenTexture myBlurTexture1;
+	CFullscreenTexture myBlurTexture2;
 
 };

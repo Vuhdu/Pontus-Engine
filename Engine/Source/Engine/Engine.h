@@ -1,5 +1,5 @@
 #pragma once
-#include "..\CommonUtilities\Vector4.hpp"
+#include "..\CommonUtilities\Vector.h"
 
 struct SCreateParameters;
 class CGraphicsEngine;

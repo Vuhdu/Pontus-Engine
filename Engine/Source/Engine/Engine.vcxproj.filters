@@ -19,6 +19,9 @@
     <Filter Include="Imgui">
       <UniqueIdentifier>{c0e6de9a-dd70-43df-acae-27e71991dd88}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Fullscreen">
+      <UniqueIdentifier>{3d8dfe1e-2674-416e-a7f4-7c14ae205eda}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">
@@ -46,11 +49,23 @@
     <FxCompile Include="CubePixelShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="FullscreenVertexShader.hlsl">
-      <Filter>Shaders</Filter>
+    <FxCompile Include="FullscreenPS-Copy.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
     </FxCompile>
-    <FxCompile Include="FullscreenShader-Copy.hlsl">
-      <Filter>Shaders</Filter>
+    <FxCompile Include="FullscreenVS.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPS-Luminance.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPS-GaussianV.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPS-GaussianH.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
+    </FxCompile>
+    <FxCompile Include="FullscreenPS-Bloom.hlsl">
+      <Filter>Shaders\Fullscreen</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -61,7 +76,7 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="FullscreenStructs.hlsli">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\Fullscreen</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

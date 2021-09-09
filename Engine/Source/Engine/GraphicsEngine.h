@@ -1,7 +1,7 @@
 #pragma once
 #include "WindowHandler.h"
 #include "DirectX11Framework.h"
-#include "ForwardRenderer.h"
+#include "RenderManager.h"
 
 namespace Editor 
 {
@@ -26,6 +26,6 @@ public:
 private:
 	CWindowHandler myWindowHandler;
 	CDirectX11Framework myFrameWork;
-	CForwardRenderer myForwardRenderer;
+	CRenderManager myRenderManager;
 
 };
