@@ -33,14 +33,15 @@ bool CRenderManager::Init(CDirectX11Framework* aFramework)
 
 	auto factory = CEngine::GetFullscreenTextureFactory();
 	auto& resolution = CEngine::GetResolution();
+
 	CU::Vector2ui halfresolution = {
 		static_cast<unsigned int>(CEngine::GetResolution().x / 2.0f),
 		static_cast<unsigned int>(CEngine::GetResolution().y / 2.0f)
 	};
 
 	CU::Vector2ui quarterresolution = {
-		static_cast<unsigned int>(CEngine::GetResolution().x / 4.0f),
-		static_cast<unsigned int>(CEngine::GetResolution().y / 4.0f)
+		static_cast<unsigned int>(halfresolution.x / 2.0f),
+		static_cast<unsigned int>(halfresolution.y / 2.0f)
 	};
 	myBackBuffer = factory->CreateTexture(backBufferTexture);
 	myIntermediateDepth = factory->CreateDepth(resolution, DXGI_FORMAT::DXGI_FORMAT_D32_FLOAT);
@@ -85,18 +86,23 @@ void CRenderManager::Render()
 		spotLights.push_back(scene->CullSpotLights(model));
 	}
 	
-	//myFramework->GetContext()->OMSetRenderTargets(1, &sceneView, myFramework->GetDepthBuffer());
-	//myForwardRenderer.SetRenderCamera(editorCamera);
-	//myForwardRenderer.Render(models, pointLights, spotLights);
-	//myFramework->GetContext()->ClearDepthStencilView(myFramework->GetDepthBuffer(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-	//
-	//myFramework->GetContext()->OMSetRenderTargets(1, &gameView, myFramework->GetDepthBuffer());
-	//myForwardRenderer.SetRenderCamera(mainCamera);
-	//myForwardRenderer.Render(models, pointLights, spotLights);
-	//myFramework->GetContext()->ClearDepthStencilView(myFramework->GetDepthBuffer(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
-	myForwardRenderer.SetRenderCamera(editorCamera);
-	myForwardRenderer.Render(models, pointLights, spotLights);
+	if (CEngine::IsUsingEditor())
+	{
+		myFramework->GetContext()->OMSetRenderTargets(1, &sceneView, myFramework->GetDepthBuffer());
+		myForwardRenderer.SetRenderCamera(editorCamera);
+		myForwardRenderer.Render(models, pointLights, spotLights);
+		myFramework->GetContext()->ClearDepthStencilView(myFramework->GetDepthBuffer(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		
+		myFramework->GetContext()->OMSetRenderTargets(1, &gameView, myFramework->GetDepthBuffer());
+		myForwardRenderer.SetRenderCamera(mainCamera);
+		myForwardRenderer.Render(models, pointLights, spotLights);
+		myFramework->GetContext()->ClearDepthStencilView(myFramework->GetDepthBuffer(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	}
+	else
+	{
+		myForwardRenderer.SetRenderCamera(editorCamera);
+		myForwardRenderer.Render(models, pointLights, spotLights);
+	}
 
 	// Luminance
 	myLuminanceTexture.SetAsActiveTarget();

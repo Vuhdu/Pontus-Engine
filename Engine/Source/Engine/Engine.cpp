@@ -157,6 +157,11 @@ bool CEngine::InternalRun()
             }
         }
 
+        if (myInput->IsKeyDown(CU::eKeyCode::F11))
+        {
+            ToggleEditor(!myWillUseEditor);
+        }
+
         myGraphicsEngine->BeginFrame();
         myEditor->BeginFrame(myWillUseEditor);
 
