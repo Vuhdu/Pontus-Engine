@@ -16,8 +16,8 @@ namespace Editor
 
 		bool Init(CWindowHandler* aWindowHandler, CDirectX11Framework* aFrameWork);
 
-		void BeginFrame();
-		void EndFrame();
+		void BeginFrame(const bool anEditorToggle);
+		void EndFrame(const bool anEditorToggle);
 
 	private:
 		CEditorInterface* myEditorInterface = nullptr;

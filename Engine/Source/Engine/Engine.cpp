@@ -78,6 +78,8 @@ bool CEngine::InternalStart(SCreateParameters* someCreateParameters)
 
     myCreateParameters = someCreateParameters;
 
+    myWillUseEditor = myCreateParameters->UseEditorInterface;
+
     myClearColor = {
         myCreateParameters->ClearColor[0],
         myCreateParameters->ClearColor[1],
@@ -156,7 +158,7 @@ bool CEngine::InternalRun()
         }
 
         myGraphicsEngine->BeginFrame();
-        myEditor->BeginFrame();
+        myEditor->BeginFrame(myWillUseEditor);
 
         myTimer->Update();
 
@@ -167,7 +169,7 @@ bool CEngine::InternalRun()
         myCreateParameters->UpdateCallback();
         myGraphicsEngine->RenderFrame();
 
-        myEditor->EndFrame();
+        myEditor->EndFrame(myWillUseEditor);
         myGraphicsEngine->EndFrame();
     }
     CloseConsole();

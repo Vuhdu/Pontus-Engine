@@ -67,8 +67,10 @@ bool Editor::CEditorInterface::Init(CWindowHandler* aWindowHandler, CDirectX11Fr
 	return true;
 }
 
-void Editor::CEditorInterface::BeginFrame()
+void Editor::CEditorInterface::BeginFrame(const bool anEditorToggle)
 {
+	anEditorToggle;
+
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
@@ -212,9 +214,9 @@ void Editor::CEditorInterface::DrawInterface()
 	ImGui::End();
 }
 
-void Editor::CEditorInterface::EndFrame()
+void Editor::CEditorInterface::EndFrame(const bool anEditorToggle)
 {
-	if (myWillRender == true)
+	if (anEditorToggle == true)
 	{
 		RenderEditorInterface();
 	}

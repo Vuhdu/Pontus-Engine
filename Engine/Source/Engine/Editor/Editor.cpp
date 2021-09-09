@@ -16,12 +16,12 @@ bool Editor::CEditor::Init(CWindowHandler* aWindowHandler, CDirectX11Framework* 
 	return myEditorInterface->Init(aWindowHandler, aFrameWork);
 }
 
-void Editor::CEditor::BeginFrame()
+void Editor::CEditor::BeginFrame(const bool anEditorToggle)
 {
-	myEditorInterface->BeginFrame();
+	myEditorInterface->BeginFrame(anEditorToggle);
 }
 
-void Editor::CEditor::EndFrame()
+void Editor::CEditor::EndFrame(const bool anEditorToggle)
 {
-	myEditorInterface->EndFrame();
+	myEditorInterface->EndFrame(anEditorToggle);
 }

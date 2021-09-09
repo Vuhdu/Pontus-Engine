@@ -46,7 +46,7 @@ void CFullscreenRenderer::Render(Shader aMode)
 {
     auto context = CEngine::GetFramework()->GetContext();
     context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    context->IAGetInputLayout(nullptr);
+    context->IASetInputLayout(nullptr);
     context->IASetVertexBuffers(0, 0, nullptr, nullptr, nullptr);
     context->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
 

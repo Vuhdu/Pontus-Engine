@@ -4,8 +4,8 @@ PixelOutput main(VertexToPixel input)
 {
 	PixelOutput result;
 
-	float3 resource1 = FullscreenTexture1.Sample(DefaultSampler, input.myUV).rbg;
-	float3 resource2 = FullscreenTexture1.Sample(DefaultSampler, input.myUV).rbg;
+	float3 resource1 = FullscreenTexture1.Sample(DefaultSampler, input.myUV).rgb;
+	float3 resource2 = FullscreenTexture2.Sample(DefaultSampler, input.myUV).rgb;
 
 	{
 		float luminance = dot(resource1, float3(0.2126f, 0.7152f, 0.0722f));

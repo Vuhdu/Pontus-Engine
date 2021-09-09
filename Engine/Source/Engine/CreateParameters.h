@@ -14,5 +14,7 @@ struct SCreateParameters
 	std::array<float, 4> ClearColor = { 0.25f, 0.5f, 1.0f, 1.0f };
 
 	std::wstring ApplicationName = L"My Awesome Game";
+
+	bool UseEditorInterface = false; // TO-DO: Fix a working toggle for editor
 };
 

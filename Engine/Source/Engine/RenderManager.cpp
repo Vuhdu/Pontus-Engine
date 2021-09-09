@@ -33,12 +33,21 @@ bool CRenderManager::Init(CDirectX11Framework* aFramework)
 
 	auto factory = CEngine::GetFullscreenTextureFactory();
 	auto& resolution = CEngine::GetResolution();
+	CU::Vector2ui halfresolution = {
+		static_cast<unsigned int>(CEngine::GetResolution().x / 2.0f),
+		static_cast<unsigned int>(CEngine::GetResolution().y / 2.0f)
+	};
+
+	CU::Vector2ui quarterresolution = {
+		static_cast<unsigned int>(CEngine::GetResolution().x / 4.0f),
+		static_cast<unsigned int>(CEngine::GetResolution().y / 4.0f)
+	};
 	myBackBuffer = factory->CreateTexture(backBufferTexture);
 	myIntermediateDepth = factory->CreateDepth(resolution, DXGI_FORMAT::DXGI_FORMAT_D32_FLOAT);
 	myIntermediateTexture = factory->CreateTexture(resolution, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
 	
-	myHalfsizeTexture = factory->CreateTexture(resolution, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
-	myQuartersizeTexture = factory->CreateTexture(resolution, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
+	myHalfsizeTexture = factory->CreateTexture(halfresolution, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
+	myQuartersizeTexture = factory->CreateTexture(quarterresolution, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
 	myBlurTexture1 = factory->CreateTexture(resolution, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
 	myBlurTexture2 = factory->CreateTexture(resolution, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
 	myLuminanceTexture = factory->CreateTexture(resolution, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
@@ -48,8 +57,13 @@ bool CRenderManager::Init(CDirectX11Framework* aFramework)
 
 void CRenderManager::Render()
 {
-	myBackBuffer.ClearTexture();
-	myIntermediateTexture.ClearTexture();
+	ID3D11RenderTargetView* sceneView = myFramework->GetEditorCameraRenderTargetView();
+	ID3D11RenderTargetView* gameView = myFramework->GetMainCameraRenderTargetView();
+
+	static auto& clearColor = CEngine::GetClearColor();
+
+	myBackBuffer.ClearTexture(clearColor);
+	myIntermediateTexture.ClearTexture(clearColor);
 	myIntermediateDepth.ClearDepth();
 
 	myIntermediateTexture.SetAsActiveTarget(&myIntermediateDepth);
@@ -70,21 +84,19 @@ void CRenderManager::Render()
 		pointLights.push_back(scene->CullPointLights(model));
 		spotLights.push_back(scene->CullSpotLights(model));
 	}
+	
+	//myFramework->GetContext()->OMSetRenderTargets(1, &sceneView, myFramework->GetDepthBuffer());
+	//myForwardRenderer.SetRenderCamera(editorCamera);
+	//myForwardRenderer.Render(models, pointLights, spotLights);
+	//myFramework->GetContext()->ClearDepthStencilView(myFramework->GetDepthBuffer(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	//
+	//myFramework->GetContext()->OMSetRenderTargets(1, &gameView, myFramework->GetDepthBuffer());
+	//myForwardRenderer.SetRenderCamera(mainCamera);
+	//myForwardRenderer.Render(models, pointLights, spotLights);
+	//myFramework->GetContext()->ClearDepthStencilView(myFramework->GetDepthBuffer(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	ID3D11RenderTargetView* sceneView = myFramework->GetEditorCameraRenderTargetView();
-	ID3D11RenderTargetView* gameView = myFramework->GetMainCameraRenderTargetView();
-
-	myFramework->GetContext()->OMSetRenderTargets(1, &sceneView, myFramework->GetDepthBuffer());
 	myForwardRenderer.SetRenderCamera(editorCamera);
 	myForwardRenderer.Render(models, pointLights, spotLights);
-	myFramework->GetContext()->ClearDepthStencilView(myFramework->GetDepthBuffer(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
-	myFramework->GetContext()->OMSetRenderTargets(1, &gameView, myFramework->GetDepthBuffer());
-	myForwardRenderer.SetRenderCamera(mainCamera);
-	myForwardRenderer.Render(models, pointLights, spotLights);
-	myFramework->GetContext()->ClearDepthStencilView(myFramework->GetDepthBuffer(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
-	myFramework->GetContext()->OMSetRenderTargets(1, &myFramework->myBackBuffer, myFramework->GetDepthBuffer());
 
 	// Luminance
 	myLuminanceTexture.SetAsActiveTarget();

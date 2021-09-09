@@ -14,8 +14,8 @@ namespace Editor
 
 		bool Init(CWindowHandler* aWindowHandler, CDirectX11Framework* aFrameWork);
 
-		void BeginFrame();
-		void EndFrame();
+		void BeginFrame(const bool anEditorToggle);
+		void EndFrame(const bool anEditorToggle);
 
 		void RenderEditorInterface();
 		void DrawInterface();
@@ -64,8 +64,6 @@ namespace Editor
 		CDirectX11Framework* myFrameWork = nullptr;
 
 		std::vector<CEditorWindow*> myGUIWindows;
-
-		bool myWillRender = true;
 
 	};
 

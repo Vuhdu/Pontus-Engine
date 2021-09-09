@@ -62,7 +62,7 @@ public:
 	static const				CU::Vector4f& GetClearColor() { return myInstance->myClearColor; };
 
 	static const				CU::Vector2ui& GetResolution() { return myInstance->myResolution; };
-
+	static const				void ToggleEditor(const bool aToggle) { myInstance->myWillUseEditor = aToggle; };
 
 	static CEngine* GetInstance();
 
@@ -82,7 +82,7 @@ private:
 
 private:
 	CU::Vector2ui myResolution = { 1280, 720 };
-	CU::Vector4f myClearColor = { 0.2f, 0.2f, 0.2f, 1.0f };
+	CU::Vector4f myClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
 	
 	CU::InputHandler* myInput = nullptr;
 	CU::Timer* myTimer = nullptr;
@@ -100,6 +100,7 @@ private:
 
 	CDirectX11Framework* myFramework = nullptr;
 
+	bool myWillUseEditor = false;
 
 	// Move this to game and editor
 private:
