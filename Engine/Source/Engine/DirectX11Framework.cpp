@@ -238,15 +238,6 @@ void CDirectX11Framework::SetRenderMode(const eRenderMode& aRenderMode)
 	}
 }
 
-void CDirectX11Framework::SetFullscreenTexture()
-{
-	CFullscreenTexture fullscreenTexture =
-		CEngine::GetFullscreenTextureFactory()->CreateTexture(CEngine::GetResolution(), DXGI_FORMAT::DXGI_FORMAT_A8_UNORM);
-	fullscreenTexture.SetAsActiveTarget();
-	fullscreenTexture.SetAsResourceOnSlot(0);
-	myBackBuffer = fullscreenTexture.GetRenderTarget();
-}
-
 bool CDirectX11Framework::InitEditorCameraRenderTarget(const CWindowHandler& aWindowHandler)
 {
 	HRESULT result;

@@ -43,8 +43,6 @@ public:
 
 	void SetRenderMode(const eRenderMode& aRenderMode);
 
-	void SetFullscreenTexture();
-
 public:
 	ID3D11RenderTargetView* myBackBuffer;
 
