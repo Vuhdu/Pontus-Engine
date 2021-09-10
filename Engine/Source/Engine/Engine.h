@@ -63,6 +63,7 @@ public:
 
 	static const				CU::Vector2ui& GetResolution() { return myInstance->myResolution; };
 	static const				void ToggleEditor(const bool aToggle) { myInstance->myWillUseEditor = aToggle; };
+	static const				bool IsUsingEditor() { return myInstance->myWillUseEditor; };
 
 	static CEngine* GetInstance();
 

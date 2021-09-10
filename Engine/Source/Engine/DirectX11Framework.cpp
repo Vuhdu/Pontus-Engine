@@ -164,8 +164,12 @@ void CDirectX11Framework::BeginFrame(std::array<float, 4> aClearColor)
 {
 	myContext->OMSetRenderTargets(1, &myBackBuffer, myDepthBuffer);
 	myContext->ClearRenderTargetView(myBackBuffer, &aClearColor[0]);
-	//myContext->ClearRenderTargetView(myEditorCameraRenderTarget, &aClearColor[0]);
-	//myContext->ClearRenderTargetView(myMainCameraRenderTarget, &aClearColor[0]);
+	
+	if (CEngine::IsUsingEditor())
+	{
+		myContext->ClearRenderTargetView(myEditorCameraRenderTarget, &aClearColor[0]);
+		myContext->ClearRenderTargetView(myMainCameraRenderTarget, &aClearColor[0]);
+	}
 }
 
 void CDirectX11Framework::EndFrame()
