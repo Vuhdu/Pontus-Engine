@@ -233,6 +233,7 @@ void Editor::CEditorInterface::EndFrame(const bool anEditorToggle)
 		ImGui::UpdatePlatformWindows();
 		ImGui::RenderPlatformWindowsDefault();
 	}
+	ImGui::EndFrame();
 }
 
 void Editor::CEditorInterface::Cleanup()
