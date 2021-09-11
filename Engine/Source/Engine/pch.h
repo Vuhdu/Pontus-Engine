@@ -1,17 +1,16 @@
 #pragma once
 
-#include "Engine.h"
-#include "ErrorManager.h"
-
-#include "Vector.h"
-#include "Matrix.h"
-#include "Mathcu.hpp"
-#include "InputHandler.h"
+#define SAFE_DELETE(aPointer) if (aPointer) { delete aPointer; aPointer = nullptr; }
 
 #include <array>
 #include <vector>
 #include <string>
 #include <assert.h>
+
+#include "Vector.h"
+#include "Matrix.h"
+#include "Mathcu.hpp"
+#include "InputHandler.h"
 
 #include "nlohmann/json.hpp"
 
@@ -19,4 +18,5 @@
 #include "imgui-docking/imgui_impl_dx11.h"
 #include "imgui-docking/imgui_impl_win32.h"
 
-#define SAFE_DELETE(aPointer) if (aPointer) { delete aPointer; aPointer = nullptr; }
+#include "Engine.h"
+#include "ErrorManager.h"

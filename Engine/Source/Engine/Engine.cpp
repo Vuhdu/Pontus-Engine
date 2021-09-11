@@ -19,11 +19,6 @@
 #include "ModelHandler.h"
 #include "Scene.h"
 
-#include "PointLight.h"
-#include "SpotLight.h"
-#include "ModelInstance.h"
-#include "EnvironmentLight.h"
-
 CEngine::CEngine()
 {
     myErrorManager = new CErrorManager();
