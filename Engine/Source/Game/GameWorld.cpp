@@ -59,6 +59,14 @@ void CGameWorld::Update(const float [[maybe_unused]] aDeltaTime)
         float innerRadius = mySpotLight->GetInnerRadius();
         float outerRadius = mySpotLight->GetOuterRadius();
         float intensity = mySpotLight->GetIntensity();
+        auto spotColor = mySpotLight->GetColor();
+
+        float color[4] = {
+                spotColor.x,
+                spotColor.y,
+                spotColor.z,
+                1.0f
+        };
 
         ImGui::Begin("SpotLight");
         if (ImGui::SliderFloat("Inner Radius", &innerRadius, 0.0f, 1.0f))
@@ -76,10 +84,17 @@ void CGameWorld::Update(const float [[maybe_unused]] aDeltaTime)
             mySpotLight->SetRange(range);
         }
 
-        if (ImGui::SliderFloat("Intensity", &intensity, 0.0f, 10000000.0f))
+        if (ImGui::SliderFloat("Intensity", &intensity, 0.0f, 1000.0f))
         {
-            mySpotLight->SetRange(intensity);
+            mySpotLight->SetIntensity(intensity);
         }
+
+        if (ImGui::ColorEdit4("Color", color, ImGuiColorEditFlags_DisplayRGB | ImGuiColorEditFlags_Float | ImGuiColorEditFlags_AlphaPreviewHalf))
+        {
+            spotColor = { color[0], color[1], color[2] };
+            mySpotLight->SetColor(spotColor);
+        }
+
         ImGui::End();
     }
 
