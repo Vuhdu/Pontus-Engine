@@ -132,6 +132,13 @@ std::vector<CModel*> CModelHandler::LoadModels(const std::string& aModelPath, co
 
 			vertices[vertexIndex].u0 = UV[0][vertexIndex].x;
 			vertices[vertexIndex].v0 = UV[0][vertexIndex].y;
+			
+			vertices[vertexIndex].u1 = 0.0f; //UV[1][vertexIndex].x;
+			vertices[vertexIndex].v1 = 0.0f; //UV[1][vertexIndex].y;
+			vertices[vertexIndex].u2 = 0.0f; //UV[2][vertexIndex].x;
+			vertices[vertexIndex].v2 = 0.0f; //UV[2][vertexIndex].y;
+			vertices[vertexIndex].u3 = 0.0f; //UV[3][vertexIndex].x;
+			vertices[vertexIndex].v3 = 0.0f; //UV[3][vertexIndex].y;
 
 			vertices[vertexIndex].nx = normals[vertexIndex].x;
 			vertices[vertexIndex].ny = normals[vertexIndex].y;

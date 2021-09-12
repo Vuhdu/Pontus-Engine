@@ -367,8 +367,9 @@ PixelOutput main(VertexOutput aInput)
 		);
 	}
 
+	float3 dullAmbience = ambience * 1.0f;
 	float3 emissive = albedo * emissiveData;
-	float3 radiance = ambience + directionalLight + pointLights + spotLights + emissive;
+	float3 radiance = dullAmbience + directionalLight + pointLights + spotLights + emissive;
 
 	PixelOutput pixelOutput;
 	pixelOutput.myColor.rgb = LinearToGamma(radiance);

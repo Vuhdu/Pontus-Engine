@@ -22,28 +22,28 @@ void CGameWorld::Init()
     CPointLight* redPointLight = lightFactory->CreatePointLight();
     redPointLight->SetPosition({ -200.0f, 70.0f, 500.0f });
     redPointLight->SetColor({ 1.0f, 0.0f, 0.0f });
-    redPointLight->SetRange(2000.0f);
-    redPointLight->SetIntensity(500000.0f);
+    redPointLight->SetRange(1000.0f);
+    redPointLight->SetIntensity(100000.0f);
 
     CPointLight* greenPointLight = lightFactory->CreatePointLight();
     greenPointLight->SetPosition({ 0.0f, 70.0f, 350.0f });
     greenPointLight->SetColor({ 0.0f, 1.0f, 0.0f });
-    greenPointLight->SetRange(200.0f);
-    greenPointLight->SetIntensity(500000.0f);
+    greenPointLight->SetRange(1000.0f);
+    greenPointLight->SetIntensity(100000.0f);
 
     CPointLight* bluePointLight = lightFactory->CreatePointLight();
     bluePointLight->SetPosition({ 200.0f, 70.0f, 350.0f });
     bluePointLight->SetColor({ 0.0f, 0.0f, 1.0f });
-    bluePointLight->SetRange(200.0f);
-    bluePointLight->SetIntensity(500000.0f);
+    bluePointLight->SetRange(1000.0f);
+    bluePointLight->SetIntensity(100000.0f);
 
     mySpotLight = lightFactory->CreateSpotLight();
-    mySpotLight->SetPosition({ 0.0f, 0.0f, 0.0f });
-    mySpotLight->SetColor({ 1.0f, 0.0f, 1.0f });
+    mySpotLight->SetPosition({ 0.0f, -35.0f, 0.0f });
+    mySpotLight->SetColor({ 1.0f, 1.0f, 1.0f });
     mySpotLight->SetDirection({ 0.0f, 0.0f, 1.0f });
-    mySpotLight->SetRange(2500.0f);
+    mySpotLight->SetRange(500.0f);
     mySpotLight->SetRadius(0.0f, 0.2f);
-    mySpotLight->SetIntensity(50000.0f);
+    mySpotLight->SetIntensity(100.0f);
 
     auto chest = CEngine::GetModelFactory()->CreateModel("Chest", { 100.0f, -70.0f, 350.0f });
     myHead = CEngine::GetModelFactory()->CreateModel("Head", { -100.0f, 35.0f, 350.0f });
@@ -53,6 +53,36 @@ void CGameWorld::Init()
 
 void CGameWorld::Update(const float [[maybe_unused]] aDeltaTime)
 {
+    if (!CEngine::IsUsingEditor())
+    {
+        float range = mySpotLight->GetRange();
+        float innerRadius = mySpotLight->GetInnerRadius();
+        float outerRadius = mySpotLight->GetOuterRadius();
+        float intensity = mySpotLight->GetIntensity();
+
+        ImGui::Begin("SpotLight");
+        if (ImGui::SliderFloat("Inner Radius", &innerRadius, 0.0f, 1.0f))
+        {
+            mySpotLight->SetRadius(innerRadius, outerRadius);
+        }
+
+        if (ImGui::SliderFloat("Outer Radius", &outerRadius, 0.0f, 1.0f))
+        {
+            mySpotLight->SetRadius(innerRadius, outerRadius);
+        }
+
+        if (ImGui::SliderFloat("Range", &range, 0.0f, 1000.0f))
+        {
+            mySpotLight->SetRange(range);
+        }
+
+        if (ImGui::SliderFloat("Intensity", &intensity, 0.0f, 10000000.0f))
+        {
+            mySpotLight->SetRange(intensity);
+        }
+        ImGui::End();
+    }
+
     myHead->Rotate({ 0.0f, 0.01f, 0.0f });
     myHead2->Rotate({ 0.0f, -0.01f, 0.0f });
 
