@@ -1,10 +1,10 @@
-TextureCube environmentTexture        : register(t0);
+TextureCube environmentTexture      : register(t0);
 
-Texture2D positionTexture			: register(t1);
-Texture2D albedoTexture				: register(t2);
-Texture2D normalTexture				: register(t3);
-Texture2D vertexNormalTexture		: register(t4);
-Texture2D materialTexture			: register(t5);
+Texture2D albedoTexture				: register(t1);
+Texture2D normalTexture				: register(t2);
+Texture2D materialTexture			: register(t3);
+Texture2D positionTexture			: register(t4);
+Texture2D vertexNormalTexture		: register(t5);
 Texture2D ambientOcclusionTexture	: register(t6);
 Texture2D depthTexture				: register(t7);
 

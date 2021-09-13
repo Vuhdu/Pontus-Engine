@@ -106,7 +106,7 @@ bool CRenderManager::Init(CDirectX11Framework* aFramework)
 	readonlyDepthDesc.DepthEnable = true;
 	readonlyDepthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
 	readonlyDepthDesc.DepthFunc = D3D11_COMPARISON_LESS;
-	readonlyDepthDesc.StencilEnable = true;
+	readonlyDepthDesc.StencilEnable = false;
 
 	result = aFramework->GetDevice()->CreateDepthStencilState(&readonlyDepthDesc, &myDepthStencilStates[DEPTHSTENCILSTATE_READONLY]);
 	if (FAILED(result))
@@ -260,14 +260,8 @@ void CRenderManager::ForwardRender()
 	myForwardRenderer.SetEnvironmentLight(environmentLight);
 
 	const std::vector<CModelInstance*> models = scene->CullModels();
-	std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> pointLights;
-	std::vector<std::pair<unsigned int, std::array<CSpotLight*, 8>>> spotLights;
-
-	for (const auto& model : models)
-	{
-		pointLights.push_back(scene->CullPointLights(model));
-		spotLights.push_back(scene->CullSpotLights(model));
-	}
+	std::vector<CPointLight*> pointLights = scene->CullPointLights();
+	std::vector<CSpotLight*> spotLights = scene->CullSpotLights();
 
 	if (CEngine::IsUsingEditor())
 	{
@@ -301,14 +295,8 @@ void CRenderManager::DeferredRender()
 	myDeferredRenderer.SetEnvironmentLight(environmentLight);
 
 	const std::vector<CModelInstance*> models = scene->CullModels();
-	std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> pointLights;
-	std::vector<std::pair<unsigned int, std::array<CSpotLight*, 8>>> spotLights;
-
-	for (const auto& model : models)
-	{
-		pointLights.push_back(scene->CullPointLights(model));
-		spotLights.push_back(scene->CullSpotLights(model));
-	}
+	std::vector<CPointLight*> pointLights = scene->CullPointLights();
+	std::vector<CSpotLight*> spotLights = scene->CullSpotLights();
 
 	myGBuffer.SetAsActiveTarget(&myIntermediateDepth);
 

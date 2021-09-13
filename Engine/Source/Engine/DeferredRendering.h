@@ -24,43 +24,62 @@ public:
 	void SetEnvironmentLight(CEnvironmentLight* anEnvironmentLight);
 
 	void Render(
-		std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>>& somePointLights, 
-		std::vector<std::pair<unsigned int, std::array<CSpotLight*, 8>>>& someSpotLights);
+		const std::vector<CPointLight*>& somePointLights, 
+		const std::vector<CSpotLight*>& someSpotLights);
 
 	void GenerateGBuffer(const std::vector<CModelInstance*>& aModelList);
 
 private:
-	struct EnvironmentLightBufferData
-	{
-		CU::Vector4f myDirectionalLightDirection;
-		CU::Vector4f myDirectionalLightColorAndIntensity;
-
-		unsigned int myEnvironmentLightMipCount;
-		unsigned int trash[3];
-	} myEnvironmentLightBufferData;
-
 	struct FrameBufferData
 	{
 		CU::Matrix4x4f myToCamera;
 		CU::Matrix4x4f myToProjection;
-
 		CU::Vector4f myCameraPosition;
 	} myFrameBufferData;
+
+	struct EnvironmentLightBufferData
+	{
+		CU::Vector4f myDirectionalLightDirection;
+		CU::Vector4f myDirectionalLightColorAndIntensity;
+		unsigned int myEnvironmentLightMipCount;
+		unsigned int trash[3];
+	} myEnvironmentLightBufferData;
 
 	struct ObjectBufferData
 	{
 		CU::Matrix4x4f myToWorld;
 		CU::Vector2f myUVScale;
-
-		CU::Vector2f myTrash;
+		unsigned int padding[2];
 	} myObjectBufferData;
 
-	ID3D11Buffer* myEnvironmentLightBuffer = nullptr;
+	struct SpotLightBufferData
+	{
+		CU::Vector4f myPosition;
+		CU::Vector4f myDirection;
+		CU::Vector4f myColorAndIntensity;
+		float myRange;
+		float myInnerAngle;
+		float myOuterAngle;
+		float myTrash;
+	} mySpotlightBufferData;
+
+	struct PointLightBufferData
+	{
+		CU::Vector4f myPosition;
+		CU::Vector4f myColorAndIntensity;
+
+		float myRange;
+		CU::Vector3f garbage;
+	} myPointLightBufferData;
+
 	ID3D11Buffer* myObjectBuffer = nullptr;
 	ID3D11Buffer* myFrameBuffer = nullptr;
+	ID3D11Buffer* myEnvironmentLightBuffer = nullptr;
+	ID3D11Buffer* mySpotLightBuffer = nullptr;
+	ID3D11Buffer* myPointLightBuffer = nullptr;
 
-	ID3D11VertexShader* myFullscreenShader = nullptr;
-	ID3D11PixelShader* myEnvironmentLightShader = nullptr;
+	ID3D11PixelShader* myLightShader = nullptr;
+	ID3D11VertexShader* myVertexShader = nullptr;
 
 	CCamera* myRenderCamera = nullptr;
 	CEnvironmentLight* myEnvironmentLight = nullptr;

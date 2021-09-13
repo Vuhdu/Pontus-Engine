@@ -8,6 +8,10 @@
 #include "Model.h"
 #include "ModelInstance.h"
 
+#include "PointLight.h"
+#include "SpotLight.h"
+
+#include <fstream>
 #include <d3d11.h>
 
 bool CDeferredRendering::Init(CDirectX11Framework* aFramework)
@@ -45,6 +49,47 @@ bool CDeferredRendering::Init(CDirectX11Framework* aFramework)
 		return false;
 	}
 
+	bufferDescription.ByteWidth = sizeof(EnvironmentLightBufferData);
+	result = device->CreateBuffer(&bufferDescription, nullptr, &myEnvironmentLightBuffer);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	bufferDescription.ByteWidth = sizeof(SpotLightBufferData);
+	result = device->CreateBuffer(&bufferDescription, nullptr, &mySpotLightBuffer);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	bufferDescription.ByteWidth = sizeof(PointLightBufferData);
+	result = device->CreateBuffer(&bufferDescription, nullptr, &myPointLightBuffer);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	std::ifstream vsFile;
+	vsFile.open("Shaders/FullscreenVS.cso", std::ios::binary);
+	std::string vsData = { std::istreambuf_iterator<char>(vsFile), std::istreambuf_iterator<char>() };
+	result = device->CreateVertexShader(vsData.data(), vsData.size(), nullptr, &myVertexShader);
+	if (FAILED(result))
+	{
+		return false;
+	}
+	vsFile.close();
+
+	std::ifstream psFile;
+	psFile.open("Shaders/EnvironmentLightShader.cso", std::ios::binary);
+	std::string psData = { std::istreambuf_iterator<char>(psFile), std::istreambuf_iterator<char>() };
+	result = device->CreatePixelShader(psData.data(), psData.size(), nullptr, &myLightShader);
+	if (FAILED(result))
+	{
+		return false;
+	}
+	psFile.close();
+
 	return true;
 }
 
@@ -58,13 +103,21 @@ void CDeferredRendering::SetEnvironmentLight(CEnvironmentLight* anEnvironmentLig
 	myEnvironmentLight = anEnvironmentLight;
 }
 
-void CDeferredRendering::Render(std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>>& somePointLights, std::vector<std::pair<unsigned int, std::array<CSpotLight*, 8>>>& someSpotLights)
+void CDeferredRendering::Render(const std::vector<CPointLight*>& somePointLights, const std::vector<CSpotLight*>& someSpotLights)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE bufferData;
 
 	myEnvironmentLightBufferData.myDirectionalLightDirection = myEnvironmentLight->GetDirection();
 	myEnvironmentLightBufferData.myDirectionalLightColorAndIntensity = myEnvironmentLight->GetColor();
+	
+	ID3D11Resource* cubeResource = nullptr;
+	myEnvironmentLight->GetCubeMap()->GetResource(&cubeResource);
+	ID3D11Texture2D* cubeTexture = reinterpret_cast<ID3D11Texture2D*>(cubeResource);
+	D3D11_TEXTURE2D_DESC cubeDescription = {};
+	cubeTexture->GetDesc(&cubeDescription);
+	myEnvironmentLightBufferData.myEnvironmentLightMipCount = cubeDescription.MipLevels;
+	cubeResource->Release();
 
 	ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
 	result = myContext->Map(myEnvironmentLightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData);
@@ -72,18 +125,78 @@ void CDeferredRendering::Render(std::vector<std::pair<unsigned int, std::array<C
 	memcpy(bufferData.pData, &myEnvironmentLightBufferData, sizeof(EnvironmentLightBufferData));
 	myContext->Unmap(myEnvironmentLightBuffer, 0);
 
-	myContext->PSSetConstantBuffers(1, 1, &myEnvironmentLightBuffer);
+	myContext->VSSetConstantBuffers(0, 1, &myEnvironmentLightBuffer);
+	myContext->PSSetConstantBuffers(0, 1, &myEnvironmentLightBuffer);
 	myContext->PSSetShaderResources(0, 1, myEnvironmentLight->GetCubeMapConstPtr());
 
-	myContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	myContext->IASetInputLayout(nullptr);
-	myContext->IAGetVertexBuffers(0, 0, nullptr, nullptr, nullptr);
-	myContext->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
-
-	myContext->VSSetShader(myFullscreenShader, nullptr, 0);
-
-	myContext->PSSetShader(myEnvironmentLightShader, nullptr, 0);
+	myContext->VSSetShader(myVertexShader, nullptr, 0);
+	myContext->PSSetShader(myLightShader, nullptr, 0);
 	myContext->Draw(3, 0);
+
+	for (auto& light : someSpotLights)
+	{
+		mySpotlightBufferData.myColorAndIntensity = {
+			light->GetColor().x,
+			light->GetColor().y,
+			light->GetColor().z,
+			light->GetIntensity()
+		};
+		mySpotlightBufferData.myRange = light->GetRange();
+		mySpotlightBufferData.myDirection = {
+			light->GetDirection().x,
+			light->GetDirection().y,
+			light->GetDirection().z,
+			0.0f
+		};
+		mySpotlightBufferData.myPosition = {
+			light->GetPosition().x,
+			light->GetPosition().y,
+			light->GetPosition().z,
+			1.0f
+		};
+		mySpotlightBufferData.myInnerAngle = light->GetInnerRadius();
+		mySpotlightBufferData.myOuterAngle = light->GetOuterRadius();
+
+		ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
+		result = myContext->Map(mySpotLightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData);
+		if (FAILED(result))
+		{
+			assert(false);
+		}
+		memcpy(bufferData.pData, &mySpotlightBufferData, sizeof(SpotLightBufferData));
+		myContext->Unmap(mySpotLightBuffer, 0);
+		myContext->PSSetConstantBuffers(1, 1, &mySpotLightBuffer);
+		myContext->PSSetShader(myLightShader, nullptr, 0);
+		myContext->Draw(3, 0);
+	}
+
+	for (auto& light : somePointLights)
+	{
+		myPointLightBufferData.myColorAndIntensity = {
+			light->GetColor().x,
+			light->GetColor().y,
+			light->GetColor().z,
+			light->GetIntensity()
+		};
+		myPointLightBufferData.myRange = light->GetRange();
+		myPointLightBufferData.myPosition = {
+			light->GetPosition().x,
+			light->GetPosition().y,
+			light->GetPosition().z,
+			1.0f
+		};
+		ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
+		result = myContext->Map(myPointLightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData);
+		if (FAILED(result))
+		{
+			assert(false);
+		}
+		memcpy(bufferData.pData, &myPointLightBufferData, sizeof(PointLightBufferData));
+		myContext->Unmap(myPointLightBuffer, 0);
+		myContext->PSSetConstantBuffers(1, 1, &myPointLightBuffer);
+		myContext->PSSetShader(myLightShader, nullptr, 0);
+		myContext->Draw(3, 0);
+	}
 }
 
 void CDeferredRendering::GenerateGBuffer(const std::vector<CModelInstance*>& aModelList)
@@ -124,7 +237,6 @@ void CDeferredRendering::GenerateGBuffer(const std::vector<CModelInstance*>& aMo
 			CModel::SModelData modelData = models[i]->GetModelData();
 
 			myObjectBufferData.myToWorld = instance->GetTransform();
-			
 
 			ZeroMemory(&bufferdata, sizeof(D3D11_MAPPED_SUBRESOURCE));
 			result = myContext->Map(myObjectBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferdata);

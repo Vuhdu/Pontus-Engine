@@ -45,55 +45,14 @@ std::vector<CGameObject*>& CScene::GetGameObjects()
     return myGameObjects;
 }
 
-std::pair<unsigned int, std::array<CPointLight*, 8>> CScene::CullPointLights(CModelInstance* aModelInstance)
+std::vector<CPointLight*> CScene::CullPointLights()
 {
-    std::array<CPointLight*, 8> pointlights = { nullptr };
-    unsigned int index = 0;
-
-    for (auto light : myPointLights)
-    {
-        auto lightPos = light->GetPosition();
-        auto instancePos = aModelInstance->GetPosition();
-        auto squaredDistance = (lightPos - instancePos).LengthSqr();
-        auto squaredRange = light->GetRange() * light->GetRange();
-        if (squaredDistance < squaredRange)
-        {
-            pointlights[index] = light;
-            index++;
-        }
-    }
-
-    std::pair<unsigned int, std::array<CPointLight*, 8>> result;
-    result.first = index;
-    result.second = pointlights;
-
-    return result;
+    return myPointLights;
 }
 
-
-std::pair<unsigned int, std::array<CSpotLight*, 8>> CScene::CullSpotLights(CModelInstance* aModelInstance)
+std::vector<CSpotLight*> CScene::CullSpotLights()
 {
-    std::array<CSpotLight*, 8> spotlights = { nullptr };
-    unsigned int index = 0;
-
-    for (auto light : mySpotLights)
-    {
-        auto lightPos = light->GetPosition();
-        auto instancePos = aModelInstance->GetPosition();
-        auto squaredDistance = (lightPos - instancePos).LengthSqr();
-        auto squaredRange = light->GetRange() * light->GetRange();
-        if (squaredDistance < squaredRange)
-        {
-            spotlights[index] = light;
-            index++;
-        }
-    }
-
-    std::pair<unsigned int, std::array<CSpotLight*, 8>> result;
-    result.first = index;
-    result.second = spotlights;
-
-    return result;
+    return mySpotLights;
 }
 
 void CScene::AddInstance(CEnvironmentLight* anEnvironmentLight)

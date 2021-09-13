@@ -26,8 +26,10 @@ public:
 	std::vector<CModelInstance*>& CullModels();
 	std::vector<CGameObject*>& GetGameObjects();
 
-	std::pair<unsigned int, std::array<CPointLight*, 8>> CullPointLights(CModelInstance* aModelInstance);
-	std::pair<unsigned int, std::array<CSpotLight*, 8>> CullSpotLights(CModelInstance* aModelInstance);
+	// To-Do: Culling method.
+	std::vector<CPointLight*> CullPointLights(); 
+	// To-Do: Culling method.
+	std::vector<CSpotLight*> CullSpotLights();
 
 	void SetMainCamera(CCamera* aCamera);
 	void SetEditorCamera(CCamera* aCamera);

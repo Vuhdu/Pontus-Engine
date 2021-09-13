@@ -21,7 +21,7 @@ public:
 	void SetRenderCamera(CCamera* aCamera);
 	void SetEnvironmentLight(CEnvironmentLight* anEnvironmentLight);
 
-	void Render(const std::vector<CModelInstance*>& aModelList, std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>>& somePointLights, std::vector<std::pair<unsigned int, std::array<CSpotLight*, 8>>>& someSpotLights);
+	void Render(const std::vector<CModelInstance*>& aModelList, std::vector<CPointLight*>& somePointLights, std::vector<CSpotLight*>& someSpotLights);
 
 private:
 	struct FrameBufferData

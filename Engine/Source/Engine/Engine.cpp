@@ -97,7 +97,7 @@ bool CEngine::InternalStart(SCreateParameters* someCreateParameters)
 
     myGraphicsEngine = new CGraphicsEngine();
     myFramework = myGraphicsEngine->GetFramework();
-
+    
     if (!myGraphicsEngine->Init(windowData))
     {
         return EXIT_FAILURE;

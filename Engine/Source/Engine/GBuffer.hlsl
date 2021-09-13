@@ -3,11 +3,11 @@
 
 struct GBufferOutput
 {
-	float4 myWorldPosition			: SV_TARGET0;
-	float4 myAlbedo					: SV_TARGET1;
-	float4 myNormal					: SV_TARGET2;
+	float4 myAlbedo					: SV_TARGET0;
+	float4 myNormal					: SV_TARGET1;
+	float3 myMaterial				: SV_TARGET2;
 	float4 myVertexNormal			: SV_TARGET3;
-	float3 myMaterial				: SV_TARGET4;
+	float4 myWorldPosition			: SV_TARGET4;
 	float myAmbientOcclusion		: SV_TARGET5;
 	float myDepth					: SV_TARGET6;
 };

@@ -75,7 +75,7 @@ void CForwardRenderer::SetEnvironmentLight(CEnvironmentLight* anEnvironmentLight
 	myEnvironmentLight = anEnvironmentLight;
 }
 
-void CForwardRenderer::Render(const std::vector<CModelInstance*>& aModelList, std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>>& somePointLights, std::vector<std::pair<unsigned int, std::array<CSpotLight*, 8>>>& someSpotLights)
+void CForwardRenderer::Render(const std::vector<CModelInstance*>& aModelList, std::vector<CPointLight*>& somePointLights, std::vector<CSpotLight*>& someSpotLights)
 {
 	HRESULT result;
 	
@@ -124,17 +124,17 @@ void CForwardRenderer::Render(const std::vector<CModelInstance*>& aModelList, st
 			CModel::SModelData modelData = models[i]->GetModelData();
 
 			myObjectBufferData.myToWorld = instance->GetTransform();
-			int pointLightSize = static_cast<unsigned int>(somePointLights[modelCount].first);
-			int spotLightSize = static_cast<unsigned int>(someSpotLights[modelCount].first);
+			int pointLightSize = static_cast<unsigned int>(somePointLights.size());
+			int spotLightSize = static_cast<unsigned int>(someSpotLights.size());
 			
 			myObjectBufferData.myNumPointLights = pointLightSize;
 			myObjectBufferData.myNumSpotLights = spotLightSize;
 
 			for (int j = 0; j < pointLightSize; j++)
 			{
-				auto pos = somePointLights[modelCount].second[j]->GetPosition();
-				auto color = somePointLights[modelCount].second[j]->GetColor();
-				auto intensity = somePointLights[modelCount].second[j]->GetIntensity();
+				auto pos = somePointLights[j]->GetPosition();
+				auto color = somePointLights[j]->GetColor();
+				auto intensity = somePointLights[j]->GetIntensity();
 
 				myObjectBufferData.myPointLights[j].myPosition = {
 					pos.x,
@@ -148,15 +148,15 @@ void CForwardRenderer::Render(const std::vector<CModelInstance*>& aModelList, st
 					color.z,
 					intensity
 				};
-				myObjectBufferData.myPointLights[j].myRange = somePointLights[modelCount].second[j]->GetRange();
+				myObjectBufferData.myPointLights[j].myRange = somePointLights[j]->GetRange();
 			}
 
 			for (int j = 0; j < spotLightSize; j++)
 			{
-				auto pos = someSpotLights[modelCount].second[j]->GetPosition();
-				auto dir = someSpotLights[modelCount].second[j]->GetDirection();
-				auto color = someSpotLights[modelCount].second[j]->GetColor();
-				auto intensity = someSpotLights[modelCount].second[j]->GetIntensity();
+				auto pos = someSpotLights[j]->GetPosition();
+				auto dir = someSpotLights[j]->GetDirection();
+				auto color = someSpotLights[j]->GetColor();
+				auto intensity = someSpotLights[j]->GetIntensity();
 
 				myObjectBufferData.mySpotLights[j].myPosition = {
 					pos.x,
@@ -178,9 +178,9 @@ void CForwardRenderer::Render(const std::vector<CModelInstance*>& aModelList, st
 					color.z,
 					intensity
 				};
-				myObjectBufferData.mySpotLights[j].myRange = someSpotLights[modelCount].second[j]->GetRange();
-				myObjectBufferData.mySpotLights[j].myInnerAngle = someSpotLights[modelCount].second[j]->GetInnerRadius();
-				myObjectBufferData.mySpotLights[j].myOuterAngle = someSpotLights[modelCount].second[j]->GetOuterRadius();
+				myObjectBufferData.mySpotLights[j].myRange = someSpotLights[j]->GetRange();
+				myObjectBufferData.mySpotLights[j].myInnerAngle = someSpotLights[j]->GetInnerRadius();
+				myObjectBufferData.mySpotLights[j].myOuterAngle = someSpotLights[j]->GetOuterRadius();
 			}
 
 			ZeroMemory(&bufferdata, sizeof(D3D11_MAPPED_SUBRESOURCE));
