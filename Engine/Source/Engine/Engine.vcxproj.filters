@@ -22,6 +22,9 @@
     <Filter Include="Shaders\Fullscreen">
       <UniqueIdentifier>{3d8dfe1e-2674-416e-a7f4-7c14ae205eda}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\DeferrredShaders">
+      <UniqueIdentifier>{d21ffd3d-84eb-4101-b2a0-68461ea55943}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">
@@ -67,6 +70,12 @@
     <FxCompile Include="FullscreenPS-Bloom.hlsl">
       <Filter>Shaders\Fullscreen</Filter>
     </FxCompile>
+    <FxCompile Include="EnvironmentLightShader.hlsl">
+      <Filter>Shaders\DeferrredShaders</Filter>
+    </FxCompile>
+    <FxCompile Include="GBuffer.hlsl">
+      <Filter>Shaders\DeferrredShaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ShaderStructs.hlsli">
@@ -77,6 +86,12 @@
     </None>
     <None Include="FullscreenStructs.hlsli">
       <Filter>Shaders\Fullscreen</Filter>
+    </None>
+    <None Include="DeferredStructs.hlsli">
+      <Filter>Shaders\DeferrredShaders</Filter>
+    </None>
+    <None Include="PBRFunctions.hlsli">
+      <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -183,6 +198,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FullscreenRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredRendering.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -302,6 +323,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FullscreenRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredRendering.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

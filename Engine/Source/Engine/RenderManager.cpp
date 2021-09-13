@@ -12,12 +12,17 @@
 bool CRenderManager::Init(CDirectX11Framework* aFramework)
 {
 	myFramework = aFramework;
-
+	
 	if (!myForwardRenderer.Init(aFramework))
 	{
 		return false;
 	}
-	
+
+	if (!myDeferredRenderer.Init(aFramework))
+	{
+		return false;
+	}
+
 	if (!myFullscreenRenderer.Init())
 	{
 		return false;
@@ -33,6 +38,7 @@ bool CRenderManager::Init(CDirectX11Framework* aFramework)
 
 	auto factory = CEngine::GetFullscreenTextureFactory();
 	auto& resolution = CEngine::GetResolution();
+	myGBuffer = factory->CreateGBuffer(resolution);
 
 	CU::Vector2ui halfresolution = {
 		static_cast<unsigned int>(CEngine::GetResolution().x / 2.0f),
@@ -44,6 +50,8 @@ bool CRenderManager::Init(CDirectX11Framework* aFramework)
 		static_cast<unsigned int>(halfresolution.y / 2.0f)
 	};
 	myBackBuffer = factory->CreateTexture(backBufferTexture);
+	myDeferredTexture = factory->CreateTexture(backBufferTexture);
+
 	myIntermediateDepth = factory->CreateDepth(resolution, DXGI_FORMAT::DXGI_FORMAT_D32_FLOAT);
 	myIntermediateTexture = factory->CreateTexture(resolution, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
 	
@@ -53,55 +61,125 @@ bool CRenderManager::Init(CDirectX11Framework* aFramework)
 	myBlurTexture2 = factory->CreateTexture(resolution, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
 	myLuminanceTexture = factory->CreateTexture(resolution, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
 
+	// Create Blend States
+	HRESULT result;
+	
+	D3D11_BLEND_DESC alphaBlendDesc = {};
+	alphaBlendDesc.RenderTarget[0].BlendEnable = true;
+	alphaBlendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	alphaBlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	alphaBlendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	alphaBlendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	alphaBlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+	alphaBlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_MAX;
+	alphaBlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	alphaBlendDesc.AlphaToCoverageEnable = true;
+
+	result = aFramework->GetDevice()->CreateBlendState(&alphaBlendDesc, &myBlendStates[BLENDSTATE_ALPHABLEND]);
+	if (FAILED(result))
+	{
+		ERROR_PRINT("Failed to create alpha blend state.");
+		return false;
+	}
+
+	D3D11_BLEND_DESC additiveBlendDesc = {};
+	additiveBlendDesc.RenderTarget[0].BlendEnable = true;
+	additiveBlendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	additiveBlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
+	additiveBlendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	additiveBlendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	additiveBlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+	additiveBlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_MAX;
+	additiveBlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	result = aFramework->GetDevice()->CreateBlendState(&additiveBlendDesc, &myBlendStates[BLENDSTATE_ADDITIVE]);
+	if (FAILED(result))
+	{
+		ERROR_PRINT("Failed to create additive blend state.");
+		return false;
+	}
+
+	myBlendStates[BLENDSTATE_DISABLE] = nullptr;
+
+	// Create Depth Stencil States
+	D3D11_DEPTH_STENCIL_DESC readonlyDepthDesc = {};
+	readonlyDepthDesc.DepthEnable = true;
+	readonlyDepthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	readonlyDepthDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	readonlyDepthDesc.StencilEnable = true;
+
+	result = aFramework->GetDevice()->CreateDepthStencilState(&readonlyDepthDesc, &myDepthStencilStates[DEPTHSTENCILSTATE_READONLY]);
+	if (FAILED(result))
+	{
+		ERROR_PRINT("Failed to create depth stencil readonly state.");
+		return false;
+	}
+
+	myDepthStencilStates[DEPTHSTENCILSTATE_DEFAULT] = nullptr;
+
+	//Create Rasterizer States
+	D3D11_RASTERIZER_DESC wireFrameRasterizerDesc = {};
+	wireFrameRasterizerDesc.FillMode = D3D11_FILL_WIREFRAME;
+	wireFrameRasterizerDesc.CullMode = D3D11_CULL_BACK;
+	wireFrameRasterizerDesc.DepthClipEnable = true;
+
+	result = aFramework->GetDevice()->CreateRasterizerState(&wireFrameRasterizerDesc, &myRasterizerStates[RASTERIZERSTATE_WIREFRAME]);
+	if (FAILED(result))
+	{
+		ERROR_PRINT("Failed to create rasterizer wireframe state.");
+		return false;
+	}
+
+	D3D11_SAMPLER_DESC pointSampleDesc = {};
+	pointSampleDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+	pointSampleDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	pointSampleDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	pointSampleDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	pointSampleDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	pointSampleDesc.MinLOD = -FLT_MAX;
+	pointSampleDesc.MaxLOD = FLT_MAX;
+
+	result = aFramework->GetDevice()->CreateSamplerState(&pointSampleDesc, &mySamplerStates[SAMPLERSTATE_POINT]);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	D3D11_SAMPLER_DESC trilWrapSampleDesc = {};
+	trilWrapSampleDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	trilWrapSampleDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	trilWrapSampleDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	trilWrapSampleDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	trilWrapSampleDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	trilWrapSampleDesc.MinLOD = -FLT_MAX;
+	trilWrapSampleDesc.MaxLOD = FLT_MAX;
+
+	result = aFramework->GetDevice()->CreateSamplerState(&trilWrapSampleDesc, &mySamplerStates[SAMPLERSTATE_TRILINEARWRAP]);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	mySamplerStates[SAMPLERSTATE_TRILINEAR] = nullptr;
+
     return true;
 }
 
 void CRenderManager::Render()
 {
-	ID3D11RenderTargetView* sceneView = myFramework->GetEditorCameraRenderTargetView();
-	ID3D11RenderTargetView* gameView = myFramework->GetMainCameraRenderTargetView();
-
-	static auto& clearColor = CEngine::GetClearColor();
-
-	myBackBuffer.ClearTexture(clearColor);
-	myIntermediateTexture.ClearTexture(clearColor);
-	myIntermediateDepth.ClearDepth();
-
-	myIntermediateTexture.SetAsActiveTarget(&myIntermediateDepth);
-
-	auto scene = CEngine::GetScene();
-	CCamera* mainCamera = scene->GetMainCamera();
-	CCamera* editorCamera = scene->GetEditorCamera();
-	CEnvironmentLight* environmentLight = scene->GetEnvironmentLight();
-
-	myForwardRenderer.SetEnvironmentLight(environmentLight);
-
-	const std::vector<CModelInstance*> models = scene->CullModels();
-	std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> pointLights;
-	std::vector<std::pair<unsigned int, std::array<CSpotLight*, 8>>> spotLights;
-
-	for (const auto& model : models)
+	switch (myRenderMode)
 	{
-		pointLights.push_back(scene->CullPointLights(model));
-		spotLights.push_back(scene->CullSpotLights(model));
-	}
-	
-	if (CEngine::IsUsingEditor())
-	{
-		myFramework->GetContext()->OMSetRenderTargets(1, &sceneView, myFramework->GetDepthBuffer());
-		myForwardRenderer.SetRenderCamera(editorCamera);
-		myForwardRenderer.Render(models, pointLights, spotLights);
-		myFramework->GetContext()->ClearDepthStencilView(myFramework->GetDepthBuffer(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-		
-		myFramework->GetContext()->OMSetRenderTargets(1, &gameView, myFramework->GetDepthBuffer());
-		myForwardRenderer.SetRenderCamera(mainCamera);
-		myForwardRenderer.Render(models, pointLights, spotLights);
-		myFramework->GetContext()->ClearDepthStencilView(myFramework->GetDepthBuffer(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-	}
-	else
-	{
-		myForwardRenderer.SetRenderCamera(editorCamera);
-		myForwardRenderer.Render(models, pointLights, spotLights);
+	case CRenderManager::RenderMode::Deferred:
+		DeferredRender();
+		break;
+
+	case CRenderManager::RenderMode::Forward:
+		ForwardRender();
+		break;
+
+	default:
+		assert(false && "No valid render mode was found");
+		break;
 	}
 
 	// Luminance
@@ -152,4 +230,115 @@ void CRenderManager::Render()
 	myIntermediateTexture.SetAsResourceOnSlot(0);
 	myHalfsizeTexture.SetAsResourceOnSlot(1);
 	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::BLOOM);
+}
+
+void CRenderManager::SetBlendState(BlendState aBlendState)
+{
+	float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	UINT sampleMask = 0xffffffff;
+	myFramework->GetContext()->OMSetBlendState(myBlendStates[aBlendState], blendFactor, sampleMask);
+}
+
+void CRenderManager::ForwardRender()
+{
+	ID3D11RenderTargetView* sceneView = myFramework->GetEditorCameraRenderTargetView();
+	ID3D11RenderTargetView* gameView = myFramework->GetMainCameraRenderTargetView();
+
+	static auto& clearColor = CEngine::GetClearColor();
+
+	myBackBuffer.ClearTexture(clearColor);
+	myIntermediateTexture.ClearTexture(clearColor);
+	myIntermediateDepth.ClearDepth();
+
+	myIntermediateTexture.SetAsActiveTarget(&myIntermediateDepth);
+
+	auto scene = CEngine::GetScene();
+	CCamera* mainCamera = scene->GetMainCamera();
+	CCamera* editorCamera = scene->GetEditorCamera();
+	CEnvironmentLight* environmentLight = scene->GetEnvironmentLight();
+
+	myForwardRenderer.SetEnvironmentLight(environmentLight);
+
+	const std::vector<CModelInstance*> models = scene->CullModels();
+	std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> pointLights;
+	std::vector<std::pair<unsigned int, std::array<CSpotLight*, 8>>> spotLights;
+
+	for (const auto& model : models)
+	{
+		pointLights.push_back(scene->CullPointLights(model));
+		spotLights.push_back(scene->CullSpotLights(model));
+	}
+
+	if (CEngine::IsUsingEditor())
+	{
+		myFramework->GetContext()->OMSetRenderTargets(1, &sceneView, myFramework->GetDepthBuffer());
+		myForwardRenderer.SetRenderCamera(editorCamera);
+		myForwardRenderer.Render(models, pointLights, spotLights);
+		myFramework->GetContext()->ClearDepthStencilView(myFramework->GetDepthBuffer(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+		myFramework->GetContext()->OMSetRenderTargets(1, &gameView, myFramework->GetDepthBuffer());
+		myForwardRenderer.SetRenderCamera(mainCamera);
+		myForwardRenderer.Render(models, pointLights, spotLights);
+		myFramework->GetContext()->ClearDepthStencilView(myFramework->GetDepthBuffer(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	}
+	else
+	{
+		myForwardRenderer.SetRenderCamera(editorCamera);
+		myForwardRenderer.Render(models, pointLights, spotLights);
+	}
+}
+
+void CRenderManager::DeferredRender()
+{
+	ID3D11RenderTargetView* sceneView = myFramework->GetEditorCameraRenderTargetView();
+	ID3D11RenderTargetView* gameView = myFramework->GetMainCameraRenderTargetView();
+
+	auto scene = CEngine::GetScene();
+	CCamera* mainCamera = scene->GetMainCamera();
+	CCamera* editorCamera = scene->GetEditorCamera();
+	CEnvironmentLight* environmentLight = scene->GetEnvironmentLight();
+
+	myDeferredRenderer.SetEnvironmentLight(environmentLight);
+
+	const std::vector<CModelInstance*> models = scene->CullModels();
+	std::vector<std::pair<unsigned int, std::array<CPointLight*, 8>>> pointLights;
+	std::vector<std::pair<unsigned int, std::array<CSpotLight*, 8>>> spotLights;
+
+	for (const auto& model : models)
+	{
+		pointLights.push_back(scene->CullPointLights(model));
+		spotLights.push_back(scene->CullSpotLights(model));
+	}
+
+	myGBuffer.SetAsActiveTarget(&myIntermediateDepth);
+
+	if (CEngine::IsUsingEditor())
+	{
+		myFramework->GetContext()->OMSetRenderTargets(1, &sceneView, myFramework->GetDepthBuffer());
+		myDeferredRenderer.SetRenderCamera(editorCamera);
+		myDeferredRenderer.GenerateGBuffer(models);
+		
+		
+		myDeferredRenderer.Render(pointLights, spotLights);
+		myFramework->GetContext()->ClearDepthStencilView(myFramework->GetDepthBuffer(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+		myFramework->GetContext()->OMSetRenderTargets(1, &gameView, myFramework->GetDepthBuffer());
+		myDeferredRenderer.SetRenderCamera(mainCamera);
+		myDeferredRenderer.GenerateGBuffer(models);
+		
+		
+		myDeferredRenderer.Render(pointLights, spotLights);
+		myFramework->GetContext()->ClearDepthStencilView(myFramework->GetDepthBuffer(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	}
+	else
+	{
+		myDeferredRenderer.SetRenderCamera(editorCamera);
+		myDeferredRenderer.GenerateGBuffer(models);
+
+		myDeferredTexture.SetAsActiveTarget();
+		myGBuffer.SetAllAsResources();
+		SetBlendState(BLENDSTATE_ADDITIVE);
+
+		myDeferredRenderer.Render(pointLights, spotLights);
+	}
 }

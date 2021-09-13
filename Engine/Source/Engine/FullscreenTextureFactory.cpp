@@ -119,3 +119,68 @@ CFullscreenTexture CFullscreenTextureFactory::CreateDepth(CU::Vector2ui aSize, D
     textureResult.myViewport = viewport;
     return textureResult;
 }
+
+GBuffer CFullscreenTextureFactory::CreateGBuffer(CU::Vector2ui aSize)
+{
+    HRESULT result;
+
+    std::array<DXGI_FORMAT, GBuffer::COUNT> textureFormats =
+    {
+        DXGI_FORMAT_R32G32B32A32_FLOAT, // POSITION
+        DXGI_FORMAT_R8G8B8A8_UNORM,     // ALBEDO
+        DXGI_FORMAT_R16G16B16A16_SNORM, // NORMAL
+        DXGI_FORMAT_R16G16B16A16_SNORM, // VERTEXNORMAL
+        DXGI_FORMAT_R8G8B8A8_UNORM,     // MATERIAL
+        DXGI_FORMAT_R8_UNORM,           // AMBIENTOCCLUSION
+        DXGI_FORMAT_R16_UNORM           // DEPTH
+    };
+
+    GBuffer returnGBuffer = {};
+
+    D3D11_TEXTURE2D_DESC desc = { 0 };
+    desc.Width = aSize.x;
+    desc.Height = aSize.y;
+    desc.MipLevels = 1;
+    desc.ArraySize = 1;
+    desc.SampleDesc.Count = 1;
+    desc.SampleDesc.Quality = 0;
+    desc.Usage = D3D11_USAGE_DEFAULT;
+    desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+    desc.CPUAccessFlags = 0;
+    desc.MiscFlags = 0;
+
+    for (unsigned int idx = 0; idx < GBuffer::COUNT; idx++)
+    {
+        auto device = CEngine::GetFramework()->GetDevice();
+
+        desc.Format = textureFormats[idx];
+        result = device->CreateTexture2D(&desc, nullptr, &returnGBuffer.myTexture[idx]);
+        assert(SUCCEEDED(result));
+
+        result = device->CreateRenderTargetView(
+            returnGBuffer.myTexture[idx],
+            nullptr,
+            &returnGBuffer.myRTVs[idx]
+        );
+        assert(SUCCEEDED(result));
+
+        result = device->CreateShaderResourceView(
+            returnGBuffer.myTexture[idx],
+            nullptr,
+            &returnGBuffer.mySRVs[idx]
+        );
+        assert(SUCCEEDED(result));
+    }
+
+    returnGBuffer.myViewport = new D3D11_VIEWPORT(
+        {
+            0,
+            0,
+            static_cast<float>(desc.Width),
+            static_cast<float>(desc.Height),
+            0,
+            1
+        }
+    );
+    return returnGBuffer;
+}

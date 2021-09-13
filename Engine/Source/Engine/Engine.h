@@ -81,7 +81,6 @@ private:
 	CGraphicsEngine* myGraphicsEngine = nullptr;
 	Editor::CEditor* myEditor = nullptr;
 
-private:
 	CU::Vector2ui myResolution = { 1280, 720 };
 	CU::Vector4f myClearColor = { 0.0f, 0.0f, 0.0f, 1.0f };
 	
@@ -107,7 +106,5 @@ private:
 private:
 	CCamera* myEditorCamera = nullptr;
 	CCamera* myMainCamera = nullptr;
-	
-	CSpotLight* mySpotLight = nullptr;
 
 };
