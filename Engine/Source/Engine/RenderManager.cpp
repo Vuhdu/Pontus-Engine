@@ -182,12 +182,6 @@ void CRenderManager::Render()
 		break;
 	}
 
-	myBackBuffer.SetAsActiveTarget();
-	myIntermediateTexture.SetAsResourceOnSlot(0);
-	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::COPY);
-
-	/*
-
 	// Luminance
 	myLuminanceTexture.SetAsActiveTarget();
 	myIntermediateTexture.SetAsResourceOnSlot(0);
@@ -236,7 +230,6 @@ void CRenderManager::Render()
 	myIntermediateTexture.SetAsResourceOnSlot(0);
 	myHalfsizeTexture.SetAsResourceOnSlot(1);
 	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::BLOOM);
-	*/
 }
 
 void CRenderManager::SetBlendState(BlendState aBlendState)

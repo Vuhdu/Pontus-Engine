@@ -42,19 +42,19 @@ PixelOutput main(VertexOutput anInput)
 	);
 
 	float3 spotLights = 0;
-	for (unsigned int s = 0; s < numSpotLights; s++)
+	for (unsigned int s = 0; s < 8; s++)
 	{
 		spotLights += EvaluateSpotLight(
 			diffuseColor, specularColor, normal, roughness,
-			mySpotLights[s].Color.rgb, mySpotLights[s].Color.w, mySpotLights[s].Range,
-			mySpotLights[s].Position.xyz, mySpotLights[s].Direction.xyz,
-			mySpotLights[s].OuterAngle, mySpotLights[s].InnerAngle,
+			slColor.rgb, slColor.w, slRange,
+			slPosition.xyz, slDirection.xyz,
+			slOuterAngle, slInnerAngle,
 			toEye.xyz, anInput.myWorldPosition.xyz
 		);
 	}
 
 	float3 emissive = albedo * emissiveMask;
-	float3 radiance = ambience + spotLights + emissive;
+	float3 radiance = spotLights + emissive;
 
 	output.myColor.rgb = radiance;
 	output.myColor.a = 1.0f;

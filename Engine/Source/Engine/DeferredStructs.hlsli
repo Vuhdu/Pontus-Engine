@@ -10,7 +10,7 @@ Texture2D depthTexture				: register(t7);
 
 SamplerState defaultSampler			: register(s0);
 
-cbuffer EnvironmentLightBuffer
+cbuffer EnvironmentLightBuffer : register(b0)
 {
     float4 toDirectionalLight;
     float4 directionalLightColor;
@@ -19,7 +19,26 @@ cbuffer EnvironmentLightBuffer
     int trash[3];
 };
 
-cbuffer FrameBuffer : register(b0)
+cbuffer SpotLightBuffer : register(b1)
+{
+    float4 slPosition;
+    float4 slDirection;
+    float4 slColor;
+    float slRange;
+    float slInnerAngle;
+    float slOuterAngle;
+    float slTrash;
+};
+
+cbuffer PointLightBuffer : register(b2)
+{
+    float4 plPosition;
+    float4 plColor;
+    float plRange;
+    float3 plGarbage;
+};
+
+cbuffer FrameBuffer : register(b3)
 {
     float4x4 toCamera;
     float4x4 toProjection;
@@ -27,34 +46,12 @@ cbuffer FrameBuffer : register(b0)
     float4 cameraPosition;
 }
 
-cbuffer ObjectBuffer : register(b1)
+cbuffer ObjectBuffer : register(b4)
 {
     float4x4 toWorld;
     float2 OB_UVScale;
-
-    unsigned int numPointLights;
-    unsigned int numSpotLights;
-
-    struct PointLightData
-    {
-        float4 Position;
-        float4 Color;
-        float Range;
-        float3 Garbage;
-    } myPointLights[8];
-
-    struct SpotLightData
-    {
-        float4 Position;
-        float4 Direction;
-        float4 Color;
-        float Range;
-        float InnerAngle;
-        float OuterAngle;
-        float Trash;
-    } mySpotLights[8];
+    int padding[2];
 }
-
 struct VertexOutput
 {
     float4 myPosition       : SV_POSITION;

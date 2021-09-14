@@ -30,13 +30,6 @@ public:
 	void GenerateGBuffer(const std::vector<CModelInstance*>& aModelList);
 
 private:
-	struct FrameBufferData
-	{
-		CU::Matrix4x4f myToCamera;
-		CU::Matrix4x4f myToProjection;
-		CU::Vector4f myCameraPosition;
-	} myFrameBufferData;
-
 	struct EnvironmentLightBufferData
 	{
 		CU::Vector4f myDirectionalLightDirection;
@@ -44,13 +37,6 @@ private:
 		unsigned int myEnvironmentLightMipCount;
 		unsigned int trash[3];
 	} myEnvironmentLightBufferData;
-
-	struct ObjectBufferData
-	{
-		CU::Matrix4x4f myToWorld;
-		CU::Vector2f myUVScale;
-		unsigned int padding[2];
-	} myObjectBufferData;
 
 	struct SpotLightBufferData
 	{
@@ -61,7 +47,7 @@ private:
 		float myInnerAngle;
 		float myOuterAngle;
 		float myTrash;
-	} mySpotlightBufferData;
+	} mySpotLightBufferData;
 
 	struct PointLightBufferData
 	{
@@ -71,6 +57,20 @@ private:
 		float myRange;
 		CU::Vector3f garbage;
 	} myPointLightBufferData;
+
+	struct FrameBufferData
+	{
+		CU::Matrix4x4f myToCamera;
+		CU::Matrix4x4f myToProjection;
+		CU::Vector4f myCameraPosition;
+	} myFrameBufferData;
+
+	struct ObjectBufferData
+	{
+		CU::Matrix4x4f myToWorld;
+		CU::Vector2f myUVScale;
+		unsigned int padding[2];
+	} myObjectBufferData;
 
 	ID3D11Buffer* myObjectBuffer = nullptr;
 	ID3D11Buffer* myFrameBuffer = nullptr;
