@@ -57,6 +57,7 @@ public:
 private:
 	void ForwardRender();
 	void DeferredRender();
+	void FullscreenRender();
 
 private:
 	enum class RenderMode 

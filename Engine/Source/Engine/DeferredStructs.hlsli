@@ -10,6 +10,17 @@ Texture2D depthTexture				: register(t7);
 
 SamplerState defaultSampler			: register(s0);
 
+struct GBufferOutput
+{
+    float4 myAlbedo					: SV_TARGET1;
+    float4 myNormal					: SV_TARGET2;
+    float3 myMaterial				: SV_TARGET3;
+    float4 myVertexNormal			: SV_TARGET4;
+    float4 myWorldPosition			: SV_TARGET5;
+    float myAmbientOcclusion        : SV_TARGET6;
+    float myDepth                   : SV_TARGET7;
+};
+
 cbuffer EnvironmentLightBuffer : register(b0)
 {
     float4 toDirectionalLight;

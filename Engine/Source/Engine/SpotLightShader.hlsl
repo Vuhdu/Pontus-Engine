@@ -28,19 +28,6 @@ PixelOutput main(VertexOutput anInput)
 	float3 specularColor = lerp((float3)0.04, albedo, metalness);
 	float3 diffuseColor = lerp((float3)0.00, albedo, 1 - metalness);
 
-	float3 ambience = EvaluateAmbience(
-		environmentTexture,
-		normal,
-		vertexNormal,
-		toEye,
-		roughness,
-		material,
-		albedo,
-		ao,
-		diffuseColor,
-		specularColor
-	);
-
 	float3 spotLights = 0;
 	for (unsigned int s = 0; s < 8; s++)
 	{
