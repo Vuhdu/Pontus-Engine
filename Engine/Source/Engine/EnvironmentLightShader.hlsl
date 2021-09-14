@@ -5,9 +5,8 @@ PixelOutput main(VertexOutput anInput)
 {
 	float4 albedoData = albedoTexture.Sample(defaultSampler, anInput.myUV);
 	if (albedoData.a == 0)
-	{
 		discard;
-	}
+
 	float3 albedo = albedoData.rgb;
 
 	PixelOutput output;
@@ -53,7 +52,7 @@ PixelOutput main(VertexOutput anInput)
 	);
 
 	float3 emissive = albedo * emissiveMask;
-	float3 radiance = ambience * directionalLight * emissive;
+	float3 radiance = ambience + directionalLight + emissive;
 
 	output.myColor.rgb = radiance;
 	output.myColor.a = 1.0f;

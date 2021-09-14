@@ -108,7 +108,7 @@ PixelOutput main(VertexOutput aInput)
 		);
 	}
 
-	float3 dullAmbience = ambience * 0.2f;
+	float3 dullAmbience = ambience * 1.0f;
 	float3 emissive = albedo * emissiveData;
 	float3 radiance = dullAmbience + directionalLight + pointLights + spotLights + emissive;
 

@@ -80,15 +80,35 @@ bool CDeferredRendering::Init(CDirectX11Framework* aFramework)
 	}
 	vsFile.close();
 
-	std::ifstream psFile;
-	psFile.open("Shaders/EnvironmentLightShader.cso", std::ios::binary);
-	std::string psData = { std::istreambuf_iterator<char>(psFile), std::istreambuf_iterator<char>() };
-	result = device->CreatePixelShader(psData.data(), psData.size(), nullptr, &myLightShader);
+	std::ifstream environmentFile;
+	environmentFile.open("Shaders/EnvironmentLightShader.cso", std::ios::binary);
+	std::string environmentData = { std::istreambuf_iterator<char>(environmentFile), std::istreambuf_iterator<char>() };
+	result = device->CreatePixelShader(environmentData.data(), environmentData.size(), nullptr, &myEnvironmentLightShader);
 	if (FAILED(result))
 	{
 		return false;
 	}
-	psFile.close();
+	environmentFile.close();
+
+	std::ifstream pointFile;
+	pointFile.open("Shaders/PointLightShader.cso", std::ios::binary);
+	std::string pointData = { std::istreambuf_iterator<char>(pointFile), std::istreambuf_iterator<char>() };
+	result = device->CreatePixelShader(pointData.data(), pointData.size(), nullptr, &myPointLightShader);
+	if (FAILED(result))
+	{
+		return false;
+	}
+	pointFile.close();
+
+	std::ifstream spotFile;
+	spotFile.open("Shaders/SpotLightShader.cso", std::ios::binary);
+	std::string spotData = { std::istreambuf_iterator<char>(spotFile), std::istreambuf_iterator<char>() };
+	result = device->CreatePixelShader(spotData.data(), spotData.size(), nullptr, &mySpotLightShader);
+	if (FAILED(result))
+	{
+		return false;
+	}
+	spotFile.close();
 
 	return true;
 }
@@ -130,7 +150,7 @@ void CDeferredRendering::Render(const std::vector<CPointLight*>& somePointLights
 	myContext->PSSetShaderResources(0, 1, myEnvironmentLight->GetCubeMapConstPtr());
 
 	myContext->VSSetShader(myVertexShader, nullptr, 0);
-	myContext->PSSetShader(myLightShader, nullptr, 0);
+	myContext->PSSetShader(myEnvironmentLightShader, nullptr, 0);
 	myContext->Draw(3, 0);
 
 	for (auto& light : someSpotLights)
@@ -166,7 +186,7 @@ void CDeferredRendering::Render(const std::vector<CPointLight*>& somePointLights
 		memcpy(bufferData.pData, &mySpotlightBufferData, sizeof(SpotLightBufferData));
 		myContext->Unmap(mySpotLightBuffer, 0);
 		myContext->PSSetConstantBuffers(1, 1, &mySpotLightBuffer);
-		myContext->PSSetShader(myLightShader, nullptr, 0);
+		myContext->PSSetShader(mySpotLightShader, nullptr, 0);
 		myContext->Draw(3, 0);
 	}
 
@@ -194,7 +214,7 @@ void CDeferredRendering::Render(const std::vector<CPointLight*>& somePointLights
 		memcpy(bufferData.pData, &myPointLightBufferData, sizeof(PointLightBufferData));
 		myContext->Unmap(myPointLightBuffer, 0);
 		myContext->PSSetConstantBuffers(1, 1, &myPointLightBuffer);
-		myContext->PSSetShader(myLightShader, nullptr, 0);
+		myContext->PSSetShader(myPointLightShader, nullptr, 0);
 		myContext->Draw(3, 0);
 	}
 }

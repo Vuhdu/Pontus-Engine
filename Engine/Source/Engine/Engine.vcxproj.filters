@@ -76,6 +76,12 @@
     <FxCompile Include="GBuffer.hlsl">
       <Filter>Shaders\DeferrredShaders</Filter>
     </FxCompile>
+    <FxCompile Include="PointLightShader.hlsl">
+      <Filter>Shaders\DeferrredShaders</Filter>
+    </FxCompile>
+    <FxCompile Include="SpotLightShader.hlsl">
+      <Filter>Shaders\DeferrredShaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ShaderStructs.hlsli">

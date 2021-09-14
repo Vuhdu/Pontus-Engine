@@ -182,6 +182,12 @@ void CRenderManager::Render()
 		break;
 	}
 
+	myBackBuffer.SetAsActiveTarget();
+	myIntermediateTexture.SetAsResourceOnSlot(0);
+	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::COPY);
+
+	/*
+
 	// Luminance
 	myLuminanceTexture.SetAsActiveTarget();
 	myIntermediateTexture.SetAsResourceOnSlot(0);
@@ -230,6 +236,7 @@ void CRenderManager::Render()
 	myIntermediateTexture.SetAsResourceOnSlot(0);
 	myHalfsizeTexture.SetAsResourceOnSlot(1);
 	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::BLOOM);
+	*/
 }
 
 void CRenderManager::SetBlendState(BlendState aBlendState)
@@ -287,6 +294,9 @@ void CRenderManager::DeferredRender()
 	ID3D11RenderTargetView* sceneView = myFramework->GetEditorCameraRenderTargetView();
 	ID3D11RenderTargetView* gameView = myFramework->GetMainCameraRenderTargetView();
 
+	myGBuffer.ClearTextures();
+	SetBlendState(BLENDSTATE_DISABLE);
+
 	auto scene = CEngine::GetScene();
 	CCamera* mainCamera = scene->GetMainCamera();
 	CCamera* editorCamera = scene->GetEditorCamera();
@@ -306,15 +316,16 @@ void CRenderManager::DeferredRender()
 		myDeferredRenderer.SetRenderCamera(editorCamera);
 		myDeferredRenderer.GenerateGBuffer(models);
 		
-		
+		SetBlendState(BLENDSTATE_ADDITIVE);
 		myDeferredRenderer.Render(pointLights, spotLights);
 		myFramework->GetContext()->ClearDepthStencilView(myFramework->GetDepthBuffer(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		SetBlendState(BLENDSTATE_DISABLE);
 
 		myFramework->GetContext()->OMSetRenderTargets(1, &gameView, myFramework->GetDepthBuffer());
 		myDeferredRenderer.SetRenderCamera(mainCamera);
 		myDeferredRenderer.GenerateGBuffer(models);
 		
-		
+		SetBlendState(BLENDSTATE_ADDITIVE);
 		myDeferredRenderer.Render(pointLights, spotLights);
 		myFramework->GetContext()->ClearDepthStencilView(myFramework->GetDepthBuffer(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	}
@@ -326,7 +337,7 @@ void CRenderManager::DeferredRender()
 		myDeferredTexture.SetAsActiveTarget();
 		myGBuffer.SetAllAsResources();
 		SetBlendState(BLENDSTATE_ADDITIVE);
-
+		
 		myDeferredRenderer.Render(pointLights, spotLights);
 	}
 }

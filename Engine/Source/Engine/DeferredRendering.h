@@ -78,7 +78,9 @@ private:
 	ID3D11Buffer* mySpotLightBuffer = nullptr;
 	ID3D11Buffer* myPointLightBuffer = nullptr;
 
-	ID3D11PixelShader* myLightShader = nullptr;
+	ID3D11PixelShader* myEnvironmentLightShader = nullptr;
+	ID3D11PixelShader* myPointLightShader = nullptr;
+	ID3D11PixelShader* mySpotLightShader = nullptr;
 	ID3D11VertexShader* myVertexShader = nullptr;
 
 	CCamera* myRenderCamera = nullptr;

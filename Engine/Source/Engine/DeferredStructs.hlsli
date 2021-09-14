@@ -32,7 +32,27 @@ cbuffer ObjectBuffer : register(b1)
     float4x4 toWorld;
     float2 OB_UVScale;
 
-    float2 trashh;
+    unsigned int numPointLights;
+    unsigned int numSpotLights;
+
+    struct PointLightData
+    {
+        float4 Position;
+        float4 Color;
+        float Range;
+        float3 Garbage;
+    } myPointLights[8];
+
+    struct SpotLightData
+    {
+        float4 Position;
+        float4 Direction;
+        float4 Color;
+        float Range;
+        float InnerAngle;
+        float OuterAngle;
+        float Trash;
+    } mySpotLights[8];
 }
 
 struct VertexOutput

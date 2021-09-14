@@ -7,6 +7,15 @@
 
 void GBuffer::ClearTextures()
 {
+	const auto clearColor = CU::Vector4f{ 0.0f, 0.0f, 0.0f, 1.0f };
+
+	for (int i = 0; i < GBufferTexture::COUNT; i++)
+	{
+		CEngine::GetFramework()->GetContext()->ClearRenderTargetView(
+			myRTVs[static_cast<GBufferTexture>(i)],
+			&clearColor.x
+		);
+	}
 }
 
 void GBuffer::SetAsActiveTarget(CFullscreenTexture* aDepth)
