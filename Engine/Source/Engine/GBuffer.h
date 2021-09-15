@@ -15,11 +15,11 @@ public:
 
 	enum GBufferTexture
 	{
+		POSITION,
 		ALBEDO,
 		NORMAL,
-		MATERIAL,
-		POSITION,
 		VERTEXNORMAL,
+		MATERIAL,
 		AMBIENTOCCLUSION,
 		DEPTH,
 		COUNT

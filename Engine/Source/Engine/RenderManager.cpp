@@ -50,7 +50,7 @@ bool CRenderManager::Init(CDirectX11Framework* aFramework)
 		static_cast<unsigned int>(halfresolution.y / 2.0f)
 	};
 	myBackBuffer = factory->CreateTexture(backBufferTexture);
-	myDeferredTexture = factory->CreateTexture(backBufferTexture);
+	myDeferredTexture = factory->CreateTexture(resolution, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
 
 	myIntermediateDepth = factory->CreateDepth(resolution, DXGI_FORMAT::DXGI_FORMAT_D32_FLOAT);
 	myIntermediateTexture = factory->CreateTexture(resolution, DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM);
@@ -167,12 +167,7 @@ bool CRenderManager::Init(CDirectX11Framework* aFramework)
 
 void CRenderManager::Render()
 {
-	static CU::Vector4f clearColor = CEngine::GetClearColor();
-
-	myIntermediateDepth.ClearDepth();
-	myBackBuffer.ClearTexture(clearColor);
-	myIntermediateTexture.ClearTexture(clearColor);
-	myGBuffer.ClearTextures();
+	ClearTextures();
 
 	switch (myRenderMode)
 	{
@@ -190,6 +185,24 @@ void CRenderManager::Render()
 	}
 
 	FullscreenRender();
+}
+
+void CRenderManager::ClearTextures()
+{
+	static CU::Vector4f clearColor = CEngine::GetClearColor();
+
+	myBackBuffer.ClearTexture(clearColor);
+	myDeferredTexture.ClearTexture(clearColor);
+	myIntermediateTexture.ClearTexture(clearColor);
+	myIntermediateDepth.ClearDepth();
+	myLuminanceTexture.ClearTexture(clearColor);
+	myHalfsizeTexture.ClearTexture(clearColor);
+	myQuartersizeTexture.ClearTexture(clearColor);
+	myBlurTexture1.ClearTexture(clearColor);
+	myBlurTexture2.ClearTexture(clearColor);
+	myGBuffer.ClearTextures();
+
+	SetBlendState(BLENDSTATE_DISABLE);
 }
 
 void CRenderManager::SetBlendState(BlendState aBlendState)
@@ -235,6 +248,11 @@ void CRenderManager::ForwardRender()
 		myForwardRenderer.SetRenderCamera(editorCamera);
 		myForwardRenderer.Render(models, pointLights, spotLights);
 	}
+
+	// Luminance
+	myLuminanceTexture.SetAsActiveTarget();
+	myIntermediateTexture.SetAsResourceOnSlot(0);
+	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::LUMINANCE);
 }
 
 void CRenderManager::DeferredRender()
@@ -250,7 +268,6 @@ void CRenderManager::DeferredRender()
 	std::vector<CSpotLight*> spotLights = scene->CullSpotLights();
 
 	myDeferredRenderer.SetEnvironmentLight(environmentLight);
-
 	myGBuffer.SetAsActiveTarget(&myIntermediateDepth);
 
 	if (CEngine::IsUsingEditor())
@@ -279,22 +296,21 @@ void CRenderManager::DeferredRender()
 	{
 		myDeferredRenderer.SetRenderCamera(editorCamera);
 		myDeferredRenderer.GenerateGBuffer(models);
-
+		
 		myDeferredTexture.SetAsActiveTarget();
 		myGBuffer.SetAllAsResources();
-		SetBlendState(BLENDSTATE_DISABLE);
-		
+		SetBlendState(BLENDSTATE_ADDITIVE);
 		myDeferredRenderer.Render(pointLights, spotLights);
 	}
+
+	// Luminance
+	myLuminanceTexture.SetAsActiveTarget();
+	myDeferredTexture.SetAsResourceOnSlot(0);
+	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::LUMINANCE);
 }
 
 void CRenderManager::FullscreenRender()
 {
-	// Luminance
-	myLuminanceTexture.SetAsActiveTarget();
-	myIntermediateTexture.SetAsResourceOnSlot(0);
-	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::LUMINANCE);
-
 	// Downsamples
 	myHalfsizeTexture.SetAsActiveTarget();
 	myLuminanceTexture.SetAsResourceOnSlot(0);
@@ -335,7 +351,18 @@ void CRenderManager::FullscreenRender()
 	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::COPY);
 
 	myBackBuffer.SetAsActiveTarget();
-	myIntermediateTexture.SetAsResourceOnSlot(0);
+
+	switch (myRenderMode)
+	{
+	case CRenderManager::RenderMode::Deferred:
+		myDeferredTexture.SetAsResourceOnSlot(0);
+		break;
+	case CRenderManager::RenderMode::Forward:
+		myIntermediateTexture.SetAsResourceOnSlot(0);
+		break;
+	default:
+		break;
+	}
 	myHalfsizeTexture.SetAsResourceOnSlot(1);
 	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::BLOOM);
 }

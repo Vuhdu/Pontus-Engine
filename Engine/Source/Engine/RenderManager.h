@@ -1,6 +1,6 @@
 #pragma once
 #include "ForwardRenderer.h"
-#include "DeferredRendering.h"
+#include "DeferredRenderer.h"
 #include "FullscreenRenderer.h"
 
 #include "FullscreenTexture.h"
@@ -52,6 +52,8 @@ public:
 	bool Init(CDirectX11Framework* aFramework);
 	void Render();
 
+	void ClearTextures();
+
 	void SetBlendState(BlendState aBlendState);
 
 private:
@@ -70,7 +72,7 @@ private:
 	CDirectX11Framework* myFramework = nullptr;
 
 	CForwardRenderer myForwardRenderer = {};
-	CDeferredRendering myDeferredRenderer = {};
+	CDeferredRenderer myDeferredRenderer = {};
 	CFullscreenRenderer myFullscreenRenderer = {};
 	GBuffer myGBuffer = {};
 

@@ -1,10 +1,21 @@
 #include "DeferredStructs.hlsli"
 #include "PBRFunctions.hlsli"
 
+struct GBufferOutput
+{
+	float4 myWorldPosition			: SV_TARGET0;
+	float4 myAlbedo					: SV_TARGET1;
+	float4 myNormal					: SV_TARGET2;
+	float4 myVertexNormal			: SV_TARGET3;
+	float3 myMaterial				: SV_TARGET4;
+	float myAmbientOcclusion		: SV_TARGET5;
+	float myDepth					: SV_TARGET6;
+};
+
 GBufferOutput main(VertexOutput anInput)
 {
 	float2 scaledUV = anInput.myUV * OB_UVScale;
-	float3 albedo = GammaToLinear(albedoTexture.Sample(defaultSampler, scaledUV).rgb);
+	float3 albedo = GammaToLinear(albedoTexture.Sample(defaultSampler, anInput.myUV).rgb);
 
 	float3 normal = normalTexture.Sample(defaultSampler, scaledUV).wyz;
 	float ambientOcclusion = normal.b;

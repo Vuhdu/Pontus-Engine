@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "DeferredRendering.h"
+#include "DeferredRenderer.h"
 #include "DirectX11Framework.h"
 
 #include "Camera.h"
@@ -14,7 +14,7 @@
 #include <fstream>
 #include <d3d11.h>
 
-bool CDeferredRendering::Init(CDirectX11Framework* aFramework)
+bool CDeferredRenderer::Init(CDirectX11Framework* aFramework)
 {
 	myContext = aFramework->GetContext();
 	if (!myContext)
@@ -110,20 +110,30 @@ bool CDeferredRendering::Init(CDirectX11Framework* aFramework)
 	}
 	spotFile.close();
 
+	std::ifstream gBufferFile;
+	gBufferFile.open("Shaders/GBuffer.cso", std::ios::binary);
+	std::string gBufferData = { std::istreambuf_iterator<char>(gBufferFile), std::istreambuf_iterator<char>() };
+	result = device->CreatePixelShader(gBufferData.data(), gBufferData.size(), nullptr, &myGBufferShader);
+	if (FAILED(result))
+	{
+		return false;
+	}
+	gBufferFile.close();
+
 	return true;
 }
 
-void CDeferredRendering::SetRenderCamera(CCamera* aCamera)
+void CDeferredRenderer::SetRenderCamera(CCamera* aCamera)
 {
 	myRenderCamera = aCamera;
 }
 
-void CDeferredRendering::SetEnvironmentLight(CEnvironmentLight* anEnvironmentLight)
+void CDeferredRenderer::SetEnvironmentLight(CEnvironmentLight* anEnvironmentLight)
 {
 	myEnvironmentLight = anEnvironmentLight;
 }
 
-void CDeferredRendering::Render(const std::vector<CPointLight*>& somePointLights, const std::vector<CSpotLight*>& someSpotLights)
+void CDeferredRenderer::Render(const std::vector<CPointLight*>& somePointLights, const std::vector<CSpotLight*>& someSpotLights)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE bufferData;
@@ -145,13 +155,45 @@ void CDeferredRendering::Render(const std::vector<CPointLight*>& somePointLights
 	memcpy(bufferData.pData, &myEnvironmentLightBufferData, sizeof(EnvironmentLightBufferData));
 	myContext->Unmap(myEnvironmentLightBuffer, 0);
 
-	myContext->VSSetConstantBuffers(0, 1, &myEnvironmentLightBuffer);
-	myContext->PSSetConstantBuffers(1, 1, &myEnvironmentLightBuffer);
+	myContext->PSSetConstantBuffers(2, 1, &myEnvironmentLightBuffer);
 	myContext->PSSetShaderResources(0, 1, myEnvironmentLight->GetCubeMapConstPtr());
+
+	myContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	myContext->IASetInputLayout(nullptr);
+	myContext->IASetVertexBuffers(0, 0, nullptr, nullptr, nullptr);
+	myContext->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
 
 	myContext->VSSetShader(myVertexShader, nullptr, 0);
 	myContext->PSSetShader(myEnvironmentLightShader, nullptr, 0);
 	myContext->Draw(3, 0);
+	/*
+	for (auto& light : somePointLights)
+	{
+		myPointLightBufferData.myColorAndIntensity = {
+			light->GetColor().x,
+			light->GetColor().y,
+			light->GetColor().z,
+			light->GetIntensity()
+		};
+		myPointLightBufferData.myRange = light->GetRange();
+		myPointLightBufferData.myPosition = {
+			light->GetPosition().x,
+			light->GetPosition().y,
+			light->GetPosition().z,
+			1.0f
+		};
+		ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
+		result = myContext->Map(myPointLightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData);
+		if (FAILED(result))
+		{
+			assert(false);
+		}
+		memcpy(bufferData.pData, &myPointLightBufferData, sizeof(PointLightBufferData));
+		myContext->Unmap(myPointLightBuffer, 0);
+		myContext->PSSetConstantBuffers(3, 1, &myPointLightBuffer);
+		myContext->PSSetShader(myPointLightShader, nullptr, 0);
+		myContext->Draw(3, 0);
+	}
 
 	for (auto& light : someSpotLights)
 	{
@@ -185,48 +227,20 @@ void CDeferredRendering::Render(const std::vector<CPointLight*>& somePointLights
 		}
 		memcpy(bufferData.pData, &mySpotLightBufferData, sizeof(SpotLightBufferData));
 		myContext->Unmap(mySpotLightBuffer, 0);
-		myContext->PSSetConstantBuffers(3, 1, &mySpotLightBuffer);
+		myContext->PSSetConstantBuffers(4, 1, &mySpotLightBuffer);
 		myContext->PSSetShader(mySpotLightShader, nullptr, 0);
 		myContext->Draw(3, 0);
 	}
-
-	for (auto& light : somePointLights)
-	{
-		myPointLightBufferData.myColorAndIntensity = {
-			light->GetColor().x,
-			light->GetColor().y,
-			light->GetColor().z,
-			light->GetIntensity()
-		};
-		myPointLightBufferData.myRange = light->GetRange();
-		myPointLightBufferData.myPosition = {
-			light->GetPosition().x,
-			light->GetPosition().y,
-			light->GetPosition().z,
-			1.0f
-		};
-		ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
-		result = myContext->Map(myPointLightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData);
-		if (FAILED(result))
-		{
-			assert(false);
-		}
-		memcpy(bufferData.pData, &myPointLightBufferData, sizeof(PointLightBufferData));
-		myContext->Unmap(myPointLightBuffer, 0);
-		myContext->PSSetConstantBuffers(2, 1, &myPointLightBuffer);
-		myContext->PSSetShader(myPointLightShader, nullptr, 0);
-		myContext->Draw(3, 0);
-	}
+	*/
 }
 
-void CDeferredRendering::GenerateGBuffer(const std::vector<CModelInstance*>& aModelList)
+void CDeferredRenderer::GenerateGBuffer(const std::vector<CModelInstance*>& aModelList)
 {
 	HRESULT result;
 
 	D3D11_MAPPED_SUBRESOURCE bufferdata;
 	myFrameBufferData.myToCamera = CU::Matrix4x4f::GetFastInverse(myRenderCamera->GetTransform());
 	myFrameBufferData.myToProjection = myRenderCamera->GetProjection();
-
 	myFrameBufferData.myCameraPosition = {
 		myRenderCamera->GetPosition().x,
 		myRenderCamera->GetPosition().y,
@@ -245,9 +259,7 @@ void CDeferredRendering::GenerateGBuffer(const std::vector<CModelInstance*>& aMo
 	myContext->Unmap(myFrameBuffer, 0);
 	myContext->VSSetConstantBuffers(0, 1, &myFrameBuffer);
 	myContext->PSSetConstantBuffers(0, 1, &myFrameBuffer);
-	myContext->PSSetShaderResources(0, 1, myEnvironmentLight->GetCubeMapConstPtr());
 
-	int modelCount = 0;
 	for (CModelInstance* instance : aModelList)
 	{
 		auto& models = instance->GetModelVector();
@@ -257,6 +269,7 @@ void CDeferredRendering::GenerateGBuffer(const std::vector<CModelInstance*>& aMo
 			CModel::SModelData modelData = models[i]->GetModelData();
 
 			myObjectBufferData.myToWorld = instance->GetTransform();
+			myObjectBufferData.myUVScale = { 1.0f, 1.0f };
 
 			ZeroMemory(&bufferdata, sizeof(D3D11_MAPPED_SUBRESOURCE));
 			result = myContext->Map(myObjectBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferdata);
@@ -277,11 +290,10 @@ void CDeferredRendering::GenerateGBuffer(const std::vector<CModelInstance*>& aMo
 			myContext->VSSetShader(modelData.myMesh.myVertexShader, nullptr, 0);
 
 			myContext->PSSetConstantBuffers(1, 1, &myObjectBuffer);
-			myContext->PSSetShaderResources(1, 3, &modelData.myTexture[0]);
-			myContext->PSSetShader(modelData.myMesh.myPixelShader, nullptr, 0);
+			myContext->PSSetShaderResources(0, 3, &modelData.myTexture[0]);
+			myContext->PSSetShader(myGBufferShader, nullptr, 0);
 
 			myContext->DrawIndexed(modelData.myMesh.myNumIndices, 0, 0);
 		}
-		modelCount++;
 	}
 }

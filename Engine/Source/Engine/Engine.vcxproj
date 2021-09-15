@@ -300,7 +300,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraFactory.cpp" />
     <ClCompile Include="CreateParameters.cpp" />
-    <ClCompile Include="DeferredRendering.cpp" />
+    <ClCompile Include="DeferredRenderer.cpp" />
     <ClCompile Include="DirectX11Framework.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="EnvironmentLight.cpp" />
@@ -342,7 +342,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraFactory.h" />
     <ClInclude Include="CreateParameters.h" />
-    <ClInclude Include="DeferredRendering.h" />
+    <ClInclude Include="DeferredRenderer.h" />
     <ClInclude Include="DirectX11Framework.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="EnvironmentLight.h" />

@@ -28,22 +28,15 @@ PixelOutput main(VertexOutput anInput)
 	float3 specularColor = lerp((float3)0.04, albedo, metalness);
 	float3 diffuseColor = lerp((float3)0.00, albedo, 1 - metalness);
 
-	float3 spotLights = 0;
-	for (unsigned int s = 0; s < 8; s++)
-	{
-		spotLights += EvaluateSpotLight(
+	float3 spotLight = EvaluateSpotLight(
 			diffuseColor, specularColor, normal, roughness,
 			slColor.rgb, slColor.w, slRange,
 			slPosition.xyz, slDirection.xyz,
 			slOuterAngle, slInnerAngle,
 			toEye.xyz, anInput.myWorldPosition.xyz
-		);
-	}
+	);
 
-	float3 emissive = albedo * emissiveMask;
-	float3 radiance = spotLights + emissive;
-
-	output.myColor.rgb = radiance;
+	output.myColor.rgb = spotLight;
 	output.myColor.a = 1.0f;
 	return output;
 }

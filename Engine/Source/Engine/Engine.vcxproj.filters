@@ -206,7 +206,7 @@
     <ClCompile Include="FullscreenRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DeferredRendering.cpp">
+    <ClCompile Include="DeferredRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GBuffer.cpp">
@@ -331,7 +331,7 @@
     <ClInclude Include="FullscreenRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DeferredRendering.h">
+    <ClInclude Include="DeferredRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GBuffer.h">
