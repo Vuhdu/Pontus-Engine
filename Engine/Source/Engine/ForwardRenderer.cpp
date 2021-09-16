@@ -182,7 +182,6 @@ void CForwardRenderer::Render(const std::vector<CModelInstance*>& aModelList, st
 				myObjectBufferData.mySpotLights[j].myInnerAngle = someSpotLights[j]->GetInnerRadius();
 				myObjectBufferData.mySpotLights[j].myOuterAngle = someSpotLights[j]->GetOuterRadius();
 			}
-
 			ZeroMemory(&bufferdata, sizeof(D3D11_MAPPED_SUBRESOURCE));
 			result = myContext->Map(myObjectBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferdata);
 			if (FAILED(result))

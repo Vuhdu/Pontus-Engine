@@ -4,7 +4,8 @@
 float3 PixelShader_Albedo(VertexOutput aInput)
 {
 	float3 albedo = albedoTexture.Sample(defaultSampler, aInput.myUV0.xy).rgb;
-	return GammaToLinear(albedo);
+	return albedo;
+	//return GammaToLinear(albedo);
 }
 
 float3 PixelShader_Normal(VertexOutput aInput)
@@ -114,6 +115,7 @@ PixelOutput main(VertexOutput aInput)
 
 	PixelOutput pixelOutput;
 	pixelOutput.myColor.rgb = LinearToGamma(radiance);
+	//pixelOutput.myColor.rgb = albedo;
 	pixelOutput.myColor.a = 1.0f;
 
 	return pixelOutput;

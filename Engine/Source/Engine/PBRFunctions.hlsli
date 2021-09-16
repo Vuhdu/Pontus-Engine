@@ -84,9 +84,16 @@ float ApproximateSpecularSelfOcclusion(float3 vR, float3 vertNormalNormalized)
 	return rimmask;
 }
 
+int GetNumMips(TextureCube cubeTex)
+{
+	int iWidth = 0, iHeight = 0, numMips = 0;
+	cubeTex.GetDimensions(0, iWidth, iHeight, numMips);
+	return numMips;
+}
+
 float3 EvaluateAmbience(TextureCube lysBurleyCube, float3 vN, float3 org_normal, float3 to_cam, float perceptualRoughness, float metalness, float3 albedo, float ao, float3 dfcol, float3 spccol)
 {
-	int numMips = environmentLightMipCount;
+	int numMips = GetNumMips(lysBurleyCube);
 	const int nrBrdfMips = numMips - nMipOffset;
 	float VdotN = clamp(dot(to_cam, vN), 0.0, 1.0f);
 	const float3 vRorg = 2 * vN * VdotN - to_cam;

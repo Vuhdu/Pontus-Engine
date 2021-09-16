@@ -1,16 +1,17 @@
 #include "CubeShaderStructs.hlsli"
 
-VertexToPixel main(VertexInput input)
+VertexOutput main(VertexInput aInput)
 {
-    VertexToPixel returnValue;
+	VertexOutput vertexOutput;
 
-    float4 vertexObjectPos = input.myPosition.xyzw;
-    float4 vertexWorldPos = mul(toWorld, vertexObjectPos);
-    float4 vertexViewPos = mul(toCamera, vertexWorldPos);
-    float4 vertexProjectionPos = mul(toProjection, vertexViewPos);
+	float4 vertexObjectPos = aInput.myPosition.xyzw;
+	float4 vertexWorldPos = mul(toWorld, vertexObjectPos);
+	float4 vertexViewPos = mul(toCamera, vertexWorldPos);
+	float4 vertexProjectionPos = mul(toProjection, vertexViewPos);
 
-    returnValue.myPosition = vertexProjectionPos;
-    returnValue.myColor = input.myColor;
-    returnValue.myUV = input.myUV;
-    return returnValue;
+	vertexOutput.myPosition = vertexProjectionPos;
+	vertexOutput.myColor = aInput.myColor;
+	vertexOutput.myUV = aInput.myUV;
+
+	return vertexOutput;
 }

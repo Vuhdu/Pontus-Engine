@@ -155,7 +155,7 @@ void CDeferredRenderer::Render(const std::vector<CPointLight*>& somePointLights,
 	memcpy(bufferData.pData, &myEnvironmentLightBufferData, sizeof(EnvironmentLightBufferData));
 	myContext->Unmap(myEnvironmentLightBuffer, 0);
 
-	myContext->PSSetConstantBuffers(2, 1, &myEnvironmentLightBuffer);
+	myContext->PSSetConstantBuffers(1, 1, &myEnvironmentLightBuffer);
 	myContext->PSSetShaderResources(0, 1, myEnvironmentLight->GetCubeMapConstPtr());
 
 	myContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -166,7 +166,7 @@ void CDeferredRenderer::Render(const std::vector<CPointLight*>& somePointLights,
 	myContext->VSSetShader(myVertexShader, nullptr, 0);
 	myContext->PSSetShader(myEnvironmentLightShader, nullptr, 0);
 	myContext->Draw(3, 0);
-	/*
+	
 	for (auto& light : somePointLights)
 	{
 		myPointLightBufferData.myColorAndIntensity = {
@@ -190,7 +190,7 @@ void CDeferredRenderer::Render(const std::vector<CPointLight*>& somePointLights,
 		}
 		memcpy(bufferData.pData, &myPointLightBufferData, sizeof(PointLightBufferData));
 		myContext->Unmap(myPointLightBuffer, 0);
-		myContext->PSSetConstantBuffers(3, 1, &myPointLightBuffer);
+		myContext->PSSetConstantBuffers(1, 1, &myPointLightBuffer);
 		myContext->PSSetShader(myPointLightShader, nullptr, 0);
 		myContext->Draw(3, 0);
 	}
@@ -227,11 +227,10 @@ void CDeferredRenderer::Render(const std::vector<CPointLight*>& somePointLights,
 		}
 		memcpy(bufferData.pData, &mySpotLightBufferData, sizeof(SpotLightBufferData));
 		myContext->Unmap(mySpotLightBuffer, 0);
-		myContext->PSSetConstantBuffers(4, 1, &mySpotLightBuffer);
+		myContext->PSSetConstantBuffers(1, 1, &mySpotLightBuffer);
 		myContext->PSSetShader(mySpotLightShader, nullptr, 0);
 		myContext->Draw(3, 0);
 	}
-	*/
 }
 
 void CDeferredRenderer::GenerateGBuffer(const std::vector<CModelInstance*>& aModelList)
@@ -290,7 +289,7 @@ void CDeferredRenderer::GenerateGBuffer(const std::vector<CModelInstance*>& aMod
 			myContext->VSSetShader(modelData.myMesh.myVertexShader, nullptr, 0);
 
 			myContext->PSSetConstantBuffers(1, 1, &myObjectBuffer);
-			myContext->PSSetShaderResources(0, 3, &modelData.myTexture[0]);
+			myContext->PSSetShaderResources(1, static_cast<UINT>(modelData.myTexture.size()), &modelData.myTexture[0]);
 			myContext->PSSetShader(myGBufferShader, nullptr, 0);
 
 			myContext->DrawIndexed(modelData.myMesh.myNumIndices, 0, 0);

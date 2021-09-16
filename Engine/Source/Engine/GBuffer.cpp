@@ -7,7 +7,7 @@
 
 void GBuffer::ClearTextures()
 {
-	const auto clearColor = CU::Vector4f{ 0.0f, 0.0f, 0.0f, 1.0f };
+	const auto clearColor = CU::Vector4f{ 0.0f, 0.0f, 0.0f, 0.0f };
 
 	for (int i = 0; i < GBufferTexture::COUNT; i++)
 	{
@@ -25,7 +25,7 @@ void GBuffer::SetAsActiveTarget(CFullscreenTexture* aDepth)
 	context->OMSetRenderTargets(
 		GBufferTexture::COUNT,
 		&myRTVs[0],
-		(aDepth) ? aDepth->GetDepthStencil() : nullptr
+		(aDepth != nullptr) ? aDepth->GetDepthStencil() : nullptr
 	);
 
 	context->RSSetViewports(1, myViewport);

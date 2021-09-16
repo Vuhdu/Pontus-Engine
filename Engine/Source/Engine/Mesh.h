@@ -12,15 +12,15 @@ struct SVertex
 {
 	float x, y, z, w;			// positions
 
-	float r0, g0, b0, a0;		// colors0
-	float r1, g1, b1, a1;		// colors1
-	float r2, g2, b2, a2;		// colors2
-	float r3, g3, b3, a3;		// colors3
+	float r, g, b, a;			// colors0
+	//float r1, g1, b1, a1;		// colors1
+	//float r2, g2, b2, a2;		// colors2
+	//float r3, g3, b3, a3;		// colors3
 
-	float u0, v0;				// uv0
-	float u1, v1;				// uv1
-	float u2, v2;				// uv2
-	float u3, v3;				// uv3
+	float u, v;					// uv0
+	//float u1, v1;				// uv1
+	//float u2, v2;				// uv2
+	//float u3, v3;				// uv3
 
 	float nx, ny, nz, nw;		// normals
 	float tx, ty, tz, tw;		// tangent

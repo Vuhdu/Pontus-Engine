@@ -1,21 +1,21 @@
-#include "DeferredStructs.hlsli"
+#include "GBufferStructs.hlsli"
 #include "PBRFunctions.hlsli"
 
 struct GBufferOutput
 {
-	float4 myWorldPosition			: SV_TARGET0;
-	float4 myAlbedo					: SV_TARGET1;
-	float4 myNormal					: SV_TARGET2;
-	float4 myVertexNormal			: SV_TARGET3;
-	float3 myMaterial				: SV_TARGET4;
-	float myAmbientOcclusion		: SV_TARGET5;
-	float myDepth					: SV_TARGET6;
+	float4 myWorldPosition		: SV_TARGET0;
+	float4 myAlbedo				: SV_TARGET1;
+	float4 myNormal2			: SV_TARGET2;
+	float4 myVertexNormal		: SV_TARGET3;
+	float3 myMaterial			: SV_TARGET4;
+	float myAmbientOcclusion	: SV_TARGET5;
+	float myDepth				: SV_TARGET6;
 };
 
-GBufferOutput main(VertexOutput anInput)
+GBufferOutput main(VertexToPixel input)
 {
-	float2 scaledUV = anInput.myUV * OB_UVScale;
-	float3 albedo = GammaToLinear(albedoTexture.Sample(defaultSampler, anInput.myUV).rgb);
+	float2 scaledUV = input.myUV * myUVScale;
+	float3 albedo = albedoTexture.Sample(defaultSampler, scaledUV).rgb;
 
 	float3 normal = normalTexture.Sample(defaultSampler, scaledUV).wyz;
 	float ambientOcclusion = normal.b;
@@ -25,22 +25,28 @@ GBufferOutput main(VertexOutput anInput)
 	normal = normalize(normal);
 
 	float3x3 TBN = float3x3(
-		normalize(anInput.myTangent.xyz),
-		normalize(anInput.myBinormal.xyz),
-		normalize(anInput.myNormal.xyz)
+		normalize(input.myTangent.xyz),
+		normalize(input.myBinormal.xyz),
+		normalize(input.myNormal.xyz)
 		);
+
 	TBN = transpose(TBN);
 	float3 pixelNormal = normalize(mul(TBN, normal));
 	float3 material = materialTexture.Sample(defaultSampler, scaledUV).rgb;
 
 	GBufferOutput output;
 
-	output.myWorldPosition = anInput.myWorldPosition;
+	output.myWorldPosition = input.myWorldPosition;
 	output.myAlbedo = float4(albedo, 1.0f);
-	output.myNormal = float4(pixelNormal, 1.0f);
-	output.myVertexNormal = float4(anInput.myNormal.xyz, 1.0f);
+	output.myNormal2 = float4(pixelNormal, 1.0f);
+	output.myVertexNormal = float4(input.myNormal.xyz, 1.0f);
 	output.myMaterial = material;
-	output.myAmbientOcclusion = anInput.myDepth;
-	output.myDepth = ambientOcclusion;
+
+	// what is input.myDepth
+	//output.myDepth = input.myDepth;
+	output.myDepth = 1.f;
+
+	output.myAmbientOcclusion = ambientOcclusion;
+
 	return output;
 }

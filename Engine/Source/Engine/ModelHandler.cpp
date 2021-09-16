@@ -117,28 +117,21 @@ std::vector<CModel*> CModelHandler::LoadModels(const std::string& aModelPath, co
 
 			if (mesh->GetNumColorChannels() > 0)
 			{
-				vertices[vertexIndex].r0 = colors[0][vertexIndex].r;
-				vertices[vertexIndex].g0 = colors[0][vertexIndex].g;
-				vertices[vertexIndex].b0 = colors[0][vertexIndex].b;
-				vertices[vertexIndex].a0 = colors[0][vertexIndex].a;
+				vertices[vertexIndex].r = colors[0][vertexIndex].r;
+				vertices[vertexIndex].g = colors[0][vertexIndex].g;
+				vertices[vertexIndex].b = colors[0][vertexIndex].b;
+				vertices[vertexIndex].a = colors[0][vertexIndex].a;
 			}
 			else 
 			{
-				vertices[vertexIndex].r0 = 1.0f;
-				vertices[vertexIndex].g0 = 1.0f;
-				vertices[vertexIndex].b0 = 1.0f;
-				vertices[vertexIndex].a0 = 1.0f;
+				vertices[vertexIndex].r = 1.0f;
+				vertices[vertexIndex].g = 1.0f;
+				vertices[vertexIndex].b = 1.0f;
+				vertices[vertexIndex].a = 1.0f;
 			}
 
-			vertices[vertexIndex].u0 = UV[0][vertexIndex].x;
-			vertices[vertexIndex].v0 = UV[0][vertexIndex].y;
-			
-			vertices[vertexIndex].u1 = 0.0f; //UV[1][vertexIndex].x;
-			vertices[vertexIndex].v1 = 0.0f; //UV[1][vertexIndex].y;
-			vertices[vertexIndex].u2 = 0.0f; //UV[2][vertexIndex].x;
-			vertices[vertexIndex].v2 = 0.0f; //UV[2][vertexIndex].y;
-			vertices[vertexIndex].u3 = 0.0f; //UV[3][vertexIndex].x;
-			vertices[vertexIndex].v3 = 0.0f; //UV[3][vertexIndex].y;
+			vertices[vertexIndex].u = UV[0][vertexIndex].x;
+			vertices[vertexIndex].v = UV[0][vertexIndex].y;
 
 			vertices[vertexIndex].nx = normals[vertexIndex].x;
 			vertices[vertexIndex].ny = normals[vertexIndex].y;
@@ -230,13 +223,7 @@ std::vector<CModel*> CModelHandler::LoadModels(const std::string& aModelPath, co
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "COLOR", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "COLOR", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "COLOR", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "UV", 1, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "UV", 2, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "UV", 3, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "TANGENT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "BINORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }

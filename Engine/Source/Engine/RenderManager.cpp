@@ -184,7 +184,10 @@ void CRenderManager::Render()
 		break;
 	}
 
-	FullscreenRender();
+	if (myPass == -1)
+	{
+		FullscreenRender();
+	}
 }
 
 void CRenderManager::ClearTextures()
@@ -192,15 +195,16 @@ void CRenderManager::ClearTextures()
 	static CU::Vector4f clearColor = CEngine::GetClearColor();
 
 	myBackBuffer.ClearTexture(clearColor);
-	myDeferredTexture.ClearTexture(clearColor);
 	myIntermediateTexture.ClearTexture(clearColor);
 	myIntermediateDepth.ClearDepth();
-	myLuminanceTexture.ClearTexture(clearColor);
+	myGBuffer.ClearTextures();
+	myDeferredTexture.ClearTexture(clearColor);
+
 	myHalfsizeTexture.ClearTexture(clearColor);
+	myLuminanceTexture.ClearTexture(clearColor);
 	myQuartersizeTexture.ClearTexture(clearColor);
 	myBlurTexture1.ClearTexture(clearColor);
 	myBlurTexture2.ClearTexture(clearColor);
-	myGBuffer.ClearTextures();
 
 	SetBlendState(BLENDSTATE_DISABLE);
 }
@@ -303,10 +307,28 @@ void CRenderManager::DeferredRender()
 		myDeferredRenderer.Render(pointLights, spotLights);
 	}
 
-	// Luminance
-	myLuminanceTexture.SetAsActiveTarget();
-	myDeferredTexture.SetAsResourceOnSlot(0);
-	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::LUMINANCE);
+	if (CEngine::GetInput()->IsKeyDown(CU::eKeyCode::F6))
+	{
+		myPass++;
+		if (myPass >= static_cast<int>(GBuffer::GBufferTexture::COUNT))
+		{
+			myPass = -1;
+		}
+	}
+
+	if (myPass == -1)
+	{
+		// Luminance
+		myLuminanceTexture.SetAsActiveTarget();
+		myDeferredTexture.SetAsResourceOnSlot(0);
+		myFullscreenRenderer.Render(CFullscreenRenderer::Shader::LUMINANCE);
+	}
+	else
+	{
+		myBackBuffer.SetAsActiveTarget();
+		myGBuffer.SetAsResourceOnSlot(static_cast<GBuffer::GBufferTexture>(myPass), 0);
+		myFullscreenRenderer.Render(CFullscreenRenderer::Shader::COPY);
+	}
 }
 
 void CRenderManager::FullscreenRender()

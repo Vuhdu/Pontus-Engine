@@ -1,9 +1,12 @@
 #include "CubeShaderStructs.hlsli"
 
-PixelOutput main(VertexToPixel input)
+PixelOutput main(VertexOutput aInput)
 {
-	PixelOutput returnValue;
-	float4 textureColor = instanceTexture.Sample(defaultSampler, input.myUV.xy).rgba;
-	returnValue.myColor = textureColor;
-	return returnValue;
+	PixelOutput pixelOutput;
+
+	const float4 textureColor = albedoTexture.Sample(defaultSampler, aInput.myUV.xy).rgba;
+
+	pixelOutput.myColor = textureColor;
+
+	return pixelOutput;
 }

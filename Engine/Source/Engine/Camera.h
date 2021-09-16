@@ -34,7 +34,7 @@ private:
 	CU::Matrix4x4f myProjection;
 
 	float myNearPlane = 0.1f;
-	float myFarPlane = 1000.0f;
+	float myFarPlane = 100000.0f;
 
 	CU::Vector2f myOldMousePosition = { 0.0f, 0.0f };
 

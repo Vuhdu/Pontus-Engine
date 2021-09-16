@@ -93,4 +93,6 @@ private:
 	CFullscreenTexture myBlurTexture1;
 	CFullscreenTexture myBlurTexture2;
 
+	// temp
+	int myPass = -1;
 };
