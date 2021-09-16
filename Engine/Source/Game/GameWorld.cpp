@@ -53,6 +53,7 @@ void CGameWorld::Init()
 
 void CGameWorld::Update(const float [[maybe_unused]] aDeltaTime)
 {
+    /*
     if (!CEngine::IsUsingEditor())
     {
         float range = mySpotLight->GetRange();
@@ -97,6 +98,7 @@ void CGameWorld::Update(const float [[maybe_unused]] aDeltaTime)
 
         ImGui::End();
     }
+    */
 
     myHead->Rotate({ 0.0f, 0.01f, 0.0f });
     myHead2->Rotate({ 0.0f, -0.01f, 0.0f });
