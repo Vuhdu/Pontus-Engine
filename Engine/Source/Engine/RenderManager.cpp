@@ -205,8 +205,6 @@ void CRenderManager::ClearTextures()
 	myQuartersizeTexture.ClearTexture(clearColor);
 	myBlurTexture1.ClearTexture(clearColor);
 	myBlurTexture2.ClearTexture(clearColor);
-
-	SetBlendState(BLENDSTATE_DISABLE);
 }
 
 void CRenderManager::SetBlendState(BlendState aBlendState)
@@ -319,6 +317,7 @@ void CRenderManager::DeferredRender()
 	if (myPass == -1)
 	{
 		// Luminance
+		SetBlendState(BLENDSTATE_DISABLE);
 		myLuminanceTexture.SetAsActiveTarget();
 		myDeferredTexture.SetAsResourceOnSlot(0);
 		myFullscreenRenderer.Render(CFullscreenRenderer::Shader::LUMINANCE);
