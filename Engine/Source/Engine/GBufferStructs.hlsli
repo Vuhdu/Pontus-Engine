@@ -10,7 +10,13 @@ struct VertexToPixel
 	float4 myWorldPosition	:	WORLDPOSITION;
 	float myDepth			:	DEPTH;
 	float4 myColor			:	COLOR0;
+	float4 myColor1			:	COLOR1;
+	float4 myColor2			:	COLOR2;
+	float4 myColor3			:	COLOR3;
 	float2 myUV				:	UV0;
+	float2 myUV1			:	UV1;
+	float2 myUV2			:	UV2;
+	float2 myUV3			:	UV3;
 	float4 myNormal			:	NORMAL;
 	float4 myTangent		:	TANGENT;
 	float4 myBinormal		:	BINORMAL;

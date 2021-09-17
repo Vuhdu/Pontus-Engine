@@ -45,7 +45,7 @@ void CGameWorld::Init()
     mySpotLight->SetRadius(0.0f, 0.2f);
     mySpotLight->SetIntensity(100.0f);
 
-    auto chest = CEngine::GetModelFactory()->CreateModel("Chest", { 100.0f, -70.0f, 350.0f });
+    myChest = CEngine::GetModelFactory()->CreateModel("Chest", { 100.0f, -70.0f, 350.0f });
     myHead = CEngine::GetModelFactory()->CreateModel("Head", { -100.0f, 35.0f, 350.0f });
     myHead2 = CEngine::GetModelFactory()->CreateModel("Head", { -100.0f, 105.0f, 350.0f });
     auto garlicMan = CEngine::GetModelFactory()->CreateModel("GarlicMan", { 0.0f, 35.0f, 500.0f });
@@ -53,6 +53,7 @@ void CGameWorld::Init()
 
 void CGameWorld::Update(const float [[maybe_unused]] aDeltaTime)
 {
+
     /*
     if (!CEngine::IsUsingEditor())
     {

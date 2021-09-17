@@ -10,7 +10,13 @@ struct VertexInput
 {
 	float4 myPosition		:	POSITION;
 	float4 myVxColor0		:	COLOR0;
+	float4 myVxColor1		:	COLOR1;
+	float4 myVxColor2		:	COLOR2;
+	float4 myVxColor3		:	COLOR3;
 	float2 myUV0			:	UV0;
+	float2 myUV1			:	UV1;
+	float2 myUV2			:	UV2;
+	float2 myUV3			:	UV3;
 	float4 myNormal			:	NORMAL;
 	float4 myTangent		:	TANGENT;
 	float4 myBinormal		:	BINORMAL;
@@ -22,7 +28,13 @@ struct VertexOutput
 	float4 myWorldPosition	:	WORLDPOSITION;
 	float myDepth			:	DEPTH;
 	float4 myColor0			:	COLOR0;
+	float4 myColor1			:	COLOR1;
+	float4 myColor2			:	COLOR2;
+	float4 myColor3			:	COLOR3;
 	float2 myUV0			:	UV0;
+	float2 myUV1			:	UV1;
+	float2 myUV2			:	UV2;
+	float2 myUV3			:	UV3;
 	float4 myNormal			:	NORMAL;
 	float4 myTangent		:	TANGENT;
 	float4 myBinormal		:	BINORMAL;

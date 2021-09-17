@@ -16,6 +16,7 @@ public:
 private:
 	CModelInstance* myHead = nullptr;
 	CModelInstance* myHead2 = nullptr;
+	CModelInstance* myChest = nullptr;
 
 	CSpotLight* mySpotLight = nullptr;
 

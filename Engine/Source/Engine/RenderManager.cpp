@@ -303,6 +303,7 @@ void CRenderManager::DeferredRender()
 		myGBuffer.SetAllAsResources();
 		SetBlendState(BLENDSTATE_ADDITIVE);
 		myDeferredRenderer.Render(pointLights, spotLights);
+		SetBlendState(BLENDSTATE_DISABLE);
 	}
 
 	if (CEngine::GetInput()->IsKeyDown(CU::eKeyCode::F6))
@@ -317,16 +318,22 @@ void CRenderManager::DeferredRender()
 	if (myPass == -1)
 	{
 		// Luminance
-		SetBlendState(BLENDSTATE_DISABLE);
 		myLuminanceTexture.SetAsActiveTarget();
 		myDeferredTexture.SetAsResourceOnSlot(0);
 		myFullscreenRenderer.Render(CFullscreenRenderer::Shader::LUMINANCE);
 	}
 	else
 	{
-		myBackBuffer.SetAsActiveTarget();
-		myGBuffer.SetAsResourceOnSlot(static_cast<GBuffer::GBufferTexture>(myPass), 0);
-		myFullscreenRenderer.Render(CFullscreenRenderer::Shader::COPY);
+		//if (static_cast<GBuffer::GBufferTexture>(myPass) >= GBuffer::GBufferTexture::AMBIENTOCCLUSION)
+		//{
+		//	// To-do: add copy shader (grey scale)
+		//}
+		//else
+		//{
+			myBackBuffer.SetAsActiveTarget();
+			myGBuffer.SetAsResourceOnSlot(static_cast<GBuffer::GBufferTexture>(myPass), 0);
+			myFullscreenRenderer.Render(CFullscreenRenderer::Shader::COPY);
+		//}
 	}
 }
 
