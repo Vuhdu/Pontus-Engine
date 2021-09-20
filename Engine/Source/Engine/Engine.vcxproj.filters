@@ -25,6 +25,9 @@
     <Filter Include="Shaders\DeferrredShaders">
       <UniqueIdentifier>{d21ffd3d-84eb-4101-b2a0-68461ea55943}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\ParticleShaders">
+      <UniqueIdentifier>{ae8603df-b001-41a3-8110-b6e873d43463}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">
@@ -82,6 +85,15 @@
     <FxCompile Include="SpotLightShader.hlsl">
       <Filter>Shaders\DeferrredShaders</Filter>
     </FxCompile>
+    <FxCompile Include="ParticleVS.hlsl">
+      <Filter>Shaders\ParticleShaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticleGS.hlsl">
+      <Filter>Shaders\ParticleShaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticlePS.hlsl">
+      <Filter>Shaders\ParticleShaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ShaderStructs.hlsli">
@@ -101,6 +113,9 @@
     </None>
     <None Include="GBufferStructs.hlsli">
       <Filter>Shaders\DeferrredShaders</Filter>
+    </None>
+    <None Include="ParticleStructs.hlsli">
+      <Filter>Shaders\ParticleShaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -213,6 +228,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEmitterFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEmitter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEmitterInstance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -338,6 +365,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitterFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitterInstance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

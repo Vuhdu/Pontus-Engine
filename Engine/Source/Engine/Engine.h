@@ -10,6 +10,7 @@ class CModelFactory;
 class CCameraFactory;
 class CLightFactory;
 class CFullscreenTextureFactory;
+class CParticleEmitterFactory;
 
 class CErrorManager;
 class CModelHandler;
@@ -48,6 +49,7 @@ public:
 	static CCameraFactory*				GetCameraFactory() { return myInstance->myCameraFactory; };
 	static CLightFactory*				GetLightFactory() { return myInstance->myLightFactory; };
 	static CFullscreenTextureFactory*	GetFullscreenTextureFactory() { return myInstance->myFullscreenTextureFactory; };
+	static CParticleEmitterFactory*		GetParticleEmitterFactory() { return myInstance->myParticleEmitterFactory; };
 	static CModelHandler*				GetModelHandler() { return myInstance->myModelHandler; };
 	static CScene*						GetScene() { return myInstance->myScene; };
 
@@ -91,7 +93,8 @@ private:
 	CCameraFactory* myCameraFactory = nullptr;
 	CLightFactory* myLightFactory = nullptr;
 	CFullscreenTextureFactory* myFullscreenTextureFactory = nullptr;
-	
+	CParticleEmitterFactory* myParticleEmitterFactory = nullptr;
+
 	CErrorManager* myErrorManager = nullptr;
 
 	CModelHandler* myModelHandler = nullptr;

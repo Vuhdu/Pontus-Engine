@@ -6,6 +6,7 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "EnvironmentLight.h"
+#include "ParticleEmitterInstance.h"
 
 #include <d3d11.h>
 
@@ -19,6 +20,11 @@ bool CRenderManager::Init(CDirectX11Framework* aFramework)
 	}
 
 	if (!myDeferredRenderer.Init(aFramework))
+	{
+		return false;
+	}
+
+	if (!myParticleRenderer.Init(aFramework))
 	{
 		return false;
 	}
@@ -186,6 +192,7 @@ void CRenderManager::Render()
 
 	if (myPass == -1)
 	{
+		ParticleRender();
 		FullscreenRender();
 	}
 }
@@ -212,6 +219,11 @@ void CRenderManager::SetBlendState(BlendState aBlendState)
 	float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	UINT sampleMask = 0xffffffff;
 	myFramework->GetContext()->OMSetBlendState(myBlendStates[aBlendState], blendFactor, sampleMask);
+}
+
+void CRenderManager::SetDepthStencilState(DepthStencilState aDepthStencilState)
+{
+	myFramework->GetContext()->OMSetDepthStencilState(myDepthStencilStates[aDepthStencilState], 1);
 }
 
 void CRenderManager::ForwardRender()
@@ -266,6 +278,7 @@ void CRenderManager::DeferredRender()
 	CEnvironmentLight* environmentLight = scene->GetEnvironmentLight();
 
 	const std::vector<CModelInstance*> models = scene->CullModels();
+	const std::vector<std::shared_ptr<CParticleEmitterInstance>> emitters = scene->CullEmitters();
 	std::vector<CPointLight*> pointLights = scene->CullPointLights();
 	std::vector<CSpotLight*> spotLights = scene->CullSpotLights();
 
@@ -303,6 +316,12 @@ void CRenderManager::DeferredRender()
 		myGBuffer.SetAllAsResources();
 		SetBlendState(BLENDSTATE_ADDITIVE);
 		myDeferredRenderer.Render(pointLights, spotLights);
+
+		myDeferredTexture.SetAsActiveTarget(&myIntermediateDepth);
+		SetDepthStencilState(DEPTHSTENCILSTATE_READONLY);
+		myParticleRenderer.SetRenderCamera(editorCamera);
+		myParticleRenderer.Render(emitters);
+
 		SetBlendState(BLENDSTATE_DISABLE);
 	}
 
@@ -335,6 +354,10 @@ void CRenderManager::DeferredRender()
 			myFullscreenRenderer.Render(CFullscreenRenderer::Shader::COPY);
 		//}
 	}
+}
+
+void CRenderManager::ParticleRender()
+{
 }
 
 void CRenderManager::FullscreenRender()

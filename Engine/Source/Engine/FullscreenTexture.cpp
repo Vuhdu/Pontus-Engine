@@ -12,7 +12,7 @@ void CFullscreenTexture::ClearTexture(CU::Vector4f aClearColor)
 	);
 }
 
-void CFullscreenTexture::ClearDepth(float aClearDepthValue, unsigned int aClearStencilValue)
+void CFullscreenTexture::ClearDepth(float aClearDepthValue, UINT8 aClearStencilValue)
 {
 	CEngine::GetFramework()->GetContext()->ClearDepthStencilView(
 		myDepth, 

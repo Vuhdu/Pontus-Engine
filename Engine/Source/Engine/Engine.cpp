@@ -15,6 +15,7 @@
 #include "CameraFactory.h"
 #include "LightFactory.h"
 #include "FullscreenTextureFactory.h"
+#include "ParticleEmitterFactory.h"
 
 #include "ModelHandler.h"
 #include "Scene.h"
@@ -30,6 +31,7 @@ CEngine::CEngine()
     myModelFactory = new CModelFactory();
     myCameraFactory = new CCameraFactory();
     myFullscreenTextureFactory = new CFullscreenTextureFactory();
+    myParticleEmitterFactory = new CParticleEmitterFactory();
 
     myModelHandler = new CModelHandler();
 
@@ -43,6 +45,7 @@ CEngine::~CEngine()
     SAFE_DELETE(myScene);
     SAFE_DELETE(myModelHandler);
     SAFE_DELETE(myCameraFactory);
+    SAFE_DELETE(myParticleEmitterFactory);
     SAFE_DELETE(myFullscreenTextureFactory);
     SAFE_DELETE(myModelFactory);
     SAFE_DELETE(myLightFactory);
@@ -105,6 +108,7 @@ bool CEngine::InternalStart(SCreateParameters* someCreateParameters)
 
     myLightFactory->Init(myFramework->GetDevice());
     myModelFactory->Init(myFramework->GetDevice());
+    myParticleEmitterFactory->Init(myFramework->GetDevice());
 
     myEditor = new Editor::CEditor();
     if (!myGraphicsEngine->InitEditorInterface(myEditor))

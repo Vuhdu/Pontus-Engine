@@ -5,6 +5,7 @@
 #include "EnvironmentLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
+#include "ParticleEmitterInstance.h"
 
 CScene::CScene()
 {
@@ -35,6 +36,11 @@ void CScene::AddInstance(CGameObject* aGameObject)
     myGameObjects.push_back(aGameObject);
 }
 
+void CScene::AddInstance(std::shared_ptr<CParticleEmitterInstance> anEmitterInstance)
+{
+    myEmitters.push_back(anEmitterInstance);
+}
+
 std::vector<CModelInstance*>& CScene::CullModels()
 {
     return myModels;
@@ -53,6 +59,11 @@ std::vector<CPointLight*> CScene::CullPointLights()
 std::vector<CSpotLight*> CScene::CullSpotLights()
 {
     return mySpotLights;
+}
+
+std::vector<std::shared_ptr<CParticleEmitterInstance>>& CScene::CullEmitters()
+{
+    return myEmitters;
 }
 
 void CScene::AddInstance(CEnvironmentLight* anEnvironmentLight)

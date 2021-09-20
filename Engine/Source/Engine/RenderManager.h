@@ -1,6 +1,7 @@
 #pragma once
 #include "ForwardRenderer.h"
 #include "DeferredRenderer.h"
+#include "ParticleRenderer.h"
 #include "FullscreenRenderer.h"
 
 #include "FullscreenTexture.h"
@@ -55,10 +56,12 @@ public:
 	void ClearTextures();
 
 	void SetBlendState(BlendState aBlendState);
+	void SetDepthStencilState(DepthStencilState aDepthStencilState);
 
 private:
 	void ForwardRender();
 	void DeferredRender();
+	void ParticleRender();
 	void FullscreenRender();
 
 private:
@@ -73,6 +76,7 @@ private:
 
 	CForwardRenderer myForwardRenderer = {};
 	CDeferredRenderer myDeferredRenderer = {};
+	CParticleRenderer myParticleRenderer = {};
 	CFullscreenRenderer myFullscreenRenderer = {};
 	GBuffer myGBuffer = {};
 

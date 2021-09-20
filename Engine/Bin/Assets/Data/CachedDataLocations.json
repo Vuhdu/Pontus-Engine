@@ -1,3 +1,4 @@
 {
-	"Models": "Assets/Data/Models.json"
+	"Models": "Assets/Data/Models.json",
+	"Particles": "Assets/Data/Particles.json"
 }

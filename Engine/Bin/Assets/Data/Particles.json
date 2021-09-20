@@ -1,0 +1,31 @@
+{
+	"Particles":
+	[
+		{
+			"ParticleNameID": "Sparks",
+			"TexturePath": "Assets/Art/Particles/Particle.dds",
+			
+			"SpawnRate": 1.0,
+			"SpawnAngle": 0.0,
+			"Lifetime": 3.0,
+			"Speed": 1.5,
+			"StartSize": 0.0,
+			"EndSize": 1.0,
+			"EmissiveStrength": 5.0,
+			
+			"StartColor": {
+				"r": 1.0,
+				"g": 0.25,
+				"b": 0.0,
+				"a": 1.0
+			},
+			
+			"EndColor": {
+				"r": 1.0,
+				"g": 0.25,
+				"b": 0.0,
+				"a": 0.0
+			}
+		}
+	]
+}

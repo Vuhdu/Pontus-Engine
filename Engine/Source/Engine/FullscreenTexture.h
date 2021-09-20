@@ -10,7 +10,7 @@ public:
 	~CFullscreenTexture() = default;
 
 	void ClearTexture(CU::Vector4f aClearColor = { 0.0f, 0.0f, 0.0f, 1.0f });
-	void ClearDepth(float aClearDepthValue = 1.0f, unsigned int aClearStencilValue = 0.0f);
+	void ClearDepth(float aClearDepthValue = 1.0f, UINT8 aClearStencilValue = 0);
 	void SetAsActiveTarget(CFullscreenTexture* aDepth = nullptr);
 	void SetAsResourceOnSlot(unsigned int aSlot);
 
