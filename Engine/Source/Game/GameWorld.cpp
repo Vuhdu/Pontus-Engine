@@ -41,10 +41,10 @@ void CGameWorld::Init()
         gl->SetRotation({ 0.0f, -90.0f, 0.0f });
 
         myLoaderModels[i].myModelInstance = new CModelInstance();
-        myLoaderModels[i].myName = "Buddah";
+        myLoaderModels[i].myName = (r) ? "Buddah" : "Chest";
         myLoaderModels[i].myIsLoaded = false;
-        myLoaderModels[i].myDistance = 500.0f;
-        myLoaderModels[i].myModelInstance->SetPosition({ ((r) ? -60.0f : 60.0f), 25.0f, 1000 + (i * 500.0f) });
+        myLoaderModels[i].myDistance = 1000.0f;
+        myLoaderModels[i].myModelInstance->SetPosition({ ((r) ? -60.0f : 60.0f), 25.0f, 1250 + (i * 750.0f) });
 
         r = !r;
     }
@@ -58,26 +58,29 @@ void CGameWorld::Update(const float [[maybe_unused]] aDeltaTime)
     if (myIsMoving)
     {
         myTimer += aDeltaTime;
-        if (myTimer > 4.0f)
+        if (myTimer > 2.0f)
         {
-            camera->Move({ 0.0f, 0.0f, 400.0f * aDeltaTime });
+            camera->Move({ 0.0f, 0.0f, 500.0f * aDeltaTime });
             for (int i = 0; i < myLoaderModels.size(); i++)
             {
-                float distance = CU::Abs((camera->GetPosition() - myLoaderModels[i].myModelInstance->GetPosition()).Length());
-
-                if (distance < myLoaderModels[i].myDistance && myLoaderModels[i].myIsLoaded == false)
+                if (myLoaderModels[i].myIsLoaded == false)
                 {
-                    if (myLoaderThread.joinable())
+                    float distance = CU::Abs((camera->GetPosition() - myLoaderModels[i].myModelInstance->GetPosition()).Length());
+
+                    if (distance < myLoaderModels[i].myDistance)
                     {
-                        myLoaderThread.join();
+                        if (myLoaderThread.joinable())
+                        {
+                            myLoaderThread.join();
+                        }
+                        myLoaderThread = std::thread(
+                            &CGameWorld::StreamLoadModel,
+                            this,
+                            myLoaderModels[i].myName.c_str(),
+                            myLoaderModels[i].myModelInstance
+                        );
+                        myLoaderModels[i].myIsLoaded = true;
                     }
-                    myLoaderThread = std::thread(
-                        &CGameWorld::StreamLoadModel,
-                        this,
-                        myLoaderModels[i].myName.c_str(),
-                        myLoaderModels[i].myModelInstance
-                    );
-                    myLoaderModels[i].myIsLoaded = true;
                 }
             }
         }
