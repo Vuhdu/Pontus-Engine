@@ -215,7 +215,7 @@ CModelInstance* CModelFactory::CreateModel(const char* aModelStringID, const CU:
 	return instance;
 }
 
-void CModelFactory::LoadAndCreateModelFromDrive(const char* aModelStringID, const CU::Vector3f& aPosition)
+void CModelFactory::LoadAndCreateModelFromDrive(const char* aModelStringID, CModelInstance* aModelInstance)
 {
 	nlohmann::json models = JsonParser::GetInstance().GetDataFromIDString("Models");
 
@@ -241,10 +241,8 @@ void CModelFactory::LoadAndCreateModelFromDrive(const char* aModelStringID, cons
 
 			auto models = myModelHandler.LoadModels(modelPath, wTexturePath, wNormalMapPath, wMaterialMapPath);
 
-			auto instance = new CModelInstance();
-			instance->Init(models);
-			instance->SetPosition(aPosition);
-			CEngine::GetScene()->AddInstance(instance);
+			aModelInstance->Init(models);
+			CEngine::GetScene()->AddInstance(aModelInstance);
 		}
 	}
 }

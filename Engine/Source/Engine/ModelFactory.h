@@ -19,7 +19,7 @@ public:
 	CModelInstance* CreateModel(const char* aModelStringID);
 	CModelInstance* CreateModel(const char* aModelStringID, const CU::Vector3f& aPosition);
 	
-	void LoadAndCreateModelFromDrive(const char* aModelStringID, const CU::Vector3f& aPosition);
+	void LoadAndCreateModelFromDrive(const char* aModelStringID, CModelInstance* aModelInstance);
 
 private:
 	CModelHandler myModelHandler;

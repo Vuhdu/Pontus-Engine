@@ -14,8 +14,10 @@
 
 CGameWorld::~CGameWorld()
 {
-    myLoaderThread.join();
-    myLoaderThread2.join();
+    if (myLoaderThread.joinable())
+    {
+        myLoaderThread.join();
+    }
 }
 
 void CGameWorld::Init()
@@ -28,26 +30,24 @@ void CGameWorld::Init()
     //InitDefaultScene(lightFactory);
 
     myIsMoving = true;
-    myTimer = myModelLoaderTimer = 0.0f;
-    myModelIndex = 0;
+    myTimer = 0.0f;
 
-    auto g1 = CEngine::GetModelFactory()->CreateModel("GarlicMan", { 500.0f, -75.0f, 750.0f });
-    auto g2 = CEngine::GetModelFactory()->CreateModel("GarlicMan", { 500.0f, -75.0f, 1000.0f });
-    auto g3 = CEngine::GetModelFactory()->CreateModel("GarlicMan", { 500.0f, -75.0f, 1250.0f });
-    auto g4 = CEngine::GetModelFactory()->CreateModel("GarlicMan", { 500.0f, -75.0f, 1500.0f });
-    g1->SetRotation({ 0.0f, 90.0f, 0.0f });
-    g2->SetRotation({ 0.0f, 90.0f, 0.0f });
-    g3->SetRotation({ 0.0f, 90.0f, 0.0f });
-    g4->SetRotation({ 0.0f, 90.0f, 0.0f });
+    bool r = true;
+    for (int i = 0; i < myLoaderModels.size(); i++)
+    {
+        auto gr = CEngine::GetModelFactory()->CreateModel("GarlicMan", { 500.0f, -100.0f, 750.0f + (i * 250.0f) });
+        gr->SetRotation({ 0.0f, 90.0f, 0.0f });
+        auto gl = CEngine::GetModelFactory()->CreateModel("GarlicMan", { -500.0f, -100.0f, 750.0f + (i * 250.0f) });
+        gl->SetRotation({ 0.0f, -90.0f, 0.0f });
 
-    auto g5 = CEngine::GetModelFactory()->CreateModel("GarlicMan", { -500.0f, -75.0f, 750.0f });
-    auto g6 = CEngine::GetModelFactory()->CreateModel("GarlicMan", { -500.0f, -75.0f, 1000.0f });
-    auto g7 = CEngine::GetModelFactory()->CreateModel("GarlicMan", { -500.0f, -75.0f, 1250.0f });
-    auto g8 = CEngine::GetModelFactory()->CreateModel("GarlicMan", { -500.0f, -75.0f, 1500.0f });
-    g5->SetRotation({ 0.0f, -90.0f, 0.0f });
-    g6->SetRotation({ 0.0f, -90.0f, 0.0f });
-    g7->SetRotation({ 0.0f, -90.0f, 0.0f });
-    g8->SetRotation({ 0.0f, -90.0f, 0.0f });
+        myLoaderModels[i].myModelInstance = new CModelInstance();
+        myLoaderModels[i].myName = "Buddah";
+        myLoaderModels[i].myIsLoaded = false;
+        myLoaderModels[i].myDistance = 500.0f;
+        myLoaderModels[i].myModelInstance->SetPosition({ ((r) ? -60.0f : 60.0f), 25.0f, 1000 + (i * 500.0f) });
+
+        r = !r;
+    }
 }
 
 void CGameWorld::Update(const float [[maybe_unused]] aDeltaTime)
@@ -60,34 +60,25 @@ void CGameWorld::Update(const float [[maybe_unused]] aDeltaTime)
         myTimer += aDeltaTime;
         if (myTimer > 4.0f)
         {
-            camera->Move({ 0.0f, 0.0f, 100.0f * aDeltaTime });
-
-            myModelLoaderTimer += aDeltaTime;
-
-            if (myModelLoaderTimer > 2.0f)
+            camera->Move({ 0.0f, 0.0f, 400.0f * aDeltaTime });
+            for (int i = 0; i < myLoaderModels.size(); i++)
             {
-                switch (myModelIndex)
-                {
-                case 0:
-                    myLoaderThread = std::thread(&CGameWorld::StreamLoadModel, this, "Buddah", CU::Vector3f{ 50.0f, 35.0f, 500.0f });
-                    break;
-                case 1:
-                    myLoaderThread.join();
-                    myLoaderThread = std::thread(&CGameWorld::StreamLoadModel, this, "GarlicMan", CU::Vector3f{ 0.0f, -75.0f, 1000.0f });
-                    break;
-                case 2:
-                {
-                    myLoaderThread.join();
-                    myLoaderThread = std::thread(&CGameWorld::StreamLoadModel, this, "Chest", CU::Vector3f{ 100.0f + 250.0f, -35.0f, 1750.0f });
-                    myLoaderThread2 = std::thread(&CGameWorld::StreamLoadModel, this, "Chest", CU::Vector3f{ 100.0f - 250.0f, -35.0f, 1750.0f });
-                } break;
-                default:
-                    myIsMoving = false;
-                    break;
-                }
+                float distance = CU::Abs((camera->GetPosition() - myLoaderModels[i].myModelInstance->GetPosition()).Length());
 
-                myModelLoaderTimer = 0.0f;
-                myModelIndex++;
+                if (distance < myLoaderModels[i].myDistance && myLoaderModels[i].myIsLoaded == false)
+                {
+                    if (myLoaderThread.joinable())
+                    {
+                        myLoaderThread.join();
+                    }
+                    myLoaderThread = std::thread(
+                        &CGameWorld::StreamLoadModel,
+                        this,
+                        myLoaderModels[i].myName.c_str(),
+                        myLoaderModels[i].myModelInstance
+                    );
+                    myLoaderModels[i].myIsLoaded = true;
+                }
             }
         }
     }
@@ -211,7 +202,7 @@ void CGameWorld::UpdateDefaultScene(const float [[maybe_unused]] aDeltaTime)
     mySpotLight->SetDirection(dir);
 }
 
-void CGameWorld::StreamLoadModel(const char* aModelNameID, const CU::Vector3f& aPosition)
+void CGameWorld::StreamLoadModel(const char* aModelNameID, CModelInstance* aModelInstance)
 {
-    CEngine::GetModelFactory()->LoadAndCreateModelFromDrive(aModelNameID, aPosition);
+    CEngine::GetModelFactory()->LoadAndCreateModelFromDrive(aModelNameID, aModelInstance);
 }

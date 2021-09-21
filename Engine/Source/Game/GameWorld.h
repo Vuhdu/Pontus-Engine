@@ -4,6 +4,14 @@
 class CModelInstance;
 class CSpotLight;
 
+struct LoaderModel
+{
+	std::string myName;
+	float myDistance = 500.0f;
+	bool myIsLoaded = false;
+	CModelInstance* myModelInstance = nullptr;
+};
+
 class CGameWorld
 {
 public:
@@ -18,7 +26,7 @@ public:
 	void DrawSpotLightImguiMenu();
 	void UpdateDefaultScene(const float [[maybe_unused]] aDeltaTime);
 
-	void StreamLoadModel(const char* aModelNameID, const CU::Vector3f& aPosition);
+	void StreamLoadModel(const char* aModelNameID, CModelInstance* aModelInstance);
 
 private:
 	CModelInstance* myHead = nullptr;
@@ -28,12 +36,9 @@ private:
 	CSpotLight* mySpotLight = nullptr;
 
 	float myTimer = 0.0f;
-
-	float myModelLoaderTimer = 0.0f;
-	int myModelIndex = 0;
 	bool myIsMoving = true;
 
 	std::thread myLoaderThread;
-	std::thread myLoaderThread2;
+	std::array<LoaderModel, 100> myLoaderModels;
 };
 
