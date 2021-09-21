@@ -9,6 +9,8 @@
 #include "ModelInstance.h"
 
 #include "Scene.h"
+#include "JsonParser.h"
+
 
 CModelFactory::CModelFactory()
 {
@@ -17,7 +19,6 @@ CModelFactory::CModelFactory()
 
 CModelFactory::~CModelFactory()
 {
-	
 }
 
 void CModelFactory::Init(ID3D11Device* aDevice)
@@ -212,4 +213,38 @@ CModelInstance* CModelFactory::CreateModel(const char* aModelStringID, const CU:
 	instance->SetPosition(aPosition);
 	
 	return instance;
+}
+
+void CModelFactory::LoadAndCreateModelFromDrive(const char* aModelStringID, const CU::Vector3f& aPosition)
+{
+	nlohmann::json models = JsonParser::GetInstance().GetDataFromIDString("Models");
+
+	const int size = static_cast<int>(models["Models"].size());
+	for (int modelIndex = 0; modelIndex < size; modelIndex++)
+	{
+		auto& m = models["Models"][modelIndex];
+
+		std::string modelstringID = m["ModelStringID"];
+
+		if (strcmp(modelstringID.c_str(), aModelStringID) == 0)
+		{
+			std::string modelPath = m["ModelPath"];
+
+			std::string texturePath = m["TexturePath"];
+			std::wstring wTexturePath(texturePath.begin(), texturePath.end());
+
+			std::string normalMapPath = m["NormalMapPath"];
+			std::wstring wNormalMapPath(normalMapPath.begin(), normalMapPath.end());
+
+			std::string materialMapPath = m["MaterialMapPath"];
+			std::wstring wMaterialMapPath(materialMapPath.begin(), materialMapPath.end());
+
+			auto models = myModelHandler.LoadModels(modelPath, wTexturePath, wNormalMapPath, wMaterialMapPath);
+
+			auto instance = new CModelInstance();
+			instance->Init(models);
+			instance->SetPosition(aPosition);
+			CEngine::GetScene()->AddInstance(instance);
+		}
+	}
 }

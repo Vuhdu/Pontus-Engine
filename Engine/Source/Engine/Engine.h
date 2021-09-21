@@ -52,6 +52,7 @@ public:
 	static CParticleEmitterFactory*		GetParticleEmitterFactory() { return myInstance->myParticleEmitterFactory; };
 	static CModelHandler*				GetModelHandler() { return myInstance->myModelHandler; };
 	static CScene*						GetScene() { return myInstance->myScene; };
+	static CCamera*						GetEditorCamera() { return myInstance->myEditorCamera; };
 
 	static CU::InputHandler*	GetInput() { return myInstance->myInput; };
 	static CU::Timer*			GetTimer() { return myInstance->myTimer; };

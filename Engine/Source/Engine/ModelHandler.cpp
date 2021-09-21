@@ -251,6 +251,13 @@ std::vector<CModel*> CModelHandler::LoadModels(const std::string& aModelPath, co
 		{
 			const std::string s(anAlbedoPath.begin(), anAlbedoPath.end());
 			ERROR_PRINT("Albedo Path \"%s\" could not be found for model.", s.c_str());
+
+			albedoPath = L"Assets/Art/Models/_Default/Default_D.dds";
+			result = DirectX::CreateDDSTextureFromFile(myDevice, albedoPath.c_str(), nullptr, &albedoShaderResourceView);
+			if (FAILED(result))
+			{
+				assert(false && "Failed to load default albedo texture.");
+			}
 		}
 		// End Textures
 
@@ -262,6 +269,13 @@ std::vector<CModel*> CModelHandler::LoadModels(const std::string& aModelPath, co
 		{
 			const std::string s(aNormalPath.begin(), aNormalPath.end());
 			ERROR_PRINT("Normal Path \"%s\" could not be found for model.", s.c_str());
+
+			normalPath = L"Assets/Art/Models/_Default/Default_N.dds";
+			result = DirectX::CreateDDSTextureFromFile(myDevice, normalPath.c_str(), nullptr, &normalShaderResourceView);
+			if (FAILED(result))
+			{
+				assert(false && "Failed to load default normal texture.");
+			}
 		}
 		// End Normals
 
@@ -273,6 +287,13 @@ std::vector<CModel*> CModelHandler::LoadModels(const std::string& aModelPath, co
 		{
 			const std::string s(aMaterialPath.begin(), aMaterialPath.end());
 			ERROR_PRINT("Material Path \"%s\" could not be found for model.", s.c_str());
+
+			materialPath = L"Assets/Art/Models/_Default/Default_M.dds";
+			result = DirectX::CreateDDSTextureFromFile(myDevice, materialPath.c_str(), nullptr, &materialShaderResourceView);
+			if (FAILED(result))
+			{
+				assert(false && "Failed to load default material texture.");
+			}
 		}
 		// End Materials
 

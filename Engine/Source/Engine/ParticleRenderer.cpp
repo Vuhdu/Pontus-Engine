@@ -12,6 +12,27 @@ bool CParticleRenderer::Init(CDirectX11Framework* aFramework)
 {
 	myContext = aFramework->GetContext();
 
+	HRESULT result;
+
+	D3D11_BUFFER_DESC bufferDescription = { 0 };
+	bufferDescription.Usage = D3D11_USAGE_DYNAMIC;
+	bufferDescription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	bufferDescription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+	bufferDescription.ByteWidth = sizeof(FrameBufferData);
+	result = aFramework->GetDevice()->CreateBuffer(&bufferDescription, nullptr, &myFrameBuffer);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	bufferDescription.ByteWidth = sizeof(ObjectBufferData);
+	result = aFramework->GetDevice()->CreateBuffer(&bufferDescription, nullptr, &myObjectBuffer);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
 	return true;
 }
 

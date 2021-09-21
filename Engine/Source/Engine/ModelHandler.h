@@ -14,9 +14,7 @@ public:
 	void Init(ID3D11Device* aDevice);
 
 	std::vector<CModel*>	GetModelVector(const std::string aModelStringID) const;
-
-private:
-	std::vector<CModel*> LoadModels(const std::string& aModelPath, const std::wstring& anAlbedoPath, const std::wstring& aNormalPath, const std::wstring& aMaterialPath);
+	std::vector<CModel*>	LoadModels(const std::string& aModelPath, const std::wstring& anAlbedoPath, const std::wstring& aNormalPath, const std::wstring& aMaterialPath);
 
 private:
 	ID3D11Device* myDevice = nullptr;

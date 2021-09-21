@@ -24,6 +24,22 @@
 			"NormalMapPath": "Assets/Art/Models/GarlicMan/GarlicMan_N.dds",
 			"MaterialMapPath": "Assets/Art/Models/GarlicMan/GarlicMan_R.dds",
 			"HeightMapPath": "Assets/Art/Models/GarlicMan/GarlicMan_H.dds"
+		},
+		{
+			"ModelStringID": "Buddah",
+			"ModelPath": "Assets/Art/Models/Buddah/Buddah.fbx",
+			"TexturePath": "",
+			"NormalMapPath": "",
+			"MaterialMapPath": "",
+			"HeightMapPath": ""
+		},
+		{
+			"ModelStringID": "Pedal",
+			"ModelPath": "Assets/Art/Models/Pedal/Pedal.fbx",
+			"TexturePath": "",
+			"NormalMapPath": "",
+			"MaterialMapPath": "",
+			"HeightMapPath": ""
 		}
 	]
 }

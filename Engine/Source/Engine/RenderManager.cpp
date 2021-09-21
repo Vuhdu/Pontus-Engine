@@ -322,6 +322,7 @@ void CRenderManager::DeferredRender()
 		myParticleRenderer.SetRenderCamera(editorCamera);
 		myParticleRenderer.Render(emitters);
 
+		SetDepthStencilState(DEPTHSTENCILSTATE_DEFAULT);
 		SetBlendState(BLENDSTATE_DISABLE);
 	}
 
