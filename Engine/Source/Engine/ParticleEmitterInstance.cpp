@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "ParticleEmitterInstance.h"
 
+#include "Random.h"
+
 #include <d3d11.h>
 
 void CParticleEmitterInstance::Init(CParticleEmitter* anEmitter)
@@ -23,10 +25,9 @@ void CParticleEmitterInstance::Update(const float aDeltaTime, CU::Vector3f aCame
 	int start = myVertices.size() - 1;
 	for (int i = start; i >= 0; --i)
 	{
-		auto particle = myVertices[i];
-		particle.myLifetime += aDeltaTime;
+		myVertices[i].myLifetime += aDeltaTime;
 
-		const float ratio = particle.myLifetime / settings.myParticleLifetime;
+		const float ratio = myVertices[i].myLifetime / settings.myParticleLifetime;
 
 		if (ratio >= 1.0f)
 		{
@@ -38,12 +39,12 @@ void CParticleEmitterInstance::Update(const float aDeltaTime, CU::Vector3f aCame
 		const float size = CU::Lerp(settings.myParticleStartSize, settings.myParticleEndSize, ratio);
 		const CU::Vector4f color = CU::Lerp(settings.myParticleStartColor, settings.myParticleEndColor, ratio);
 
-		particle.myPosition += particle.myVelocity * settings.myParticleSpeed * aDeltaTime;
-		particle.mySize = {
+		myVertices[i].myPosition += myVertices[i].myVelocity * settings.myParticleSpeed * aDeltaTime;
+		myVertices[i].mySize = {
 			size, size
 		};
-		particle.myColor = color;
-		particle.myDistanceToCamera = CU::Vector4f{
+		myVertices[i].myColor = color;
+		myVertices[i].myDistanceToCamera = CU::Vector4f{
 			aCameraPosition.x,
 			aCameraPosition.y,
 			aCameraPosition.z,
@@ -51,16 +52,11 @@ void CParticleEmitterInstance::Update(const float aDeltaTime, CU::Vector3f aCame
 		}.LengthSqr();
 	}
 
-	if (myVertices.size() == 0)
-	{
-		return;
-	}
-
 	for (unsigned int firstIndex = 0; firstIndex < myVertices.size(); firstIndex++)
 	{
 		for (unsigned int secondIndex = 0; secondIndex < myVertices.size(); secondIndex++)
 		{
-			CParticleEmitter::SParticleVertex& firstParticle= myVertices[firstIndex];
+			CParticleEmitter::SParticleVertex& firstParticle = myVertices[firstIndex];
 			CParticleEmitter::SParticleVertex& secondParticle = myVertices[secondIndex];
 
 			if (firstParticle.myDistanceToCamera < secondParticle.myDistanceToCamera)
@@ -103,7 +99,7 @@ void CParticleEmitterInstance::SetPosition(const CU::Vector3f& aPosition)
 
 void CParticleEmitterInstance::InstantiateParticle(CParticleEmitter::SParticleSettings& someSettings)
 {
-	CParticleEmitter::SParticleVertex particle = {};
+	CParticleEmitter::SParticleVertex particle;
 	particle.myColor = someSettings.myParticleStartColor;
 	particle.myLifetime = 0.0f;
 	particle.mySize = { someSettings.myParticleStartSize, someSettings.myParticleStartSize };
@@ -111,10 +107,10 @@ void CParticleEmitterInstance::InstantiateParticle(CParticleEmitter::SParticleSe
 	particle.myEmissiveStrength = someSettings.myParticleEmissiveStrength;
 	
 	particle.myVelocity = CU::Vector4f{
-		static_cast<float>(rand()) / static_cast<float>(RAND_MAX),
-		static_cast<float>(rand()) / static_cast<float>(RAND_MAX),
-		static_cast<float>(rand()) / static_cast<float>(RAND_MAX),
-		1.0f
+		Random::RandomFloat(-180.0f, 180.0f),
+		Random::RandomFloat(-180.0f, 180.0f),
+		Random::RandomFloat(-180.0f, 180.0f),
+		0.0f
 	}.GetNormalized();
 
 	myVertices.push_back(particle);

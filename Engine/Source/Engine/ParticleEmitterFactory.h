@@ -18,7 +18,8 @@ public:
 protected:
 	bool GetParticleEmitterInternal(const std::string& aParticleNameID, CParticleEmitter*& anOutEmitter);
 	CParticleEmitter* LoadParticleEmitter(
-		const std::wstring& aTexturePath
+		const std::wstring& aTexturePath,
+		const int aMaxAmount
 	);
 
 private:

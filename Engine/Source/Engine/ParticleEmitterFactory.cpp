@@ -30,11 +30,12 @@ void CParticleEmitterFactory::Init(ID3D11Device* aDevice)
         std::string texturePath = p["TexturePath"];
         std::wstring wTexturePath(texturePath.begin(), texturePath.end());
 
-        if (myParticleEmitters[particleNameID] = LoadParticleEmitter(wTexturePath))
+        float spawnRate = p["SpawnRate"];
+        float lifetime = p["Lifetime"];
+
+        if (myParticleEmitters[particleNameID] = LoadParticleEmitter(wTexturePath, std::ceil(lifetime / spawnRate)))
         {
-            float spawnRate = p["SpawnRate"];
             float spawnAngle = p["SpawnAngle"];
-            float lifetime = p["Lifetime"];
             float speed = p["Speed"];
             float startSize = p["StartSize"];
             float endSize = p["EndSize"];
@@ -102,18 +103,17 @@ bool CParticleEmitterFactory::GetParticleEmitterInternal(const std::string& aPar
     return false;
 }
 
-CParticleEmitter* CParticleEmitterFactory::LoadParticleEmitter(const std::wstring& aTexturePath)
+CParticleEmitter* CParticleEmitterFactory::LoadParticleEmitter(const std::wstring& aTexturePath, const int aMaxAmount)
 {
     HRESULT result;
-
-    unsigned int particleAmount = 500;
 
     ID3D11Buffer* vertexBuffer;
     D3D11_BUFFER_DESC bufferDescription = { 0 };
     bufferDescription.Usage = D3D11_USAGE_DYNAMIC;
     bufferDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     bufferDescription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    bufferDescription.ByteWidth = sizeof(CParticleEmitter::SParticleVertex);
+    bufferDescription.ByteWidth = aMaxAmount * sizeof(CParticleEmitter::SParticleVertex);
+
     result = myDevice->CreateBuffer(&bufferDescription, nullptr, &vertexBuffer);
     if (FAILED(result))
     {
@@ -183,7 +183,7 @@ CParticleEmitter* CParticleEmitterFactory::LoadParticleEmitter(const std::wstrin
     }
 
     CParticleEmitter::SParticleData data;
-    data.myNumberOfParticles = particleAmount;
+    data.myNumberOfParticles = aMaxAmount;
     data.myStride = sizeof(CParticleEmitter::SParticleVertex);
     data.myOffset = 0;
     data.myParticleVertexBuffer = vertexBuffer;
