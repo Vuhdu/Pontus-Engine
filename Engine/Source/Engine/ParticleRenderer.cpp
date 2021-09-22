@@ -41,7 +41,7 @@ void CParticleRenderer::SetRenderCamera(CCamera* aCamera)
 	myRenderCamera = aCamera;
 }
 
-void CParticleRenderer::Render(const std::vector<std::shared_ptr<CParticleEmitterInstance>>& someParticleEmitters)
+void CParticleRenderer::Render(const std::vector<CParticleEmitterInstance*>& someParticleEmitters)
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE bufferdata;
@@ -71,6 +71,11 @@ void CParticleRenderer::Render(const std::vector<std::shared_ptr<CParticleEmitte
 
     for (const auto& instance : someParticleEmitters)
     {
+		if (instance->GetVertices().size() == 0)
+		{
+			continue;
+		}
+
         const auto& emitter = instance->GetEmitter();
         myObjectBufferData.myToWorld = instance->GetTransform();
         myObjectBufferData.myUVScale = { 1.0f, 1.0f };
@@ -81,7 +86,7 @@ void CParticleRenderer::Render(const std::vector<std::shared_ptr<CParticleEmitte
         memcpy(bufferdata.pData, &myObjectBufferData, sizeof(ObjectBufferData));
         myContext->Unmap(myObjectBuffer, 0);
 
-        CParticleEmitter::SParticleData emitterData = emitter->GetData();
+        auto& emitterData = emitter->GetData();
 
         ZeroMemory(&bufferdata, sizeof(D3D11_MAPPED_SUBRESOURCE));
         result = myContext->Map(emitterData.myParticleVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferdata);
@@ -104,4 +109,5 @@ void CParticleRenderer::Render(const std::vector<std::shared_ptr<CParticleEmitte
 
         myContext->Draw(emitterData.myNumberOfParticles, 0);
     }
+	myContext->GSSetShader(nullptr, nullptr, 0);
 }

@@ -9,8 +9,8 @@
 			"SpawnAngle": 0.0,
 			"Lifetime": 3.0,
 			"Speed": 1.5,
-			"StartSize": 0.0,
-			"EndSize": 1.0,
+			"StartSize": 1.0,
+			"EndSize": 2.0,
 			"EmissiveStrength": 5.0,
 			
 			"StartColor": {

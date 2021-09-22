@@ -278,7 +278,7 @@ void CRenderManager::DeferredRender()
 	CEnvironmentLight* environmentLight = scene->GetEnvironmentLight();
 
 	const std::vector<CModelInstance*> models = scene->CullModels();
-	const std::vector<std::shared_ptr<CParticleEmitterInstance>> emitters = scene->CullEmitters();
+	const std::vector<CParticleEmitterInstance*> emitters = scene->CullEmitters();
 	std::vector<CPointLight*> pointLights = scene->CullPointLights();
 	std::vector<CSpotLight*> spotLights = scene->CullSpotLights();
 
@@ -318,12 +318,13 @@ void CRenderManager::DeferredRender()
 		myDeferredRenderer.Render(pointLights, spotLights);
 
 		myDeferredTexture.SetAsActiveTarget(&myIntermediateDepth);
-		SetDepthStencilState(DEPTHSTENCILSTATE_READONLY);
-		myParticleRenderer.SetRenderCamera(editorCamera);
-		myParticleRenderer.Render(emitters);
 
+		myParticleRenderer.SetRenderCamera(editorCamera);
+		SetDepthStencilState(DEPTHSTENCILSTATE_READONLY);
+		myParticleRenderer.Render(emitters);
 		SetDepthStencilState(DEPTHSTENCILSTATE_DEFAULT);
 		SetBlendState(BLENDSTATE_DISABLE);
+
 	}
 
 	if (CEngine::GetInput()->IsKeyDown(CU::eKeyCode::F6))

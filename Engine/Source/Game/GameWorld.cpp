@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "GameWorld.h"
 
+#include "ParticleEmitterFactory.h"
 #include "ModelFactory.h"
 #include "ModelInstance.h"
 
@@ -8,16 +9,19 @@
 #include "EnvironmentLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
+#include "ParticleEmitterInstance.h"
 
 #include "Timer.h"
 #include "Camera.h"
 
 CGameWorld::~CGameWorld()
 {
+    /*
     if (myLoaderThread.joinable())
     {
         myLoaderThread.join();
     }
+    */
 }
 
 void CGameWorld::Init()
@@ -27,8 +31,9 @@ void CGameWorld::Init()
     auto light = lightFactory->CreateEnvironmentLight(L"Assets/Art/CubeMap/cube_1024_preblurred_angle3_Skansen3.dds");
     light->SetDirection({ 0.0f, 0.0f, -1.0f });
     light->SetColor({ 0.8f, 0.8f, 0.8f });
-    //InitDefaultScene(lightFactory);
+    InitDefaultScene(lightFactory);
 
+    /*
     myIsMoving = true;
     myTimer = 0.0f;
 
@@ -48,11 +53,15 @@ void CGameWorld::Init()
 
         r = !r;
     }
+    */
 }
 
 void CGameWorld::Update(const float [[maybe_unused]] aDeltaTime)
 {
-    //UpdateDefaultScene(aDeltaTime);
+    UpdateDefaultScene(aDeltaTime);
+    myEmitter->Update(aDeltaTime, CEngine::GetEditorCamera()->GetPosition());
+
+    /*
     auto camera = CEngine::GetEditorCamera();
 
     if (myIsMoving)
@@ -85,7 +94,7 @@ void CGameWorld::Update(const float [[maybe_unused]] aDeltaTime)
             }
         }
     }
-
+    */
 }
 
 void CGameWorld::Render()
@@ -126,6 +135,9 @@ void CGameWorld::InitDefaultScene(CLightFactory* aLightFactory)
     myHead2 = CEngine::GetModelFactory()->CreateModel("Head", { -100.0f, 105.0f, 350.0f });
     
     auto garlicMan = CEngine::GetModelFactory()->CreateModel("GarlicMan", { 0.0f, 35.0f, 500.0f });
+
+    myEmitter = CEngine::GetParticleEmitterFactory()->GetParticleEmitter("Sparks");
+    
 }
 
 void CGameWorld::DrawSpotLightImguiMenu()

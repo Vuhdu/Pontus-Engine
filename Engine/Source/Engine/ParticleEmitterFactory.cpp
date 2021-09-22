@@ -3,6 +3,8 @@
 #include "ParticleEmitter.h"
 #include "ParticleEmitterInstance.h"
 
+#include "Scene.h"
+
 #include "JsonParser.h"
 
 #include "DirectX11Framework.h"
@@ -72,9 +74,9 @@ void CParticleEmitterFactory::Init(ID3D11Device* aDevice)
     }
 }
 
-std::shared_ptr<CParticleEmitterInstance> CParticleEmitterFactory::GetParticleEmitter(const std::string& aParticleNameID)
+CParticleEmitterInstance* CParticleEmitterFactory::GetParticleEmitter(const std::string& aParticleNameID)
 {
-    std::shared_ptr<CParticleEmitter> emitter;
+    CParticleEmitter* emitter = nullptr;
     
     if (!GetParticleEmitterInternal(aParticleNameID, emitter))
     {
@@ -82,12 +84,15 @@ std::shared_ptr<CParticleEmitterInstance> CParticleEmitterFactory::GetParticleEm
         return nullptr;
     }
     
-    std::shared_ptr<CParticleEmitterInstance> instance = std::make_shared<CParticleEmitterInstance>();
+    CParticleEmitterInstance* instance = new CParticleEmitterInstance();
     instance->Init(emitter);
+
+    CEngine::GetScene()->AddInstance(instance);
+
     return instance;
 }
 
-bool CParticleEmitterFactory::GetParticleEmitterInternal(const std::string& aParticleNameID, std::shared_ptr<CParticleEmitter> anOutEmitter)
+bool CParticleEmitterFactory::GetParticleEmitterInternal(const std::string& aParticleNameID, CParticleEmitter*& anOutEmitter)
 {
     if (myParticleEmitters.find(aParticleNameID) != myParticleEmitters.end())
     {
@@ -97,7 +102,7 @@ bool CParticleEmitterFactory::GetParticleEmitterInternal(const std::string& aPar
     return false;
 }
 
-std::shared_ptr<CParticleEmitter> CParticleEmitterFactory::LoadParticleEmitter(const std::wstring& aTexturePath)
+CParticleEmitter* CParticleEmitterFactory::LoadParticleEmitter(const std::wstring& aTexturePath)
 {
     HRESULT result;
 
@@ -186,10 +191,10 @@ std::shared_ptr<CParticleEmitter> CParticleEmitterFactory::LoadParticleEmitter(c
     data.myParticleGeometryShader = geometryShader;
     data.myParticlePixelShader = pixelShader;
     data.myInputLayout = inputLayout;
-    data.myPrimitiveTopology = static_cast<UINT>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    data.myPrimitiveTopology = static_cast<unsigned int>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     data.mySRV = textureShaderResourceView;
 
-    std::shared_ptr<CParticleEmitter> emitter = std::make_shared<CParticleEmitter>();
+    CParticleEmitter* emitter = new CParticleEmitter();
     emitter->SetData(data);
     return emitter;
 }

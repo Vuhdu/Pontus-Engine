@@ -13,16 +13,16 @@ public:
 
 	void Init(ID3D11Device* aDevice);
 
-	std::shared_ptr<CParticleEmitterInstance> GetParticleEmitter(const std::string& aParticleNameID);
+	CParticleEmitterInstance* GetParticleEmitter(const std::string& aParticleNameID);
 
 protected:
-	bool GetParticleEmitterInternal(const std::string& aParticleNameID, std::shared_ptr<CParticleEmitter> anOutEmitter);
-	std::shared_ptr<CParticleEmitter> LoadParticleEmitter(
+	bool GetParticleEmitterInternal(const std::string& aParticleNameID, CParticleEmitter*& anOutEmitter);
+	CParticleEmitter* LoadParticleEmitter(
 		const std::wstring& aTexturePath
 	);
 
 private:
-	std::unordered_map<std::string, std::shared_ptr<CParticleEmitter>> myParticleEmitters;
+	std::unordered_map<std::string, CParticleEmitter*> myParticleEmitters;
 
 	ID3D11Device* myDevice = nullptr;
 

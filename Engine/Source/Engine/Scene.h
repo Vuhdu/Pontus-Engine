@@ -23,7 +23,7 @@ public:
 	void AddInstance(CSpotLight* aSpotLight);
 	void AddInstance(CCamera* aCamera);
 	void AddInstance(CGameObject* aGameObject);
-	void AddInstance(std::shared_ptr<CParticleEmitterInstance> anEmitterInstance);
+	void AddInstance(CParticleEmitterInstance* anEmitterInstance);
 
 	std::vector<CModelInstance*>& CullModels();
 	std::vector<CGameObject*>& GetGameObjects();
@@ -33,7 +33,7 @@ public:
 	// To-Do: Culling method.
 	std::vector<CSpotLight*> CullSpotLights();
 
-	std::vector<std::shared_ptr<CParticleEmitterInstance>>& CullEmitters();
+	std::vector<CParticleEmitterInstance*>& CullEmitters();
 
 	void SetMainCamera(CCamera* aCamera);
 	void SetEditorCamera(CCamera* aCamera);
@@ -55,5 +55,5 @@ private:
 
 	std::vector<CPointLight*> myPointLights;
 	std::vector<CSpotLight*> mySpotLights;
-	std::vector<std::shared_ptr<CParticleEmitterInstance>> myEmitters;
+	std::vector<CParticleEmitterInstance*> myEmitters;
 };

@@ -167,7 +167,7 @@ bool CEngine::InternalRun()
         myTimer->Update();
 
         myEditorCamera->Update(myTimer->GetDeltaTime());
-        //myEditorCamera->HandleMovement(*myInput, myTimer->GetDeltaTime());
+        myEditorCamera->HandleMovement(*myInput, myTimer->GetDeltaTime());
         myMainCamera->Update(myTimer->GetDeltaTime());
 
         myCreateParameters->UpdateCallback();

@@ -36,7 +36,7 @@ void CScene::AddInstance(CGameObject* aGameObject)
     myGameObjects.push_back(aGameObject);
 }
 
-void CScene::AddInstance(std::shared_ptr<CParticleEmitterInstance> anEmitterInstance)
+void CScene::AddInstance(CParticleEmitterInstance* anEmitterInstance)
 {
     myEmitters.push_back(anEmitterInstance);
 }
@@ -61,7 +61,7 @@ std::vector<CSpotLight*> CScene::CullSpotLights()
     return mySpotLights;
 }
 
-std::vector<std::shared_ptr<CParticleEmitterInstance>>& CScene::CullEmitters()
+std::vector<CParticleEmitterInstance*>& CScene::CullEmitters()
 {
     return myEmitters;
 }

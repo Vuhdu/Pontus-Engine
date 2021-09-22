@@ -3,6 +3,7 @@
 
 class CModelInstance;
 class CSpotLight;
+class CParticleEmitterInstance;
 
 struct LoaderModel
 {
@@ -34,11 +35,13 @@ private:
 	CModelInstance* myChest = nullptr;
 
 	CSpotLight* mySpotLight = nullptr;
+	CParticleEmitterInstance* myEmitter = nullptr;
 
+	/*
 	float myTimer = 0.0f;
 	bool myIsMoving = true;
-
 	std::thread myLoaderThread;
 	std::array<LoaderModel, 100> myLoaderModels;
+	*/
 };
 

@@ -43,7 +43,7 @@ public:
 		ID3D11VertexShader* myParticleVertexShader = nullptr;
 		ID3D11GeometryShader* myParticleGeometryShader = nullptr;
 		ID3D11PixelShader* myParticlePixelShader = nullptr;
-		UINT myPrimitiveTopology;
+		unsigned int myPrimitiveTopology;
 		ID3D11InputLayout* myInputLayout = nullptr;
 		ID3D11ShaderResourceView* mySRV = nullptr;
 	};

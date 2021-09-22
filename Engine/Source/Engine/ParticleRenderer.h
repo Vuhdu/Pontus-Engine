@@ -25,7 +25,7 @@ public:
 
 	void SetRenderCamera(CCamera* aCamera);
 
-	void Render(const std::vector<std::shared_ptr<CParticleEmitterInstance>>& someParticleEmitters);
+	void Render(const std::vector<CParticleEmitterInstance*>& someParticleEmitters);
 
 private:
 	struct FrameBufferData
