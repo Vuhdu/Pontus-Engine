@@ -7,11 +7,6 @@
 #include "SpotLight.h"
 #include "ParticleEmitterInstance.h"
 
-CScene::CScene()
-{
-    myMainCamera = nullptr;
-}
-
 CScene::~CScene()
 {
     for (auto& camera : myCameras)

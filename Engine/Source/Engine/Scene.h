@@ -12,7 +12,7 @@ class CParticleEmitterInstance;
 class CScene
 {
 public:
-	CScene();
+	CScene() = default;
 	~CScene();
 
 	bool Init();
@@ -44,14 +44,14 @@ public:
 	CEnvironmentLight* GetEnvironmentLight() { return myEnvironmentLight; }
 
 private:
-	CCamera* myEditorCamera;
-	CCamera* myMainCamera;
+	CCamera* myEditorCamera = nullptr;
+	CCamera* myMainCamera = nullptr;
 	std::vector<CCamera*> myCameras;
 
 	std::vector<CGameObject*> myGameObjects;
 
 	std::vector<CModelInstance*> myModels;
-	CEnvironmentLight* myEnvironmentLight;
+	CEnvironmentLight* myEnvironmentLight = nullptr;
 
 	std::vector<CPointLight*> myPointLights;
 	std::vector<CSpotLight*> mySpotLights;

@@ -35,22 +35,22 @@ private:
 		CU::Matrix4x4f myToCamera;
 		CU::Matrix4x4f myToProjection;
 		CU::Vector4f myCameraPosition;
-	} myFrameBufferData;
+	} myFrameBufferData = {};
 
 	struct ObjectBufferData
 	{
 		CU::Matrix4x4f myToWorld;
 		CU::Vector2f myUVScale = { 1.0f, 1.0f };
 		unsigned int padding[2];
-	} myObjectBufferData;
+	} myObjectBufferData = {};
 
 	struct EnvironmentLightBufferData
 	{
-		CU::Vector4f myDirectionalLightDirection;
-		CU::Vector4f myDirectionalLightColorAndIntensity;
-		unsigned int myEnvironmentLightMipCount;
+		CU::Vector4f myDirectionalLightDirection = { 0.0f, 0.0f, 0.0f, 1.0f };
+		CU::Vector4f myDirectionalLightColorAndIntensity = { 0.0f, 0.0f, 0.0f, 1.0f };
+		unsigned int myEnvironmentLightMipCount = 0;
 		unsigned int trash[3];
-	} myEnvironmentLightBufferData;
+	} myEnvironmentLightBufferData{};
 
 	struct PointLightBufferData
 	{
@@ -58,7 +58,7 @@ private:
 		CU::Vector4f myColorAndIntensity;
 		float myRange;
 		CU::Vector3f garbage;
-	} myPointLightBufferData;
+	} myPointLightBufferData = {};
 
 	struct SpotLightBufferData
 	{
@@ -69,7 +69,7 @@ private:
 		float myInnerAngle;
 		float myOuterAngle;
 		float myTrash;
-	} mySpotLightBufferData;
+	} mySpotLightBufferData = {};
 
 	ID3D11Buffer* myObjectBuffer = nullptr;
 	ID3D11Buffer* myFrameBuffer = nullptr;

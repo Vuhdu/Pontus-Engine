@@ -31,22 +31,22 @@ struct SMesh
 {
 	UINT myNumVertices = 0;
 	UINT myNumIndices = 0;
-	UINT myStride;
-	UINT myOffset;
+	UINT myStride = 0;
+	UINT myOffset = 0;
 
 	std::vector<SVertex> myVertices;
 	std::vector<UINT32> myIndices;
 
-	CMaterial* myMaterial;
+	CMaterial* myMaterial = nullptr;
 
-	ID3D11Buffer* myVertexBuffer;
-	ID3D11Buffer* myIndexBuffer;
+	ID3D11Buffer* myVertexBuffer = nullptr;
+	ID3D11Buffer* myIndexBuffer = nullptr;
 
-	ID3D11VertexShader* myVertexShader;
-	ID3D11PixelShader* myPixelShader;
-	ID3D11InputLayout* myInputLayout;
+	ID3D11VertexShader* myVertexShader = nullptr;
+	ID3D11PixelShader* myPixelShader = nullptr;
+	ID3D11InputLayout* myInputLayout = nullptr;
 
-	unsigned int myPrimitiveTopology;
+	unsigned int myPrimitiveTopology = 0;
 
 	ID3D11ShaderResourceView* myTexture = nullptr;
 

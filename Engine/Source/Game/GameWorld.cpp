@@ -59,7 +59,7 @@ void CGameWorld::Init()
 void CGameWorld::Update(const float [[maybe_unused]] aDeltaTime)
 {
     UpdateDefaultScene(aDeltaTime);
-    myEmitter->Update(aDeltaTime, CEngine::GetEditorCamera()->GetPosition());
+    
 
     /*
     auto camera = CEngine::GetEditorCamera();
@@ -137,7 +137,7 @@ void CGameWorld::InitDefaultScene(CLightFactory* aLightFactory)
     auto garlicMan = CEngine::GetModelFactory()->CreateModel("GarlicMan", { 0.0f, 35.0f, 500.0f });
 
     myEmitter = CEngine::GetParticleEmitterFactory()->GetParticleEmitter("Sparks");
-    
+    myEmitter->SetPosition({ 0.0f, 0.0f, 100.0f });
 }
 
 void CGameWorld::DrawSpotLightImguiMenu()
@@ -215,6 +215,8 @@ void CGameWorld::UpdateDefaultScene(const float [[maybe_unused]] aDeltaTime)
         }
     }
     mySpotLight->SetDirection(dir);
+
+    myEmitter->Update(aDeltaTime, CEngine::GetEditorCamera()->GetPosition());
 }
 
 void CGameWorld::StreamLoadModel(const char* aModelNameID, CModelInstance* aModelInstance)

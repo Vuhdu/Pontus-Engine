@@ -23,7 +23,7 @@ private:
 	void InstantiateParticle(CParticleEmitter::SParticleSettings& someSettings);
 
 private:
-	CParticleEmitter* myEmitter;
+	CParticleEmitter* myEmitter = nullptr;
 	std::vector<CParticleEmitter::SParticleVertex> myVertices;
 	CU::Matrix4x4f myTransform = {};
 

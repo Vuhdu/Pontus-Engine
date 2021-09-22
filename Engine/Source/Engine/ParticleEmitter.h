@@ -43,20 +43,20 @@ public:
 		ID3D11VertexShader* myParticleVertexShader = nullptr;
 		ID3D11GeometryShader* myParticleGeometryShader = nullptr;
 		ID3D11PixelShader* myParticlePixelShader = nullptr;
-		unsigned int myPrimitiveTopology;
+		unsigned int myPrimitiveTopology = 0;
 		ID3D11InputLayout* myInputLayout = nullptr;
 		ID3D11ShaderResourceView* mySRV = nullptr;
 	};
 
 	struct SParticleVertex
 	{
-		CU::Vector4f myPosition;
-		CU::Vector4f myVelocity;
-		CU::Vector4f myColor;
-		CU::Vector2f mySize;
-		float myLifetime;
-		float myDistanceToCamera;
-		float myEmissiveStrength;
+		CU::Vector4f myPosition = { 0.0f, 0.0f, 0.0f, 1.0f };
+		CU::Vector4f myVelocity = { 0.0f, 0.0f, 0.0f, 1.0f };
+		CU::Vector4f myColor = { 1.0f, 1.0f, 1.0f, 1.0f };
+		CU::Vector2f mySize = { 1.0f, 1.0f };
+		float myLifetime = 0.0f;
+		float myDistanceToCamera = 0.0f;
+		float myEmissiveStrength = 0.0f;
 	};
 
 public:

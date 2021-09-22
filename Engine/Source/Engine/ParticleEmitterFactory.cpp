@@ -33,7 +33,7 @@ void CParticleEmitterFactory::Init(ID3D11Device* aDevice)
         float spawnRate = p["SpawnRate"];
         float lifetime = p["Lifetime"];
 
-        if (myParticleEmitters[particleNameID] = LoadParticleEmitter(wTexturePath, std::ceil(lifetime / spawnRate)))
+        if (myParticleEmitters[particleNameID] = LoadParticleEmitter(wTexturePath, static_cast<int>(std::ceil(lifetime / spawnRate))))
         {
             float spawnAngle = p["SpawnAngle"];
             float speed = p["Speed"];
@@ -70,7 +70,7 @@ void CParticleEmitterFactory::Init(ID3D11Device* aDevice)
         }
         else
         {
-            assert(false && "Failed to load particle with NameID: \"%s\"", particleNameID.c_str());
+            assert(false && "Failed to load particle.");
         }
     }
 }
@@ -81,7 +81,7 @@ CParticleEmitterInstance* CParticleEmitterFactory::GetParticleEmitter(const std:
     
     if (!GetParticleEmitterInternal(aParticleNameID, emitter))
     {
-        assert(false && "Could not create particle emitter from file path \"%s\"", someFilePath.c_str());
+        assert(false && "Could not create particle emitter.");
         return nullptr;
     }
     
