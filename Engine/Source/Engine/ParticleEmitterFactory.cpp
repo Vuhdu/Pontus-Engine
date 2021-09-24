@@ -16,7 +16,6 @@
 void CParticleEmitterFactory::Init(ID3D11Device* aDevice)
 {
     myDevice = aDevice;
-    std::shared_ptr<CParticleEmitter> emitter;
 
     nlohmann::json particles = JsonParser::GetInstance().GetDataFromIDString("Particles");
 
