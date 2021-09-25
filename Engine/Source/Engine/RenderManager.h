@@ -59,6 +59,7 @@ public:
 	void SetDepthStencilState(DepthStencilState aDepthStencilState);
 
 private:
+	void ImguiRender();
 	void ForwardRender();
 	void DeferredRender();
 	void ParticleRender();
@@ -69,8 +70,9 @@ private:
 	{
 		Deferred,
 		Forward
-	};
-	RenderMode myRenderMode = RenderMode::Deferred;
+	} myRenderMode = RenderMode::Deferred;
+	
+	bool myBloomIsActive = true;
 
 	CDirectX11Framework* myFramework = nullptr;
 

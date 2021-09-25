@@ -156,7 +156,7 @@ void CGameWorld::DrawSpotLightImguiMenu()
                 spotColor.z,
                 1.0f
         };
-
+        /*
         ImGui::Begin("SpotLight");
         if (ImGui::SliderFloat("Inner Radius", &innerRadius, 0.0f, 1.0f))
         {
@@ -185,6 +185,7 @@ void CGameWorld::DrawSpotLightImguiMenu()
         }
 
         ImGui::End();
+        */
     }
 }
 

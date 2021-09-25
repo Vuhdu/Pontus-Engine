@@ -37,13 +37,18 @@ void CParticleEmitterInstance::Update(const float aDeltaTime, CU::Vector3f aCame
 		}
 
 		const float size = CU::Lerp(settings.myParticleStartSize, settings.myParticleEndSize, ratio);
-		const CU::Vector4f color = CU::Lerp(settings.myParticleStartColor, settings.myParticleEndColor, ratio);
+		const float red = CU::Lerp(settings.myParticleStartColor.x, settings.myParticleEndColor.x, ratio);
+		const float green = CU::Lerp(settings.myParticleStartColor.y, settings.myParticleEndColor.y, ratio);
+		const float blue = CU::Lerp(settings.myParticleStartColor.z, settings.myParticleEndColor.z, ratio);
+		const float alpha = CU::Lerp(settings.myParticleStartColor.w, settings.myParticleEndColor.w, ratio);
 
 		myVertices[i].myPosition += myVertices[i].myVelocity * settings.myParticleSpeed * aDeltaTime;
 		myVertices[i].mySize = {
 			size, size
 		};
-		myVertices[i].myColor = color;
+		myVertices[i].myColor = {
+			red, green, blue, alpha
+		};
 		myVertices[i].myDistanceToCamera = CU::Vector4f{
 			aCameraPosition.x,
 			aCameraPosition.y,

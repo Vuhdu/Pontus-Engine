@@ -190,11 +190,9 @@ void CRenderManager::Render()
 		break;
 	}
 
-	if (myPass == -1)
-	{
-		ParticleRender();
-		FullscreenRender();
-	}
+	FullscreenRender();
+
+	ImguiRender();
 }
 
 void CRenderManager::ClearTextures()
@@ -224,6 +222,35 @@ void CRenderManager::SetBlendState(BlendState aBlendState)
 void CRenderManager::SetDepthStencilState(DepthStencilState aDepthStencilState)
 {
 	myFramework->GetContext()->OMSetDepthStencilState(myDepthStencilStates[aDepthStencilState], 1);
+}
+
+void CRenderManager::ImguiRender()
+{
+	ImGui::Begin("RenderManager");
+	{
+		std::string active = (myRenderMode == RenderMode::Forward) ? "Active: Forward Rendering" : "Active: Deferred Rendering";
+		ImGui::Text("RenderMode");
+		if (ImGui::Button("Forward Rendering", ImVec2(150, 0))) { myRenderMode = RenderMode::Forward; }
+		ImGui::SameLine();
+		if (ImGui::Button("Deferred Rendering", ImVec2(150, 0))) { myRenderMode = RenderMode::Deferred; }
+		ImGui::Text(active.c_str());
+		ImGui::Separator();
+		ImGui::Text("Bloom");
+		bool bloom = myBloomIsActive;
+		if (ImGui::Checkbox("Active", &bloom)) { myBloomIsActive = bloom; }
+		ImGui::Separator();
+		if (myRenderMode == RenderMode::Deferred)
+		{
+			int pass = (myPass + 1);
+			ImGui::Text("Render Pass");
+			if (ImGui::SliderInt("Value", &pass, 0, static_cast<int>(GBuffer::GBufferTexture::COUNT)))
+			{ 
+				myPass = (pass - 1);
+			}
+			ImGui::Separator();
+		}
+	}
+	ImGui::End();
 }
 
 void CRenderManager::ForwardRender()
@@ -261,12 +288,11 @@ void CRenderManager::ForwardRender()
 	{
 		myForwardRenderer.SetRenderCamera(editorCamera);
 		myForwardRenderer.Render(models, pointLights, spotLights);
-	}
 
-	// Luminance
-	myLuminanceTexture.SetAsActiveTarget();
-	myIntermediateTexture.SetAsResourceOnSlot(0);
-	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::LUMINANCE);
+		SetBlendState(BlendState::BLENDSTATE_ADDITIVE);
+		ParticleRender();
+		SetBlendState(BlendState::BLENDSTATE_DISABLE);
+	}
 }
 
 void CRenderManager::DeferredRender()
@@ -278,7 +304,7 @@ void CRenderManager::DeferredRender()
 	CEnvironmentLight* environmentLight = scene->GetEnvironmentLight();
 
 	const std::vector<CModelInstance*> models = scene->CullModels();
-	const std::vector<CParticleEmitterInstance*> emitters = scene->CullEmitters();
+	
 	std::vector<CPointLight*> pointLights = scene->CullPointLights();
 	std::vector<CSpotLight*> spotLights = scene->CullSpotLights();
 
@@ -318,104 +344,122 @@ void CRenderManager::DeferredRender()
 		myDeferredRenderer.Render(pointLights, spotLights);
 
 		myDeferredTexture.SetAsActiveTarget(&myIntermediateDepth);
-
-		myParticleRenderer.SetRenderCamera(editorCamera);
-		SetDepthStencilState(DEPTHSTENCILSTATE_READONLY);
-		myParticleRenderer.Render(emitters);
-		SetDepthStencilState(DEPTHSTENCILSTATE_DEFAULT);
+		
+		ParticleRender();
 		SetBlendState(BLENDSTATE_DISABLE);
-
 	}
 
-	if (CEngine::GetInput()->IsKeyDown(CU::eKeyCode::F6))
+	if (myPass != -1)
 	{
-		myPass++;
-		if (myPass >= static_cast<int>(GBuffer::GBufferTexture::COUNT))
-		{
-			myPass = -1;
-		}
-	}
-
-	if (myPass == -1)
-	{
-		// Luminance
-		myLuminanceTexture.SetAsActiveTarget();
-		myDeferredTexture.SetAsResourceOnSlot(0);
-		myFullscreenRenderer.Render(CFullscreenRenderer::Shader::LUMINANCE);
-	}
-	else
-	{
-		//if (static_cast<GBuffer::GBufferTexture>(myPass) >= GBuffer::GBufferTexture::AMBIENTOCCLUSION)
-		//{
-		//	// To-do: add copy shader (grey scale)
-		//}
-		//else
-		//{
-			myBackBuffer.SetAsActiveTarget();
-			myGBuffer.SetAsResourceOnSlot(static_cast<GBuffer::GBufferTexture>(myPass), 0);
-			myFullscreenRenderer.Render(CFullscreenRenderer::Shader::COPY);
-		//}
+		myBackBuffer.SetAsActiveTarget();
+		myGBuffer.SetAsResourceOnSlot(static_cast<GBuffer::GBufferTexture>(myPass), 0);
+		myFullscreenRenderer.Render(CFullscreenRenderer::Shader::COPY);
 	}
 }
 
 void CRenderManager::ParticleRender()
 {
+	auto scene = CEngine::GetScene();
+	CCamera* editorCamera = scene->GetEditorCamera();
+	const std::vector<CParticleEmitterInstance*> emitters = scene->CullEmitters();
+
+	SetDepthStencilState(DEPTHSTENCILSTATE_READONLY);
+	myParticleRenderer.SetRenderCamera(editorCamera);
+	myParticleRenderer.Render(emitters);
+	SetDepthStencilState(DEPTHSTENCILSTATE_DEFAULT);
 }
 
 void CRenderManager::FullscreenRender()
 {
-	// Downsamples
-	myHalfsizeTexture.SetAsActiveTarget();
-	myLuminanceTexture.SetAsResourceOnSlot(0);
-	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::COPY);
-
-	myQuartersizeTexture.SetAsActiveTarget();
-	myHalfsizeTexture.SetAsResourceOnSlot(0);
-	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::COPY);
-
-	myBlurTexture1.SetAsActiveTarget();
-	myQuartersizeTexture.SetAsResourceOnSlot(0);
-	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::COPY);
-
-	// Gaussian Blurs
-	myBlurTexture2.SetAsActiveTarget();
-	myBlurTexture1.SetAsResourceOnSlot(0);
-	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::GAUSSIANHORIZONTAL);
-
-	myBlurTexture1.SetAsActiveTarget();
-	myBlurTexture2.SetAsResourceOnSlot(0);
-	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::GAUSSIANVERTICAL);
-
-	myBlurTexture2.SetAsActiveTarget();
-	myBlurTexture1.SetAsResourceOnSlot(0);
-	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::GAUSSIANHORIZONTAL);
-
-	myBlurTexture1.SetAsActiveTarget();
-	myBlurTexture2.SetAsResourceOnSlot(0);
-	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::GAUSSIANVERTICAL);
-
-	// Bloom
-	myQuartersizeTexture.SetAsActiveTarget();
-	myBlurTexture1.SetAsResourceOnSlot(0);
-	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::COPY);
-
-	myHalfsizeTexture.SetAsActiveTarget();
-	myQuartersizeTexture.SetAsResourceOnSlot(0);
-	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::COPY);
-
-	myBackBuffer.SetAsActiveTarget();
-
-	switch (myRenderMode)
+	if (myPass == -1)
 	{
-	case CRenderManager::RenderMode::Deferred:
-		myDeferredTexture.SetAsResourceOnSlot(0);
-		break;
-	case CRenderManager::RenderMode::Forward:
-		myIntermediateTexture.SetAsResourceOnSlot(0);
-		break;
-	default:
-		break;
+		if (!myBloomIsActive)
+		{
+			myBackBuffer.SetAsActiveTarget();
+			switch (myRenderMode)
+			{
+			case CRenderManager::RenderMode::Deferred:
+				myDeferredTexture.SetAsResourceOnSlot(0);
+				break;
+			case CRenderManager::RenderMode::Forward:
+				myIntermediateTexture.SetAsResourceOnSlot(0);
+				break;
+			default:
+				break;
+			}
+			myFullscreenRenderer.Render(CFullscreenRenderer::Shader::COPY);
+		}
+		else
+		{
+			// Luminance
+			myLuminanceTexture.SetAsActiveTarget();
+			switch (myRenderMode)
+			{
+			case CRenderManager::RenderMode::Deferred:
+				myDeferredTexture.SetAsResourceOnSlot(0);
+				break;
+			case CRenderManager::RenderMode::Forward:
+				myIntermediateTexture.SetAsResourceOnSlot(0);
+				break;
+			default:
+				break;
+			}
+			myFullscreenRenderer.Render(CFullscreenRenderer::Shader::LUMINANCE);
+
+			// Downsamples
+			myHalfsizeTexture.SetAsActiveTarget();
+			myLuminanceTexture.SetAsResourceOnSlot(0);
+			myFullscreenRenderer.Render(CFullscreenRenderer::Shader::COPY);
+
+			myQuartersizeTexture.SetAsActiveTarget();
+			myHalfsizeTexture.SetAsResourceOnSlot(0);
+			myFullscreenRenderer.Render(CFullscreenRenderer::Shader::COPY);
+
+			myBlurTexture1.SetAsActiveTarget();
+			myQuartersizeTexture.SetAsResourceOnSlot(0);
+			myFullscreenRenderer.Render(CFullscreenRenderer::Shader::COPY);
+
+			// Gaussian Blurs
+			myBlurTexture2.SetAsActiveTarget();
+			myBlurTexture1.SetAsResourceOnSlot(0);
+			myFullscreenRenderer.Render(CFullscreenRenderer::Shader::GAUSSIANHORIZONTAL);
+
+			myBlurTexture1.SetAsActiveTarget();
+			myBlurTexture2.SetAsResourceOnSlot(0);
+			myFullscreenRenderer.Render(CFullscreenRenderer::Shader::GAUSSIANVERTICAL);
+
+			myBlurTexture2.SetAsActiveTarget();
+			myBlurTexture1.SetAsResourceOnSlot(0);
+			myFullscreenRenderer.Render(CFullscreenRenderer::Shader::GAUSSIANHORIZONTAL);
+
+			myBlurTexture1.SetAsActiveTarget();
+			myBlurTexture2.SetAsResourceOnSlot(0);
+			myFullscreenRenderer.Render(CFullscreenRenderer::Shader::GAUSSIANVERTICAL);
+
+			// Bloom
+			myQuartersizeTexture.SetAsActiveTarget();
+			myBlurTexture1.SetAsResourceOnSlot(0);
+			myFullscreenRenderer.Render(CFullscreenRenderer::Shader::COPY);
+
+			myHalfsizeTexture.SetAsActiveTarget();
+			myQuartersizeTexture.SetAsResourceOnSlot(0);
+			myFullscreenRenderer.Render(CFullscreenRenderer::Shader::COPY);
+
+			myBackBuffer.SetAsActiveTarget();
+
+			switch (myRenderMode)
+			{
+			case CRenderManager::RenderMode::Deferred:
+				myDeferredTexture.SetAsResourceOnSlot(0);
+				break;
+			case CRenderManager::RenderMode::Forward:
+				myIntermediateTexture.SetAsResourceOnSlot(0);
+				break;
+			default:
+				break;
+			}
+			myHalfsizeTexture.SetAsResourceOnSlot(1);
+			myFullscreenRenderer.Render(CFullscreenRenderer::Shader::BLOOM);
+		}
 	}
-	myHalfsizeTexture.SetAsResourceOnSlot(1);
-	myFullscreenRenderer.Render(CFullscreenRenderer::Shader::BLOOM);
 }
