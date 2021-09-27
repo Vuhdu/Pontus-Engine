@@ -56,5 +56,5 @@ void CShadowRenderer::Render(const std::vector<CModelInstance*>& aModelList)
 	myFramework->GetContext()->Unmap(myFrameBuffer, 0);
 	myFramework->GetContext()->VSSetConstantBuffers(0, 1, &myFrameBuffer);
 
-
+	// Shadow mapping branch
 }
