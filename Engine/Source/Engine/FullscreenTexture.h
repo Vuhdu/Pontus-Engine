@@ -11,6 +11,8 @@ public:
 
 	void ClearTexture(CU::Vector4f aClearColor = { 0.0f, 0.0f, 0.0f, 1.0f });
 	void ClearDepth(float aClearDepthValue = 1.0f, unsigned char aClearStencilValue = 0);
+	
+	void SetAsActiveDepth();
 	void SetAsActiveTarget(CFullscreenTexture* aDepth = nullptr);
 	void SetAsResourceOnSlot(unsigned int aSlot);
 

@@ -41,6 +41,11 @@ namespace CommonUtilities
 		// Assumes aTransform is made up of nothing but rotations and translations.
 		static Matrix4x4<T> GetFastInverse(const Matrix4x4<T>& aTransform);
 
+		void SetPosition(const Vector3<T>& aNewPosition);
+		void SetRotationRad(const Vector3<T>& aNewRotation);
+		void SetRotationDeg(const Vector3<T>& aNewRotation);
+		void SetScale(const Vector3<T>& aNewScale);
+
 		const Vector3<T>	Forward() const;
 		const Vector3<T>	Right() const;
 		const Vector3<T>	Up() const;
@@ -362,6 +367,82 @@ namespace CommonUtilities
 		temp(4, 3) = translation.z;
 		temp(4, 4) = aTransform(4, 4);
 		return temp;
+	}
+
+	template<class T>
+	void Matrix4x4<T>::SetPosition(const Vector3<T>& aNewPosition)
+	{
+		myMatrix[3][0] = aNewPosition.x;
+		myMatrix[3][1] = aNewPosition.y;
+		myMatrix[3][2] = aNewPosition.z;
+	}
+
+	template<class T>
+	void Matrix4x4<T>::SetRotationDeg(const Vector3<T>& aNewRotation)
+	{
+		const float PI = 3.14159265358979323846f;
+		const float toRad = PI / 180;
+		SetRotationRad(aNewRotation * toRad);
+	}
+
+	template<class T>
+	void Matrix4x4<T>::SetRotationRad(const Vector3<T>& aNewRotation)
+	{
+		CU::Matrix4x4<T> translation{};
+		translation(4, 1) = myMatrix[3][0];
+		translation(4, 2) = myMatrix[3][1];
+		translation(4, 3) = myMatrix[3][2];
+
+		const CU::Matrix4x4<T> newMatrix =
+			CU::Matrix4x4<T>::CreateRotationAroundZ(aNewRotation.z) *
+			CU::Matrix4x4<T>::CreateRotationAroundX(aNewRotation.x) *
+			CU::Matrix4x4<T>::CreateRotationAroundY(aNewRotation.y) *
+			translation;
+		
+		myMatrix[0][0] = newMatrix(1, 1);
+		myMatrix[0][1] = newMatrix(1, 2);
+		myMatrix[0][2] = newMatrix(1, 3);
+		myMatrix[0][3] = newMatrix(1, 4);
+
+		myMatrix[1][0] = newMatrix(2, 1);
+		myMatrix[1][1] = newMatrix(2, 2);
+		myMatrix[1][2] = newMatrix(2, 3);
+		myMatrix[1][3] = newMatrix(2, 4);
+
+		myMatrix[2][0] = newMatrix(3, 1);
+		myMatrix[2][1] = newMatrix(3, 2);
+		myMatrix[2][2] = newMatrix(3, 3);
+		myMatrix[2][3] = newMatrix(3, 4);
+
+		myMatrix[3][0] = translation(4, 1);
+		myMatrix[3][1] = translation(4, 2);
+		myMatrix[3][2] = translation(4, 3);
+		myMatrix[3][3] = 1.0f;
+	}
+
+	template<class T>
+	void Matrix4x4<T>::SetScale(const Vector3<T>& aNewScale)
+	{
+		CU::Vector3<T> x = { myMatrix[0][0], myMatrix[0][1], myMatrix[0][2] };
+		x.Normalize();
+		x *= aNewScale.x;
+		myMatrix[0][0] = x.x;
+		myMatrix[0][1] = x.y;
+		myMatrix[0][2] = x.z;
+
+		CU::Vector3<T> y = { myMatrix[1][0], myMatrix[1][1], myMatrix[1][2] };
+		y.Normalize();
+		y *= aNewScale.y;
+		myMatrix[1][0] = y.x;
+		myMatrix[1][1] = y.y;
+		myMatrix[1][2] = y.z;
+
+		CU::Vector3<T> z = { myMatrix[2][0], myMatrix[2][1], myMatrix[2][2] };
+		z.Normalize();
+		z *= aNewScale.z;
+		myMatrix[2][0] = z.x;
+		myMatrix[2][1] = z.y;
+		myMatrix[2][2] = z.z;
 	}
 
 	template<class T>

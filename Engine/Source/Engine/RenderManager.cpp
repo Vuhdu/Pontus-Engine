@@ -12,6 +12,11 @@ bool CRenderManager::Init(CDirectX11Framework* aFramework)
 {
 	myFramework = aFramework;
 	
+	if (!myShadowRenderer.Init(aFramework))
+	{
+		return false;
+	}
+
 	if (!myForwardRenderer.Init(aFramework))
 	{
 		return false;
@@ -173,6 +178,8 @@ void CRenderManager::Render()
 {
 	ClearTextures();
 
+	ShadowRender();
+
 	switch (myRenderMode)
 	{
 	case CRenderManager::RenderMode::Deferred:
@@ -222,6 +229,16 @@ void CRenderManager::SetDepthStencilState(DepthStencilState aDepthStencilState)
 	myFramework->GetContext()->OMSetDepthStencilState(myDepthStencilStates[aDepthStencilState], 1);
 }
 
+void CRenderManager::SetSamplerState(SamplerState aSamplerState)
+{
+	SetSamplerState(1, aSamplerState);
+}
+
+void CRenderManager::SetSamplerState(const int aSlot, SamplerState aSamplerState)
+{
+	myFramework->GetContext()->VSSetSamplers(aSlot, 1, &mySamplerStates[aSamplerState]);
+}
+
 void CRenderManager::ImguiRender()
 {
 	ImGui::Begin("RenderManager");
@@ -249,6 +266,21 @@ void CRenderManager::ImguiRender()
 		}
 	}
 	ImGui::End();
+}
+
+void CRenderManager::ShadowRender()
+{
+	auto scene = CEngine::GetScene();
+	const std::vector<CModelInstance*> models = scene->CullModels();
+
+	CEnvironmentLight* environmentLight = scene->GetEnvironmentLight();
+	auto shadowCamera = environmentLight->GetShadowCamera();
+	auto& shadowMap = environmentLight->GetShadowMap();
+	shadowMap.ClearDepth();
+	shadowMap.SetAsActiveDepth();
+
+	myShadowRenderer.SetRenderCamera(shadowCamera);
+	myShadowRenderer.Render(models);
 }
 
 void CRenderManager::ForwardRender()
@@ -339,6 +371,8 @@ void CRenderManager::DeferredRender()
 		myDeferredTexture.SetAsActiveTarget();
 		myGBuffer.SetAllAsResources();
 		SetBlendState(BLENDSTATE_ADDITIVE);
+		SetSamplerState(SAMPLERSTATE_TRILINEARWRAP);
+		SetSamplerState(1, SAMPLERSTATE_POINT);
 		myDeferredRenderer.Render(pointLights, spotLights);
 
 		myDeferredTexture.SetAsActiveTarget(&myIntermediateDepth);

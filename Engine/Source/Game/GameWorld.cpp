@@ -13,6 +13,8 @@
 
 #include "Timer.h"
 #include "Camera.h"
+#include "Scene.h"
+#include "EnvironmentLight.h"
 
 CGameWorld::~CGameWorld()
 {
@@ -28,10 +30,23 @@ void CGameWorld::Init()
 {
     auto lightFactory = CEngine::GetLightFactory();
 
-    auto light = lightFactory->CreateEnvironmentLight(L"Assets/Art/CubeMap/cube_1024_preblurred_angle3_Skansen3.dds");
+    CU::Vector3f cameraPos = { 0.0f, 0.0f, 0.0f };
+
+    CU::Matrix4x4f shadowCamera4x4f;
+    shadowCamera4x4f.SetPosition(cameraPos);
+
+    auto light = lightFactory->CreateEnvironmentLight(
+        L"Assets/Art/CubeMap/cube_1024_preblurred_angle3_Skansen3.dds",
+        shadowCamera4x4f,
+        { 1.0f, 1.0f, 1.0f, 1.0f },
+        true
+    );
     light->SetDirection({ 0.0f, 0.0f, -1.0f });
     light->SetColor({ 0.8f, 0.8f, 0.8f });
     InitDefaultScene(lightFactory);
+
+    myCameraPos = CEngine::GetModelFactory()->CreateModel("Primitive_Sphere", cameraPos);
+    myCameraPos->SetScale({ 0.1f, 0.1f, 0.1f });
 
     /*
     myIsMoving = true;
@@ -58,8 +73,23 @@ void CGameWorld::Init()
 
 void CGameWorld::Update(const float [[maybe_unused]] aDeltaTime)
 {
-    UpdateDefaultScene(aDeltaTime);
-    
+    //UpdateDefaultScene(aDeltaTime);
+
+    ImGui::Begin("Shadow Camera");
+    {
+        auto environment = CEngine::GetScene()->GetEnvironmentLight();
+        auto camera = environment->GetShadowCamera();
+        static CU::Vector3f position = { 0.0f, 500.0f, 0.0f };
+        static CU::Vector3f eulerAngles = { -25.0f, 0.0f, 0.0f };//{ 0.0f, -37.2f, -20.425f };
+
+        ImGui::DragFloat3("position", &position.x, 0.01f, -180.0f, 180.0f);
+        ImGui::DragFloat3("rotation", &eulerAngles.x, 0.01f, -180.0f, 180.0f);
+        environment->SetDirection(eulerAngles);
+        camera->SetRotation(eulerAngles);
+        camera->SetPosition(position);
+        myCameraPos->SetPosition(position);
+    }
+    ImGui::End();
 
     /*
     auto camera = CEngine::GetEditorCamera();
@@ -104,6 +134,7 @@ void CGameWorld::Render()
 
 void CGameWorld::InitDefaultScene(CLightFactory* aLightFactory)
 {
+    /*
     CPointLight* redPointLight = aLightFactory->CreatePointLight();
     redPointLight->SetPosition({ -200.0f, 70.0f, 500.0f });
     redPointLight->SetColor({ 1.0f, 0.0f, 0.0f });
@@ -129,11 +160,14 @@ void CGameWorld::InitDefaultScene(CLightFactory* aLightFactory)
     mySpotLight->SetRange(500.0f);
     mySpotLight->SetRadius(0.0f, 0.2f);
     mySpotLight->SetIntensity(100.0f);
-
+    */
     myChest = CEngine::GetModelFactory()->CreateModel("Chest", { 100.0f, -70.0f, 350.0f });
     myHead = CEngine::GetModelFactory()->CreateModel("Head", { -100.0f, 35.0f, 350.0f });
     myHead2 = CEngine::GetModelFactory()->CreateModel("Head", { -100.0f, 105.0f, 350.0f });
-    
+
+    myPlane = CEngine::GetModelFactory()->CreateModel("Primitive_Plane", { 0.0f, -75.0f, 350.0f });
+    myPlane->SetScale({ 10.0f, 1.0f, 10.0f });
+
     auto garlicMan = CEngine::GetModelFactory()->CreateModel("GarlicMan", { 0.0f, 35.0f, 500.0f });
 
     myEmitter = CEngine::GetParticleEmitterFactory()->GetParticleEmitter("Sparks");

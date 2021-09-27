@@ -2,6 +2,46 @@
 	"Models":
 	[
 		{
+			"ModelStringID": "Primitive_Cube",
+			"ModelPath": "Assets/Art/Models/Primitives/Cube.fbx",
+			"TexturePath": "",
+			"NormalMapPath": "",
+			"MaterialMapPath": "",
+			"HeightMapPath": ""
+		},
+		{
+			"ModelStringID": "Primitive_Cylinder",
+			"ModelPath": "Assets/Art/Models/Primitives/Cylinder.fbx",
+			"TexturePath": "",
+			"NormalMapPath": "",
+			"MaterialMapPath": "",
+			"HeightMapPath": ""
+		},
+		{
+			"ModelStringID": "Primitive_Cone",
+			"ModelPath": "Assets/Art/Models/Primitives/Cone.fbx",
+			"TexturePath": "",
+			"NormalMapPath": "",
+			"MaterialMapPath": "",
+			"HeightMapPath": ""
+		},
+		{
+			"ModelStringID": "Primitive_Plane",
+			"ModelPath": "Assets/Art/Models/Primitives/Plane.fbx",
+			"TexturePath": "Assets/Art/Models/Primitives/Plane_D.dds",
+			"NormalMapPath": "Assets/Art/Models/Primitives/Plane_N.dds",
+			"MaterialMapPath": "Assets/Art/Models/Primitives/Plane_M.dds",
+			"HeightMapPath": ""
+		},
+		{
+			"ModelStringID": "Primitive_Sphere",
+			"ModelPath": "Assets/Art/Models/Primitives/Sphere.fbx",
+			"TexturePath": "",
+			"NormalMapPath": "",
+			"MaterialMapPath": "",
+			"HeightMapPath": ""
+		},
+		{
 			"ModelStringID": "Chest",
 			"ModelPath": "Assets/Art/Models/Chest/Particle_Chest.fbx",
 			"TexturePath": "Assets/Art/Models/Chest/Particle_Chest_D.dds",

@@ -22,6 +22,12 @@ void CFullscreenTexture::ClearDepth(float aClearDepthValue, unsigned char aClear
 	);
 }
 
+void CFullscreenTexture::SetAsActiveDepth()
+{
+	CEngine::GetFramework()->GetContext()->OMSetRenderTargets(0, nullptr, myDepth);
+	CEngine::GetFramework()->GetContext()->RSSetViewports(1, myViewport);
+}
+
 void CFullscreenTexture::SetAsActiveTarget(CFullscreenTexture* aDepth)
 {
 	if (aDepth)

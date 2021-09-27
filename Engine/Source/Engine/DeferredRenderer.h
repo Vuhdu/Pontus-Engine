@@ -46,10 +46,10 @@ private:
 
 	struct EnvironmentLightBufferData
 	{
+		CU::Matrix4x4f myLightView;
+		CU::Matrix4x4f myLightProjection;
 		CU::Vector4f myDirectionalLightDirection = { 0.0f, 0.0f, 0.0f, 1.0f };
 		CU::Vector4f myDirectionalLightColorAndIntensity = { 0.0f, 0.0f, 0.0f, 1.0f };
-		unsigned int myEnvironmentLightMipCount = 0;
-		unsigned int trash[3];
 	} myEnvironmentLightBufferData{};
 
 	struct PointLightBufferData

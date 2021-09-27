@@ -14,8 +14,13 @@ CCameraFactory::~CCameraFactory()
 
 CCamera* CCameraFactory::CreateCamera(const float aFieldOfView, eOrientation anOrientation)
 {
+	return CreateCamera(aFieldOfView, CEngine::GetResolution(), anOrientation);
+}
+
+CCamera* CCameraFactory::CreateCamera(const float aFieldOfView, const CU::Vector2ui aResolution, eOrientation anOrientation)
+{
 	CCamera* camera = new CCamera();
-	camera->Init(aFieldOfView, CEngine::GetResolution(), anOrientation);
+	camera->Init(aFieldOfView, aResolution, anOrientation);
 
 	CEngine::GetScene()->AddInstance(camera);
 

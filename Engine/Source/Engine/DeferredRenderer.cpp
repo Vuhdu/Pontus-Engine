@@ -139,14 +139,8 @@ void CDeferredRenderer::Render(const std::vector<CPointLight*>& somePointLights,
 
 	myEnvironmentLightBufferData.myDirectionalLightDirection = myEnvironmentLight->GetDirection();
 	myEnvironmentLightBufferData.myDirectionalLightColorAndIntensity = myEnvironmentLight->GetColor();
-	
-	ID3D11Resource* cubeResource = nullptr;
-	myEnvironmentLight->GetCubeMap()->GetResource(&cubeResource);
-	ID3D11Texture2D* cubeTexture = reinterpret_cast<ID3D11Texture2D*>(cubeResource);
-	D3D11_TEXTURE2D_DESC cubeDescription = {};
-	cubeTexture->GetDesc(&cubeDescription);
-	myEnvironmentLightBufferData.myEnvironmentLightMipCount = cubeDescription.MipLevels;
-	cubeResource->Release();
+	myEnvironmentLightBufferData.myLightView = CU::Matrix4x4f::GetFastInverse(myEnvironmentLight->GetShadowCamera()->GetTransform());
+	myEnvironmentLightBufferData.myLightProjection = myEnvironmentLight->GetShadowCamera()->GetProjection();
 
 	ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
 	result = myContext->Map(myEnvironmentLightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData);
@@ -154,6 +148,7 @@ void CDeferredRenderer::Render(const std::vector<CPointLight*>& somePointLights,
 	memcpy(bufferData.pData, &myEnvironmentLightBufferData, sizeof(EnvironmentLightBufferData));
 	myContext->Unmap(myEnvironmentLightBuffer, 0);
 
+	myEnvironmentLight->GetShadowMap().SetAsResourceOnSlot(8);
 	myContext->PSSetConstantBuffers(1, 1, &myEnvironmentLightBuffer);
 	myContext->PSSetShaderResources(0, 1, myEnvironmentLight->GetCubeMapConstPtr());
 

@@ -42,7 +42,7 @@ CEnvironmentLight* CLightFactory::CreateEnvironmentLight(const std::wstring& aCu
 
 	if (aShouldCastShadows)
 	{
-		auto shadowCamera = CEngine::GetCameraFactory()->CreateCamera(90, eOrientation::Orthographic);
+		auto shadowCamera = CEngine::GetCameraFactory()->CreateCamera(90, { 2048, 2048 }, eOrientation::Orthographic);
 		shadowCamera->SetPosition(aTransform.Position());
 		shadowCamera->SetRotation(aTransform.EulerAngles());
 		environmentLight->SetShadowCamera(shadowCamera);

@@ -23,7 +23,8 @@ public:
 	ID3D11ShaderResourceView* const* GetCubeMapConstPtr() { return &myCubeMap; }
 	const CU::Vector4f& GetDirection() const { return myDirection; }
 	const CU::Vector4f& GetColor() const { return myColor; }
-
+	CCamera* GetShadowCamera() const { return myShadowCamera; }
+	CFullscreenTexture& GetShadowMap() { return myShadowMap; }
 
 private:
 	ID3D11ShaderResourceView* myCubeMap = nullptr;

@@ -13,6 +13,7 @@ public:
 	void SetTransform(const CU::Vector3f aPosition, CU::Vector3f aRotation);
 	void SetRotation(const CU::Vector3f aRotation);
 	void SetPosition(const CU::Vector3f aPosition);
+	void SetScale(const CU::Vector3f aScale);
 
 	void Move(const CU::Vector3f aMovement);
 	void Rotate(const CU::Vector3f aRotation);

@@ -7,6 +7,7 @@ Texture2D vertexNormalTexture		: register(t4);
 Texture2D materialTexture			: register(t5);
 Texture2D ambientOcclusionTexture	: register(t6);
 Texture2D depthTexture				: register(t7);
+Texture2D shadowTexture				: register(t8);
 
 SamplerState defaultSampler : register(s0);
 

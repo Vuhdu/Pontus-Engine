@@ -319,6 +319,7 @@
     <None Include="ParticleStructs.hlsli" />
     <None Include="PBRFunctions.hlsli" />
     <None Include="ShaderStructs.hlsli" />
+    <None Include="ShadowStructs.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />

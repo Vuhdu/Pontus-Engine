@@ -1,4 +1,5 @@
 #pragma once
+#include "ShadowRenderer.h"
 #include "ForwardRenderer.h"
 #include "DeferredRenderer.h"
 #include "ParticleRenderer.h"
@@ -57,9 +58,12 @@ public:
 
 	void SetBlendState(BlendState aBlendState);
 	void SetDepthStencilState(DepthStencilState aDepthStencilState);
+	void SetSamplerState(SamplerState aSamplerState);
+	void SetSamplerState(const int aSlot, SamplerState aSamplerState);
 
 private:
 	void ImguiRender();
+	void ShadowRender();
 	void ForwardRender();
 	void DeferredRender();
 	void ParticleRender();
@@ -76,6 +80,7 @@ private:
 
 	CDirectX11Framework* myFramework = nullptr;
 
+	CShadowRenderer myShadowRenderer = {};
 	CForwardRenderer myForwardRenderer = {};
 	CDeferredRenderer myDeferredRenderer = {};
 	CParticleRenderer myParticleRenderer = {};

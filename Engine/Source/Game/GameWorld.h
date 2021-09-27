@@ -33,6 +33,8 @@ private:
 	CModelInstance* myHead = nullptr;
 	CModelInstance* myHead2 = nullptr;
 	CModelInstance* myChest = nullptr;
+	CModelInstance* myPlane = nullptr;
+	CModelInstance* myCameraPos = nullptr;
 
 	CSpotLight* mySpotLight = nullptr;
 	CParticleEmitterInstance* myEmitter = nullptr;
