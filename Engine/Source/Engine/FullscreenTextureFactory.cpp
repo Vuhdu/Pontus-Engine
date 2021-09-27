@@ -70,6 +70,62 @@ CFullscreenTexture CFullscreenTextureFactory::CreateTexture(ID3D11Texture2D* aTe
     return textureResult;
 }
 
+CFullscreenTexture CFullscreenTextureFactory::CreateShadowMap(const CU::Vector2ui& aSize)
+{
+    HRESULT result;
+
+    D3D11_TEXTURE2D_DESC textureDesc = { 0 };
+    textureDesc.Width = aSize.x;
+    textureDesc.Height = aSize.y;
+    textureDesc.MipLevels = 1;
+    textureDesc.ArraySize = 1;
+    textureDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+    textureDesc.SampleDesc.Count = 1;
+    textureDesc.SampleDesc.Quality = 0;
+    textureDesc.Usage = D3D11_USAGE_DEFAULT;
+    textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_DEPTH_STENCIL;
+    textureDesc.CPUAccessFlags = 0;
+    textureDesc.MiscFlags = 0;
+
+    ID3D11Texture2D* texture;
+    result = CEngine::GetFramework()->GetDevice()->CreateTexture2D(&textureDesc, nullptr, &texture);
+    assert(SUCCEEDED(result));
+
+    D3D11_DEPTH_STENCIL_VIEW_DESC depthDesc = {};
+    depthDesc.Format = DXGI_FORMAT_D32_FLOAT;
+    depthDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+
+    ID3D11DepthStencilView* depth;
+    result = CEngine::GetFramework()->GetDevice()->CreateDepthStencilView(texture, &depthDesc, &depth);
+    assert(SUCCEEDED(result));
+
+    D3D11_SHADER_RESOURCE_VIEW_DESC resourceDesc = {};
+    resourceDesc.Format = DXGI_FORMAT_R32_FLOAT;
+    resourceDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+    resourceDesc.Texture2D.MipLevels = textureDesc.MipLevels;
+
+    ID3D11ShaderResourceView* shaderResource;
+    result = CEngine::GetFramework()->GetDevice()->CreateShaderResourceView(texture, &resourceDesc, &shaderResource);
+    assert(SUCCEEDED(result));
+
+    D3D11_VIEWPORT* viewport = new D3D11_VIEWPORT(
+        { 
+            0.0f, 
+            0.0f, 
+            static_cast<float>(aSize.x), 
+            static_cast<float>(aSize.y), 
+            0.0f, 
+            1.0f 
+        });
+
+    CFullscreenTexture returnDepth;
+    returnDepth.myTexture = texture;
+    returnDepth.myDepth = depth;
+    returnDepth.mySRV = shaderResource;
+    returnDepth.myViewport = viewport;
+    return returnDepth;
+}
+
 CFullscreenTexture CFullscreenTextureFactory::CreateDepth(CU::Vector2ui aSize, DXGI_FORMAT aFormat)
 {
     HRESULT result;

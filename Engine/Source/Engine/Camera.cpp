@@ -9,25 +9,36 @@ CCamera::~CCamera()
 {
 }
 
-void CCamera::Init(const float aFieldOfView, const CU::Vector2f aResolution)
+void CCamera::Init(const float aFieldOfView, const CU::Vector2ui aResolution, eOrientation anOrientation)
 {
-	const float hFoVRad = aFieldOfView * (CU_PI / 180.f);
-	const float vFoVRad = 2.f * std::atan(std::tan(hFoVRad / 2.f) * (aResolution.y / aResolution.x));
+	if (anOrientation == eOrientation::Perspective)
+	{
+		const float hFoVRad = aFieldOfView * (CU_PI / 180.f);
+		const float vFoVRad = 2.f * std::atan(std::tan(hFoVRad / 2.f) * static_cast<float>(aResolution.y) / static_cast<float>(aResolution.x));
 
-	const float vFoVDeg = std::ceil(vFoVRad * (180.f / CU_PI));
-	vFoVDeg;
+		const float vFoVDeg = std::ceil(vFoVRad * (180.f / CU_PI));
+		vFoVDeg;
 
-	const float scaleX = 1.f / std::tan(hFoVRad * .5f);
-	const float scaleY = 1.f / std::tan(vFoVRad * .5f);
+		const float scaleX = 1.f / std::tan(hFoVRad * .5f);
+		const float scaleY = 1.f / std::tan(vFoVRad * .5f);
 
-	const float Q = myFarPlane / (myFarPlane - myNearPlane);
+		const float Q = myFarPlane / (myFarPlane - myNearPlane);
 
-	myProjection(1, 1) = scaleX;
-	myProjection(2, 2) = scaleY;
-	myProjection(3, 3) = Q;
-	myProjection(3, 4) = 1.f / Q;
-	myProjection(4, 3) = -Q  * myNearPlane;
-	myProjection(4, 4) = 0.0f;
+		myProjection(1, 1) = scaleX;
+		myProjection(2, 2) = scaleY;
+		myProjection(3, 3) = Q;
+		myProjection(3, 4) = 1.f / Q;
+		myProjection(4, 3) = -Q * myNearPlane;
+		myProjection(4, 4) = 0.0f;
+	}
+	else 
+	{
+		myProjection(1, 1) = 2.0f / static_cast<float>(aResolution.x);
+		myProjection(2, 2) = 2.0f / static_cast<float>(aResolution.y);
+		myProjection(3, 3) = 1.0f / (myFarPlane - myNearPlane);
+		myProjection(4, 3) = myNearPlane / (myNearPlane - myFarPlane);
+		myProjection(4, 4) = 1.0f;
+	}
 }
 
 void CCamera::SetTransform(const CU::Vector3f aPosition, const CU::Vector3f aRotation)

@@ -5,13 +5,19 @@ namespace CommonUtilities
 	class InputHandler;
 }
 
+enum class eOrientation
+{
+	Perspective,
+	Orthographic
+};
+
 class CCamera
 {
 public:
 	CCamera();
 	~CCamera();
 
-	void Init(const float aFieldOfView, const CU::Vector2f aResolution);
+	void Init(const float aFieldOfView, const CU::Vector2ui aResolution, eOrientation anOrientation = eOrientation::Perspective);
 
 	void SetTransform(const CU::Vector3f aPosition, CU::Vector3f aRotation);
 	void SetRotation(const CU::Vector3f aRotation);

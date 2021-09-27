@@ -116,9 +116,9 @@ bool CEngine::InternalStart(SCreateParameters* someCreateParameters)
         return EXIT_FAILURE;
     }
 
-    myEditorCamera = myCameraFactory->CreateCamera(90.0f);
+    myEditorCamera = myCameraFactory->CreateCamera(90.0f, eOrientation::Perspective);
     myEditorCamera->SetTransform({ 0.0f, 0.0f, -5.0f }, { 0.0f, 0.0f, 0.0f });
-    myMainCamera = myCameraFactory->CreateCamera(90.0f);
+    myMainCamera = myCameraFactory->CreateCamera(90.0f, eOrientation::Perspective);
     myMainCamera->SetTransform({ 0.0f, 0.0f, -5.0f }, { 0.0f, 0.0f, 0.0f });
 
     myScene->SetEditorCamera(myEditorCamera);

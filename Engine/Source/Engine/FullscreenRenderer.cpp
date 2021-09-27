@@ -3,7 +3,6 @@
 #include "DirectX11Framework.h"
 
 #include <fstream>
-#include <d3d11.h>
 
 bool CFullscreenRenderer::Init()
 {

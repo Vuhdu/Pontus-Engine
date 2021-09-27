@@ -3,8 +3,6 @@
 #include "FullscreenTexture.h"
 #include "DirectX11Framework.h"
 
-#include <d3d11.h>
-
 void GBuffer::ClearTextures()
 {
 	const auto clearColor = CU::Vector4f{ 0.0f, 0.0f, 0.0f, 0.0f };

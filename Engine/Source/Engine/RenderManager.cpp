@@ -8,8 +8,6 @@
 #include "EnvironmentLight.h"
 #include "ParticleEmitterInstance.h"
 
-#include <d3d11.h>
-
 bool CRenderManager::Init(CDirectX11Framework* aFramework)
 {
 	myFramework = aFramework;

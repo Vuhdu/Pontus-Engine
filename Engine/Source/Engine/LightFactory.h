@@ -15,6 +15,7 @@ public:
 	void Init(ID3D11Device* aDevice);
 
 	CEnvironmentLight* CreateEnvironmentLight(const std::wstring& aCubeMapPath);
+	CEnvironmentLight* CreateEnvironmentLight(const std::wstring& aCubeMapPath, const CU::Matrix4x4f& aTransform, const CU::Vector4f& aColorAndIntensity, bool aShouldCastShadows);;
 	CPointLight* CreatePointLight();
 	CSpotLight* CreateSpotLight();
 

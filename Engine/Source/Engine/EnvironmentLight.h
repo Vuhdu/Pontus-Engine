@@ -1,6 +1,8 @@
 #pragma once
+#include "FullscreenTexture.h"
 
 struct ID3D11ShaderResourceView;
+class CCamera;
 
 class CEnvironmentLight
 {
@@ -11,6 +13,10 @@ public:
 
 	void SetDirection(const CU::Vector3f& aDirection);
 	void SetColor(const CU::Vector3f& aColor);
+	void SetIntensity(const float& anIntensity);
+	void SetShadowCamera(CCamera* aCamera);
+	void SetShouldCastShadows(bool aShouldCastShadows);
+	void SetShadowMap(const CFullscreenTexture aShadowMap);
 
 public:
 	ID3D11ShaderResourceView* GetCubeMap() { return myCubeMap; }
@@ -23,5 +29,9 @@ private:
 	ID3D11ShaderResourceView* myCubeMap = nullptr;
 	CU::Vector4f myDirection = { };
 	CU::Vector4f myColor = { };
+
+	bool myIsCastingShadows = false;
+	CCamera* myShadowCamera = nullptr;
+	CFullscreenTexture myShadowMap;
 
 };

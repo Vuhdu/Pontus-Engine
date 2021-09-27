@@ -359,6 +359,7 @@
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="ShadowRenderer.cpp" />
     <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -408,6 +409,7 @@
     <ClInclude Include="RenderManager.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="ShadowRenderer.h" />
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="targetver.h" />

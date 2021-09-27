@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <assert.h>
+#include <d3d11.h>
 
 #include "Vector.h"
 #include "Matrix.h"

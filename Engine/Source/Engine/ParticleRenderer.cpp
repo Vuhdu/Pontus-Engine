@@ -6,7 +6,6 @@
 #include "Camera.h"
 
 #include <fstream>
-#include <d3d11.h>
 
 bool CParticleRenderer::Init(CDirectX11Framework* aFramework)
 {

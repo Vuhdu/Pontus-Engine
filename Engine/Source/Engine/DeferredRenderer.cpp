@@ -12,7 +12,6 @@
 #include "SpotLight.h"
 
 #include <fstream>
-#include <d3d11.h>
 
 bool CDeferredRenderer::Init(CDirectX11Framework* aFramework)
 {

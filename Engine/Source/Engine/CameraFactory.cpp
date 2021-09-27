@@ -12,10 +12,10 @@ CCameraFactory::~CCameraFactory()
 {
 }
 
-CCamera* CCameraFactory::CreateCamera(const float aFieldOfView)
+CCamera* CCameraFactory::CreateCamera(const float aFieldOfView, eOrientation anOrientation)
 {
 	CCamera* camera = new CCamera();
-	camera->Init(aFieldOfView, { 1920.f, 1080.f });
+	camera->Init(aFieldOfView, CEngine::GetResolution(), anOrientation);
 
 	CEngine::GetScene()->AddInstance(camera);
 

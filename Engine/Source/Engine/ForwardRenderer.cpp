@@ -8,8 +8,6 @@
 #include "PointLight.h"
 #include "SpotLight.h"
 
-#include <d3d11.h>
-
 CForwardRenderer::CForwardRenderer()
 {
 	myContext = nullptr;
