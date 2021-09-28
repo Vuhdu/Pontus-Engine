@@ -11,6 +11,7 @@ public:
 
 	CCamera* CreateCamera(const float aFieldOfView, eOrientation anOrientation);
 	CCamera* CreateCamera(const float aFieldOfView, const CU::Vector2ui aResolution, eOrientation anOrientation);
+	CCamera* CreateCameraWithoutAddingToScene(const float aFieldOfView, const CU::Vector2ui aResolution, eOrientation anOrientation);
 
 private:
 

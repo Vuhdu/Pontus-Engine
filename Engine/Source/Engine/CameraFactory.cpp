@@ -26,3 +26,11 @@ CCamera* CCameraFactory::CreateCamera(const float aFieldOfView, const CU::Vector
 
 	return camera;
 }
+
+CCamera* CCameraFactory::CreateCameraWithoutAddingToScene(const float aFieldOfView, const CU::Vector2ui aResolution, eOrientation anOrientation)
+{
+	CCamera* camera = new CCamera();
+	camera->Init(aFieldOfView, aResolution, anOrientation);
+
+	return camera;
+}

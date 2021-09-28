@@ -5,41 +5,44 @@ cbuffer EnvironmentLightBuffer : register(b1)
 {
     float4x4 lightView;
     float4x4 lightProjection;
-	float4 toDirectionalLight;
-	float4 directionalLightColor;
+    float4 toDirectionalLight;
+    float4 directionalLightColor;
+
+    int myEnvironmentLightMipCount; // No longer used
+    int myTrash[3];
 }
 
 PixelOutput main(VertexToPixel input)
 {
-	float4 albedoData = albedoTexture.Sample(defaultSampler, input.myUV);
+    float4 albedoData = albedoTexture.Sample(defaultSampler, input.myUV);
 
-	if (albedoData.a == 0)
-	{
-		discard;
-	}
+    if (albedoData.a == 0)
+    {
+        discard;
+    }
 
-	float3 albedo = albedoData.rgb;
+    float3 albedo = albedoData.rgb;
 
-	PixelOutput output;
+    PixelOutput output;
 
-	float4 worldPosition = positionTexture.Sample(defaultSampler, input.myUV).rgba;
-	float3 normal = normalTexture.Sample(defaultSampler, input.myUV).xyz;
-	float3 vertexNormal = vertexNormalTexture.Sample(defaultSampler, input.myUV).xyz;
-	float4 material = materialTexture.Sample(defaultSampler, input.myUV);
+    float4 worldPosition = positionTexture.Sample(defaultSampler, input.myUV);
+    float3 normal = normalTexture.Sample(defaultSampler, input.myUV).xyz;
+    float3 vertexNormal = vertexNormalTexture.Sample(defaultSampler, input.myUV).xyz;
+    float4 material = materialTexture.Sample(defaultSampler, input.myUV);
 
-	float metalness = material.r;
-	float roughness = material.g;
-	float emissiveMask = material.b;
+    float metalness = material.r;
+    float roughness = material.g;
+    float emissiveMask = material.b;
 
-	float ao = ambientOcclusionTexture.Sample(defaultSampler, input.myUV).r;
-	float depth = depthTexture.Sample(defaultSampler, input.myUV).r;
+    float ao = ambientOcclusionTexture.Sample(defaultSampler, input.myUV).r;
+    float depth = depthTexture.Sample(defaultSampler, input.myUV).r;
 
-	float3 toEye = normalize(FB_CameraPosition.xyz - worldPosition.xyz);
+    float3 toEye = normalize(FB_CameraPosition.xyz - worldPosition.xyz);
 
-	float3 specularColor = lerp((float3)0.04, albedo, metalness);
-	float3 diffuseColor = lerp((float3)0.00, albedo, 1 - metalness);
+    float3 specularColor = lerp((float3) 0.04, albedo, metalness);
+    float3 diffuseColor = lerp((float3) 0.00, albedo, 1 - metalness);
 
-	float3 ambience = EvaluateAmbience(
+    float3 ambience = EvaluateAmbience(
 		environmentTexture,
 		normal,
 		vertexNormal,
@@ -52,7 +55,7 @@ PixelOutput main(VertexToPixel input)
 		specularColor
 	);
 
-	float3 directionalLight = EvaluateDirectionalLight(
+    float3 directionalLight = EvaluateDirectionalLight(
 		diffuseColor,
 		specularColor,
 		normal,
@@ -61,35 +64,40 @@ PixelOutput main(VertexToPixel input)
 		toDirectionalLight.xyz,
 		toEye.xyz
 	);
-
+	
+	// bcuz position, W needs to be 1
+    //float4 worldPos2 = float4(worldPosition, 1.f);
+	
     float4 worldToLightView = mul(lightView, worldPosition);
-    float4 lightViewToProj = mul(lightProjection, worldToLightView);
+    float4 lightViewToLightProj = mul(lightProjection, worldToLightView);
 	
     float2 projectedTexCoord;
-    projectedTexCoord.x = lightViewToProj.x / lightViewToProj.w / 2.0f + 0.5f;
-    projectedTexCoord.y = lightViewToProj.y / lightViewToProj.w / 2.0f + 0.5f;
+    projectedTexCoord.x = lightViewToLightProj.x / lightViewToLightProj.w / 2.f + 0.5f;
+    projectedTexCoord.y = -lightViewToLightProj.y / lightViewToLightProj.w / 2.f + 0.5f;
 	
-	if (saturate(projectedTexCoord.x) == projectedTexCoord.x && saturate(projectedTexCoord.y) == projectedTexCoord.y)
+    if (saturate(projectedTexCoord.x) == projectedTexCoord.x &&
+		saturate(projectedTexCoord.y) == projectedTexCoord.y)
     {
         const float shadowBias = 0.0005f;
 		
-        float shadow = 0.0f;
+        float shadow = 0.f;
 		
-        float viewDepth = (lightViewToProj.z / lightViewToProj.w) - shadowBias;
+        float viewDepth = (lightViewToLightProj.z / lightViewToLightProj.w) - shadowBias;
+
+        float sampleDepth = ShadowTexture.Sample(pointSampler, projectedTexCoord).r;
 		
-        float sampleDepth = shadowTexture.Sample(defaultSampler, projectedTexCoord).r;
-		
-		if (sampleDepth < viewDepth)
+        if (sampleDepth < viewDepth)
         {
             directionalLight *= shadow;
         }
     }
 	
-	float3 emissive = albedo * emissiveMask;
-	float3 radiance = ambience + directionalLight + emissive;
+    float3 emissive = albedo * emissiveMask;
+    float3 radiance = ambience + directionalLight + emissive;
+	//float3 radiance = LinearToGamma(albedo) /*+ directionalLight + emissive*/;
 
-	output.myColor.rgb = LinearToGamma(radiance);
-	output.myColor.a = 1.0f;
+    output.myColor.rgb = LinearToGamma(radiance);
+    output.myColor.a = 1.0f;
 
-	return output;
+    return output;
 }
