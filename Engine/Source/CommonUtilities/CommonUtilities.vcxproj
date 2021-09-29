@@ -189,6 +189,7 @@
     <ClInclude Include="Sphere.hpp" />
     <ClInclude Include="Stack.hpp" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="Transform.h" />
     <ClInclude Include="TreeNode.hpp" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="Vector2.hpp" />
@@ -207,6 +208,7 @@
     </ClCompile>
     <ClCompile Include="Random.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

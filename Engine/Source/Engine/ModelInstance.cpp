@@ -50,7 +50,8 @@ void CModelInstance::SetScale(const CU::Vector3f aScale)
 
 void CModelInstance::SetRotation(const CU::Vector3f aRotation)
 {
-	CU::Matrix4x4f translation;
+	myTransform.SetRotationRad(aRotation);
+	/*CU::Matrix4x4f translation;
 	translation(4, 1) = myTransform(4, 1);
 	translation(4, 2) = myTransform(4, 2);
 	translation(4, 3) = myTransform(4, 3);
@@ -61,7 +62,7 @@ void CModelInstance::SetRotation(const CU::Vector3f aRotation)
 		CU::Matrix4x4f::CreateRotationAroundY(aRotation.y) *
 		translation;
 
-	myTransform = newMatrix;
+	myTransform = newMatrix;*/
 }
 
 void CModelInstance::SetPosition(const CU::Vector3f aPosition)

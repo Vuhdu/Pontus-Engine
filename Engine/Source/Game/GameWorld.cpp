@@ -156,10 +156,13 @@ void CGameWorld::InitDefaultScene(CLightFactory* aLightFactory)
     mySpotLight = aLightFactory->CreateSpotLight();
     mySpotLight->SetPosition({ 0.0f, -35.0f, 0.0f });
     mySpotLight->SetColor({ 1.0f, 1.0f, 1.0f });
-    mySpotLight->SetDirection({ 0.0f, 0.0f, 1.0f });
+    mySpotLight->SetDirection({ 0.0f, 0.0f, 0.0f });
     mySpotLight->SetRange(500.0f);
     mySpotLight->SetRadius(0.0f, 0.2f);
     mySpotLight->SetIntensity(100.0f);
+
+    mySpotPos = CEngine::GetModelFactory()->CreateModel("Primitive_Cube", mySpotLight->GetPosition());
+    
 
     myChest = CEngine::GetModelFactory()->CreateModel("Chest", { 100.0f, -70.0f, 350.0f });
     myHead = CEngine::GetModelFactory()->CreateModel("Head", { -100.0f, 35.0f, 350.0f });
@@ -191,8 +194,49 @@ void CGameWorld::DrawSpotLightImguiMenu()
                 spotColor.z,
                 1.0f
         };
-        /*
+        
         ImGui::Begin("SpotLight");
+        static CU::Vector3f position = mySpotLight->GetPosition();
+        static CU::Vector3f eulerAngles = mySpotLight->GetDirection();
+        static bool followCamera = false;
+
+        if (!followCamera)
+        {
+            ImGui::DragFloat3("position", &position.x, 1.0f, -2000.0f, 2000.0f);
+            ImGui::DragFloat3("rotation", &eulerAngles.x, 0.01f, -180.0f, 180.0f);
+
+            mySpotLight->SetDirection({
+                -eulerAngles.y,
+                eulerAngles.x,
+                eulerAngles.z
+            });
+            mySpotLight->SetPosition(position);
+            
+            //mySpotPos->SetRotation({ eulerAngles.x, eulerAngles.y, eulerAngles.z });
+            //mySpotPos->SetPosition(position);
+        }
+        else
+        {
+            auto camera = CEngine::GetScene()->GetEditorCamera();
+            eulerAngles = camera->GetTransform().Forward();
+            position = camera->GetTransform().Position();
+            
+            mySpotLight->SetDirection({ 
+                -eulerAngles.y, 
+                eulerAngles.x, 
+                eulerAngles.z 
+            });
+
+            mySpotLight->SetPosition(position);
+            
+            //mySpotPos->SetRotation({ 0, 0, 0 });
+            //mySpotPos->SetPosition({ 0, 0, 0 });
+        }
+        ImGui::Checkbox("Follow Camera", &followCamera);
+
+        
+        mySpotPos->SetScale({ 0.25f, 0.25f, 0.25f });
+
         if (ImGui::SliderFloat("Inner Radius", &innerRadius, 0.0f, 1.0f))
         {
             mySpotLight->SetRadius(innerRadius, outerRadius);
@@ -220,7 +264,7 @@ void CGameWorld::DrawSpotLightImguiMenu()
         }
 
         ImGui::End();
-        */
+        
     }
 }
 
@@ -231,6 +275,7 @@ void CGameWorld::UpdateDefaultScene(const float [[maybe_unused]] aDeltaTime)
     myHead->Rotate({ 0.0f, 0.01f, 0.0f });
     myHead2->Rotate({ 0.0f, -0.01f, 0.0f });
 
+    /*
     static bool turn = true;
 
     auto dir = mySpotLight->GetDirection();
@@ -251,6 +296,7 @@ void CGameWorld::UpdateDefaultScene(const float [[maybe_unused]] aDeltaTime)
         }
     }
     mySpotLight->SetDirection(dir);
+    */
 
     myEmitter->Update(aDeltaTime, CEngine::GetEditorCamera()->GetPosition());
 }

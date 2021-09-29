@@ -46,12 +46,12 @@ std::vector<CGameObject*>& CScene::GetGameObjects()
     return myGameObjects;
 }
 
-std::vector<CPointLight*> CScene::CullPointLights()
+std::vector<CPointLight*>& CScene::CullPointLights()
 {
     return myPointLights;
 }
 
-std::vector<CSpotLight*> CScene::CullSpotLights()
+std::vector<CSpotLight*>& CScene::CullSpotLights()
 {
     return mySpotLights;
 }

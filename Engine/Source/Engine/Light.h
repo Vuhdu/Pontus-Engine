@@ -5,7 +5,7 @@ public:
 	CLight() = default;
 	~CLight() = default;
 
-	void SetPosition(const CU::Vector3f& aPosition);
+	virtual void SetPosition(const CU::Vector3f& aPosition);
 	void SetColor(const CU::Vector3f& aColor);
 	void SetIntensity(float anIntensity);
 	void SetRange(float aRange);
@@ -17,6 +17,8 @@ public:
 	const float GetRange() const { return myRange; };
 
 private:
+	CU::Matrix4x4f myTransform;
+
 	CU::Vector3f myPosition = { 0.0f, 0.0f, 0.0f };
 	CU::Vector3f myColor = { 1.0f, 1.0f, 1.0f };
 	float myIntensity = 1.0f;

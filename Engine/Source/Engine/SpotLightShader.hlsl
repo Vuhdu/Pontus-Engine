@@ -3,6 +3,8 @@
 
 cbuffer SpotLightBuffer : register(b1)
 {
+    float4x4 SL_LightView;
+    float4x4 SL_LightProjection;
 	float4 myPosition;
 	float4 myDirection;
 	float4 myColorAndIntensity;
@@ -25,7 +27,7 @@ PixelOutput main(VertexToPixel input)
 
 	PixelOutput output;
 
-	float3 worldPosition = positionTexture.Sample(defaultSampler, input.myUV).rgb;
+	float4 worldPosition = positionTexture.Sample(defaultSampler, input.myUV);
 	float3 normal = normalTexture.Sample(defaultSampler, input.myUV).xyz;
 	float3 vertexNormal = vertexNormalTexture.Sample(defaultSampler, input.myUV).xyz;
 	float4 material = materialTexture.Sample(defaultSampler, input.myUV);
@@ -56,6 +58,30 @@ PixelOutput main(VertexToPixel input)
 		toEye.xyz,
 		worldPosition.xyz);
 
+    float4 worldToLightView = mul(SL_LightView, worldPosition);
+    float4 lightViewToLightProj = mul(SL_LightProjection, worldToLightView);
+	
+    float2 projectedTexCoord;
+    projectedTexCoord.x = lightViewToLightProj.x / lightViewToLightProj.w / 2.f + 0.5f;
+    projectedTexCoord.y = -lightViewToLightProj.y / lightViewToLightProj.w / 2.f + 0.5f;
+	
+    if (saturate(projectedTexCoord.x) == projectedTexCoord.x &&
+		saturate(projectedTexCoord.y) == projectedTexCoord.y)
+    {
+        const float shadowBias = 0.0005f;
+		
+        float shadow = 0.f;
+		
+        float viewDepth = (lightViewToLightProj.z / lightViewToLightProj.w) - shadowBias;
+
+        float sampleDepth = ShadowTexture.Sample(pointSampler, projectedTexCoord).r;
+		
+        if (sampleDepth < viewDepth)
+        {
+            spotLights *= shadow;
+        }
+    }
+	
 	float3 radiance = spotLights;
 
 	output.myColor.rgb = LinearToGamma(radiance);

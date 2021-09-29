@@ -29,9 +29,9 @@ public:
 	std::vector<CGameObject*>& GetGameObjects();
 
 	// To-Do: Culling method.
-	std::vector<CPointLight*> CullPointLights(); 
+	std::vector<CPointLight*>& CullPointLights(); 
 	// To-Do: Culling method.
-	std::vector<CSpotLight*> CullSpotLights();
+	std::vector<CSpotLight*>& CullSpotLights();
 
 	std::vector<CParticleEmitterInstance*>& CullEmitters();
 

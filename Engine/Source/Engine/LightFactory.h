@@ -17,6 +17,7 @@ public:
 	CEnvironmentLight* CreateEnvironmentLight(const std::wstring& aCubeMapPath);
 	CEnvironmentLight* CreateEnvironmentLight(const std::wstring& aCubeMapPath, const CU::Matrix4x4f& aTransform, const CU::Vector4f& aColorAndIntensity, bool aShouldCastShadows);;
 	CPointLight* CreatePointLight();
+	CPointLight* CreatePointLight(const CU::Matrix4x4f& aTransform, bool aShouldCastShadows);
 	CSpotLight* CreateSpotLight();
 
 private:

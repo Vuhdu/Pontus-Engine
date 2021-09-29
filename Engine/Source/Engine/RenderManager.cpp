@@ -6,6 +6,8 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "EnvironmentLight.h"
+#include "SpotLight.h"
+#include "PointLight.h"
 #include "ParticleEmitterInstance.h"
 
 bool CRenderManager::Init(CDirectX11Framework* aFramework)
@@ -273,14 +275,33 @@ void CRenderManager::ShadowRender()
 	auto scene = CEngine::GetScene();
 	const std::vector<CModelInstance*> models = scene->CullModels();
 
-	CEnvironmentLight* environmentLight = scene->GetEnvironmentLight();
-	auto shadowCamera = environmentLight->GetShadowCamera();
-	auto& shadowMap = environmentLight->GetShadowMap();
-	shadowMap.ClearDepth();
-	shadowMap.SetAsActiveDepth();
+	// Environment shadow render
+	{
+		CEnvironmentLight* environmentLight = scene->GetEnvironmentLight();
+		auto shadowCamera = environmentLight->GetShadowCamera();
+		auto& shadowMap = environmentLight->GetShadowMap();
+		shadowMap.ClearDepth();
+		shadowMap.SetAsActiveDepth();
 
-	myShadowRenderer.SetRenderCamera(shadowCamera);
-	myShadowRenderer.Render(models);
+		myShadowRenderer.SetRenderCamera(shadowCamera);
+		myShadowRenderer.Render(models);
+	}
+
+	// Spotlight shadow render
+	{
+		std::vector<CSpotLight*>& spotLights = scene->CullSpotLights();
+
+		for (auto& spotLight : spotLights)
+		{
+			auto shadowCamera = spotLight->GetShadowCamera();
+			auto& shadowMap = spotLight->GetShadowMap();
+			shadowMap.ClearDepth();
+			shadowMap.SetAsActiveDepth();
+
+			myShadowRenderer.SetRenderCamera(shadowCamera);
+			myShadowRenderer.Render(models);
+		}
+	}
 }
 
 void CRenderManager::ForwardRender()
@@ -296,8 +317,8 @@ void CRenderManager::ForwardRender()
 	myForwardRenderer.SetEnvironmentLight(environmentLight);
 
 	const std::vector<CModelInstance*> models = scene->CullModels();
-	std::vector<CPointLight*> pointLights = scene->CullPointLights();
-	std::vector<CSpotLight*> spotLights = scene->CullSpotLights();
+	std::vector<CPointLight*>& pointLights = scene->CullPointLights();
+	std::vector<CSpotLight*>& spotLights = scene->CullSpotLights();
 
 	if (CEngine::IsUsingEditor())
 	{

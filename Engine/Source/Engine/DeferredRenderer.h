@@ -62,6 +62,8 @@ private:
 
 	struct SpotLightBufferData
 	{
+		CU::Matrix4x4f myLightView;
+		CU::Matrix4x4f myLightProjection;
 		CU::Vector4f myPosition;
 		CU::Vector4f myDirection;
 		CU::Vector4f myColorAndIntensity;

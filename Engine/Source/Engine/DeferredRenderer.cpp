@@ -191,6 +191,9 @@ void CDeferredRenderer::Render(const std::vector<CPointLight*>& somePointLights,
 
 	for (auto& light : someSpotLights)
 	{
+		mySpotLightBufferData.myLightView = CU::Matrix4x4f::GetFastInverse(light->GetTransform());
+		mySpotLightBufferData.myLightProjection = light->GetShadowCamera()->GetProjection();
+
 		mySpotLightBufferData.myColorAndIntensity = {
 			light->GetColor().x,
 			light->GetColor().y,
@@ -198,11 +201,13 @@ void CDeferredRenderer::Render(const std::vector<CPointLight*>& somePointLights,
 			light->GetIntensity()
 		};
 		mySpotLightBufferData.myRange = light->GetRange();
+
+		const auto& dir = light->GetTransform().Forward();
 		mySpotLightBufferData.myDirection = {
-			light->GetDirection().x,
-			light->GetDirection().y,
-			light->GetDirection().z,
-			0.0f
+			dir.x,
+			dir.y,
+			dir.z,
+			0.0
 		};
 		mySpotLightBufferData.myPosition = {
 			light->GetPosition().x,
@@ -221,6 +226,9 @@ void CDeferredRenderer::Render(const std::vector<CPointLight*>& somePointLights,
 		}
 		memcpy(bufferData.pData, &mySpotLightBufferData, sizeof(SpotLightBufferData));
 		myContext->Unmap(mySpotLightBuffer, 0);
+
+		// light->GetShadowMap().SetAsResourceOnSlot(8);
+
 		myContext->PSSetConstantBuffers(1, 1, &mySpotLightBuffer);
 		myContext->PSSetShader(mySpotLightShader, nullptr, 0);
 		myContext->Draw(3, 0);
