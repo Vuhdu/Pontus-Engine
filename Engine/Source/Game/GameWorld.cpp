@@ -256,7 +256,7 @@ void CGameWorld::DrawSpotLightImguiMenu()
         {
             mySpotLight->SetIntensity(intensity);
         }
-
+        
         if (ImGui::ColorEdit4("Color", color, ImGuiColorEditFlags_DisplayRGB | ImGuiColorEditFlags_Float | ImGuiColorEditFlags_AlphaPreviewHalf))
         {
             spotColor = { color[0], color[1], color[2] };
