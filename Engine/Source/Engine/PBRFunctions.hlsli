@@ -256,10 +256,10 @@ float3 EvaluateSpotLight(float3 albedoColor, float3 specularColor, float3 normal
 	float linearAttenuation = lightDistance / lightRange;
 	linearAttenuation = 1.0f - linearAttenuation;
 	linearAttenuation = saturate(linearAttenuation);
-	float physicalAttenuation = saturate(linearAttenuation);
+    float physicalAttenuation = saturate(1.0f / (linearAttenuation * lightDistance));
 	float attenuation = lambert * linearAttenuation * physicalAttenuation;
 
 	float finalAttenuation = lambert * intensity * attenuation;
 
-	return saturate(lightColor * lightIntensity * lambert * finalAttenuation * ((cDiff * (-1.0f - cSpec) + cSpec) * PI));
+	return saturate(lightColor * lightIntensity * lambert * finalAttenuation * ((cDiff * (1.0f - cSpec) + cSpec) * PI));
 }
