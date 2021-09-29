@@ -49,15 +49,12 @@ void CCamera::SetTransform(const CU::Vector3f aPosition, const CU::Vector3f aRot
 
 void CCamera::SetRotation(const CU::Vector3f aRotation)
 {
-	myTransform.SetRotationRad(aRotation);
+	myTransform.SetRotation(aRotation);
 }
 
 void CCamera::SetPosition(const CU::Vector3f aPosition)
 {
-	myTransform(4, 1) = aPosition.x;
-	myTransform(4, 2) = aPosition.y;
-	myTransform(4, 3) = aPosition.z;
-	myTransform(4, 4) = 1.0f;
+	myTransform.SetPosition(aPosition);
 }
 
 void CCamera::Update(const float aDeltaTime)
@@ -67,9 +64,9 @@ void CCamera::Update(const float aDeltaTime)
 
 void CCamera::HandleMovement(CU::InputHandler& anInputHandler, const float aDeltaTime)
 {
-	const CU::Vector3f right = myTransform.Right();
-	const CU::Vector3f up = myTransform.Up();
-	const CU::Vector3f forward = myTransform.Forward();
+	const CU::Vector3f right = myTransform.ToMatrix().GetRight();
+	const CU::Vector3f up = myTransform.ToMatrix().GetUp();
+	const CU::Vector3f forward = myTransform.ToMatrix().GetForward();
 
 	CU::Vector3f position = { 0.0f, 0.0f, 0.0f };
 

@@ -30,14 +30,14 @@ public:
 	void Rotate(const CU::Vector3f aRotation);
 
 public:
-	CU::Vector3f GetPosition() { return { myTransform(4, 1), myTransform(4, 2), myTransform(4, 3) }; }
+	CU::Vector3f GetPosition() { return { myTransform.GetPosition() }; }
 
-	CU::Matrix4x4f	GetTransform() { return myTransform; }
-	CU::Matrix4x4f	GetProjection() { return myProjection; }
+	CU::Transform	GetTransform() { return myTransform; }
+	CU::Matrix4f	GetProjection() { return myProjection; }
 
 private:
-	CU::Matrix4x4f myTransform;
-	CU::Matrix4x4f myProjection;
+	CU::Transform myTransform;
+	CU::Matrix4f myProjection;
 
 	float myNearPlane = 0.1f;
 	float myFarPlane = 100000.0f;

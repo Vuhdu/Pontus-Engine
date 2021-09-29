@@ -10,6 +10,7 @@
 
 #include "Vector.h"
 #include "Matrix.h"
+#include "Transform.h"
 #include "Mathcu.hpp"
 #include "InputHandler.h"
 
