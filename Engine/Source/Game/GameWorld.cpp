@@ -82,10 +82,13 @@ void CGameWorld::Update(const float [[maybe_unused]] aDeltaTime)
         auto camera = environment->GetShadowCamera();
         static CU::Vector3f position = { 0.0f, 500.0f, 0.0f };
         static CU::Vector3f eulerAngles = { -25.0f, 0.0f, 0.0f };
+        static float intensity = 1.0f;
 
         ImGui::DragFloat3("position", &position.x, 1.0f, -2000.0f, 2000.0f);
         ImGui::DragFloat3("rotation", &eulerAngles.x, 0.01f, -180.0f, 180.0f);
+        ImGui::DragFloat("intensity", &intensity, 0.01f, 0.0f, 1.0f);
         environment->SetDirection(eulerAngles);
+        environment->SetIntensity(intensity);
         camera->SetRotation(eulerAngles);
         camera->SetPosition(position);
         myCameraPos->SetPosition(position);
@@ -160,7 +163,7 @@ void CGameWorld::InitDefaultScene(CLightFactory* aLightFactory)
     mySpotLight->SetRotation({ 0.0f, 0.0f, 0.0f });
     mySpotLight->SetRange(5000.0f);
     mySpotLight->SetRadius(10.0f, 50.0f);
-    mySpotLight->SetIntensity(500.0f);
+    mySpotLight->SetIntensity(8.0f);
 
     mySpotPos = CEngine::GetModelFactory()->CreateModel("Primitive_Cube", mySpotLight->GetPosition());
     
@@ -224,22 +227,22 @@ void CGameWorld::DrawSpotLightImguiMenu()
         ImGui::Checkbox("Follow Camera", &followCamera);
         mySpotPos->SetScale({ 0.25f, 0.25f, 0.25f });
 
-        if (ImGui::SliderFloat("Inner Radius", &innerRadius, 1.0f, 100.0f))
+        if (ImGui::SliderFloat("Inner Radius", &innerRadius, 1.0f, 1000.0f))
         {
             mySpotLight->SetRadius(innerRadius, outerRadius);
         }
 
-        if (ImGui::SliderFloat("Outer Radius", &outerRadius, 1.0f, 100.0f))
+        if (ImGui::SliderFloat("Outer Radius", &outerRadius, 1.0f, 1000.0f))
         {
             mySpotLight->SetRadius(innerRadius, outerRadius);
         }
 
-        if (ImGui::SliderFloat("Range", &range, 0.0f, 10000.0f))
+        if (ImGui::SliderFloat("Range", &range, 0.0f, 1000000.0f))
         {
             mySpotLight->SetRange(range);
         }
 
-        if (ImGui::SliderFloat("Intensity", &intensity, 0.0f, 2000.0f))
+        if (ImGui::SliderFloat("Intensity", &intensity, 0.0f, 200.0f))
         {
             mySpotLight->SetIntensity(intensity);
         }
