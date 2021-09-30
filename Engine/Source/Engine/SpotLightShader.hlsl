@@ -82,7 +82,7 @@ PixelOutput main(VertexToPixel input)
         }
     }
 	
-    float3 radiance = spotLights * myColorAndIntensity.a;
+    float3 radiance = spotLights;
 
 	output.myColor.rgb = LinearToGamma(radiance);
 	output.myColor.a = 1.0f;

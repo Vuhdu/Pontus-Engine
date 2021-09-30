@@ -163,7 +163,7 @@ void CGameWorld::InitDefaultScene(CLightFactory* aLightFactory)
     mySpotLight->SetRotation({ 0.0f, 0.0f, 0.0f });
     mySpotLight->SetRange(5000.0f);
     mySpotLight->SetRadius(10.0f, 50.0f);
-    mySpotLight->SetIntensity(8.0f);
+    mySpotLight->SetIntensity(500.0f);
 
     mySpotPos = CEngine::GetModelFactory()->CreateModel("Primitive_Cube", mySpotLight->GetPosition());
     
@@ -242,7 +242,7 @@ void CGameWorld::DrawSpotLightImguiMenu()
             mySpotLight->SetRange(range);
         }
 
-        if (ImGui::SliderFloat("Intensity", &intensity, 0.0f, 200.0f))
+        if (ImGui::SliderFloat("Intensity", &intensity, 0.0f, 20000.0f))
         {
             mySpotLight->SetIntensity(intensity);
         }
