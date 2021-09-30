@@ -18,7 +18,12 @@ public:
 	CCamera();
 	~CCamera();
 
-	void Init(const float aFieldOfView, const CU::Vector2ui aResolution, eOrientation anOrientation = eOrientation::Perspective);
+	void Init(
+		const float aFieldOfView, 
+		const float aNearPlane,
+		const float aFarPlane,
+		const CU::Vector2ui aResolution, 
+		eOrientation anOrientation = eOrientation::Perspective);
 
 	void SetTransform(const CU::Transform& aTransform);
 	void SetRotation(const CU::Vector3f aRotation);
@@ -40,7 +45,7 @@ private:
 	CU::Transform myTransform;
 	CU::Matrix4x4f myProjection;
 
-	float myNearPlane = 0.1f;
+	float myNearPlane = 1.0f;
 	float myFarPlane = 100000.0f;
 
 	CU::Vector2f myOldMousePosition = { 0.0f, 0.0f };

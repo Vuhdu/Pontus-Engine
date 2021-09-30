@@ -9,18 +9,15 @@ CCamera::~CCamera()
 {
 }
 
-void CCamera::Init(const float aFieldOfView, const CU::Vector2ui aResolution, eOrientation anOrientation)
+void CCamera::Init(const float aFieldOfView, const float aNearPlane, const float aFarPlane, const CU::Vector2ui aResolution, eOrientation anOrientation)
 {
 	if (anOrientation == eOrientation::Perspective)
 	{
 		const float hFoVRad = aFieldOfView * (CU_PI / 180.f);
 		const float vFoVRad = 2.f * std::atan(std::tan(hFoVRad / 2.f) * static_cast<float>(aResolution.y) / static_cast<float>(aResolution.x));
 
-		const float vFoVDeg = std::ceil(vFoVRad * (180.f / CU_PI));
-		vFoVDeg;
-
-		const float scaleX = 1.f / std::tan(hFoVRad * .5f);
-		const float scaleY = 1.f / std::tan(vFoVRad * .5f);
+		const float scaleX = 1.f / std::tanf(hFoVRad * .5f);
+		const float scaleY = 1.f / std::tanf(vFoVRad * .5f);
 
 		const float Q = myFarPlane / (myFarPlane - myNearPlane);
 
@@ -69,7 +66,7 @@ void CCamera::HandleMovement(CU::InputHandler& anInputHandler, const float aDelt
 
 	CU::Vector3f position = { 0.0f, 0.0f, 0.0f };
 
-	const float speed = (anInputHandler.IsKeyPressed(CU::eKeyCode::LeftShift) == true) ? 100.0f : 25.0f;
+	const float speed = (anInputHandler.IsKeyPressed(CU::eKeyCode::LeftShift) == true) ? 500.0f : 50.0f;
 	const float rotationSpeed = speed * .1f;
 
 	if (anInputHandler.IsKeyPressed(CU::eKeyCode::W))
@@ -116,35 +113,9 @@ void CCamera::HandleMovement(CU::InputHandler& anInputHandler, const float aDelt
 void CCamera::Move(const CU::Vector3f aMovement)
 {
 	myTransform.SetPosition(myTransform.GetPosition() + aMovement);
-
-	/*
-	CU::Vector3f position = {
-		myTransform(4, 1),
-		myTransform(4, 2),
-		myTransform(4, 3)
-	};
-
-	position.x += aMovement.x;
-	position.y += aMovement.y;
-	position.z += aMovement.z;
-
-	SetPosition(position);
-	*/
 }
 
 void CCamera::Rotate(const CU::Vector3f aRotation)
 {
-	/*
-	const CU::Vector3f position = {
-		myTransform(4, 1),
-		myTransform(4, 2),
-		myTransform(4, 3)
-	};
-
-	myTransform *= CU::Matrix4x4f::CreateRotationAroundX(aRotation.x);
-	myTransform *= CU::Matrix4x4f::CreateRotationAroundY(aRotation.y);
-	myTransform *= CU::Matrix4x4f::CreateRotationAroundZ(aRotation.z);
-
-	SetPosition(position);
-	*/
+	myTransform.SetRotation(myTransform.GetRotation() + aRotation);
 }

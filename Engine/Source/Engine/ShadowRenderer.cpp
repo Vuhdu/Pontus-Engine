@@ -76,14 +76,15 @@ void CShadowRenderer::Render(const std::vector<CModelInstance*>& aModelList)
 			memcpy(bufferdata.pData, &myObjectBufferData, sizeof(SObjectBufferData));
 			myFramework->GetContext()->Unmap(myObjectBuffer, 0);
 			myFramework->GetContext()->IASetPrimitiveTopology(static_cast<D3D11_PRIMITIVE_TOPOLOGY>(modelData.myMesh.myPrimitiveTopology));
+			myFramework->GetContext()->IASetInputLayout(modelData.myMesh.myInputLayout);
 
 			myFramework->GetContext()->IASetVertexBuffers(0, 1, &modelData.myMesh.myVertexBuffer, &modelData.myMesh.myStride, &modelData.myMesh.myOffset);
 			myFramework->GetContext()->IASetIndexBuffer(modelData.myMesh.myIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 			myFramework->GetContext()->VSSetConstantBuffers(1, 1, &myObjectBuffer);
 			myFramework->GetContext()->VSSetShader(modelData.myMesh.myVertexShader, nullptr, 0);
-			myFramework->GetContext()->GSSetShader(nullptr, nullptr, 0);
 
+			myFramework->GetContext()->GSSetShader(nullptr, nullptr, 0);
 			myFramework->GetContext()->PSSetShader(nullptr, nullptr, 0);
 
 			myFramework->GetContext()->DrawIndexed(modelData.myMesh.myNumIndices, 0, 0);

@@ -135,6 +135,7 @@ void CGameWorld::Render()
 
 void CGameWorld::InitDefaultScene(CLightFactory* aLightFactory)
 {
+    /*
     CPointLight* redPointLight = aLightFactory->CreatePointLight();
     redPointLight->SetPosition({ -200.0f, 70.0f, 500.0f });
     redPointLight->SetColor({ 1.0f, 0.0f, 0.0f });
@@ -152,14 +153,14 @@ void CGameWorld::InitDefaultScene(CLightFactory* aLightFactory)
     bluePointLight->SetColor({ 0.0f, 0.0f, 1.0f });
     bluePointLight->SetRange(1000.0f);
     bluePointLight->SetIntensity(100000.0f);
-
+    */
     mySpotLight = aLightFactory->CreateSpotLight();
     mySpotLight->SetPosition({ 0.0f, -35.0f, 0.0f });
     mySpotLight->SetColor({ 1.0f, 1.0f, 1.0f });
     mySpotLight->SetRotation({ 0.0f, 0.0f, 0.0f });
-    mySpotLight->SetRange(500.0f);
-    mySpotLight->SetRadius(0.0f, 0.2f);
-    mySpotLight->SetIntensity(100.0f);
+    mySpotLight->SetRange(5000.0f);
+    mySpotLight->SetRadius(10.0f, 50.0f);
+    mySpotLight->SetIntensity(500.0f);
 
     mySpotPos = CEngine::GetModelFactory()->CreateModel("Primitive_Cube", mySpotLight->GetPosition());
     
@@ -208,8 +209,8 @@ void CGameWorld::DrawSpotLightImguiMenu()
             mySpotLight->SetRotation(rotation);
             mySpotLight->SetPosition(position);
             
-            mySpotPos->SetRotation(rotation);
-            mySpotPos->SetPosition(position);
+            //mySpotPos->SetRotation(rotation);
+            //mySpotPos->SetPosition(position);
         }
         else
         {
@@ -221,26 +222,24 @@ void CGameWorld::DrawSpotLightImguiMenu()
             mySpotLight->SetPosition(position);
         }
         ImGui::Checkbox("Follow Camera", &followCamera);
-
-        
         mySpotPos->SetScale({ 0.25f, 0.25f, 0.25f });
 
-        if (ImGui::SliderFloat("Inner Radius", &innerRadius, 0.0f, 1.0f))
+        if (ImGui::SliderFloat("Inner Radius", &innerRadius, 1.0f, 100.0f))
         {
             mySpotLight->SetRadius(innerRadius, outerRadius);
         }
 
-        if (ImGui::SliderFloat("Outer Radius", &outerRadius, 0.0f, 1.0f))
+        if (ImGui::SliderFloat("Outer Radius", &outerRadius, 1.0f, 100.0f))
         {
             mySpotLight->SetRadius(innerRadius, outerRadius);
         }
 
-        if (ImGui::SliderFloat("Range", &range, 0.0f, 1000.0f))
+        if (ImGui::SliderFloat("Range", &range, 0.0f, 10000.0f))
         {
             mySpotLight->SetRange(range);
         }
 
-        if (ImGui::SliderFloat("Intensity", &intensity, 0.0f, 1000.0f))
+        if (ImGui::SliderFloat("Intensity", &intensity, 0.0f, 2000.0f))
         {
             mySpotLight->SetIntensity(intensity);
         }

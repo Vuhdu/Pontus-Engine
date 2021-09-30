@@ -139,6 +139,7 @@ void CDeferredRenderer::Render(const std::vector<CPointLight*>& somePointLights,
 
 	myEnvironmentLightBufferData.myDirectionalLightDirection = myEnvironmentLight->GetDirection();
 	myEnvironmentLightBufferData.myDirectionalLightColorAndIntensity = myEnvironmentLight->GetColor();
+
 	myEnvironmentLightBufferData.myLightView = CU::Matrix4x4f::GetFastInverse(myEnvironmentLight->GetShadowCamera()->GetTransform().ToMatrix());
 	myEnvironmentLightBufferData.myLightProjection = myEnvironmentLight->GetShadowCamera()->GetProjection();
 
@@ -194,29 +195,29 @@ void CDeferredRenderer::Render(const std::vector<CPointLight*>& somePointLights,
 		mySpotLightBufferData.myLightView = CU::Matrix4x4f::GetFastInverse(light->GetTransform().ToMatrix());
 		mySpotLightBufferData.myLightProjection = light->GetShadowCamera()->GetProjection();
 
+		const auto& color = light->GetColor();
 		mySpotLightBufferData.myColorAndIntensity = {
-			light->GetColor().x,
-			light->GetColor().y,
-			light->GetColor().z,
+			color.x, color.y, color.z,
 			light->GetIntensity()
 		};
 		mySpotLightBufferData.myRange = light->GetRange();
 
-		const auto& dir = light->GetTransform().ToMatrix().GetForward();
+		const auto& dir = light->GetDirection();
 		mySpotLightBufferData.myDirection = {
 			dir.x,
 			dir.y,
 			dir.z,
 			0.0
 		};
+		const auto& pos = light->GetPosition();
 		mySpotLightBufferData.myPosition = {
-			light->GetPosition().x,
-			light->GetPosition().y,
-			light->GetPosition().z,
+			pos.x,
+			pos.y,
+			pos.z,
 			1.0f
 		};
-		mySpotLightBufferData.myInnerAngle = light->GetInnerRadius();
-		mySpotLightBufferData.myOuterAngle = light->GetOuterRadius();
+		mySpotLightBufferData.myInnerAngle = light->GetInnerRadius() * (CU_PI / 180.f);
+		mySpotLightBufferData.myOuterAngle = light->GetOuterRadius() * (CU_PI / 180.f);
 
 		ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
 		result = myContext->Map(mySpotLightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData);

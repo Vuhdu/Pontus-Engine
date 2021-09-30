@@ -44,6 +44,7 @@ CEnvironmentLight* CLightFactory::CreateEnvironmentLight(const std::wstring& aCu
 	{
 		auto shadowCamera = CEngine::GetCameraFactory()->CreateCameraWithoutAddingToScene(
 			90, 
+			1.0f, 10000.0f,
 			CEngine::GetResolution(), 
 			eOrientation::Orthographic
 		);
@@ -92,6 +93,7 @@ CSpotLight* CLightFactory::CreateSpotLight()
 	auto shadowCamera = 
 		CEngine::GetCameraFactory()->CreateCameraWithoutAddingToScene(
 			90, 
+			10.0f, 10000.0f,
 			CEngine::GetResolution(),
 			eOrientation::Perspective
 		);
