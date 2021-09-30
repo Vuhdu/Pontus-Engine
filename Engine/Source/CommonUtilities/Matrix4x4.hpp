@@ -93,8 +93,8 @@ namespace CommonUtilities
 		0, 0, 0, 1
 		});
 
-	using Matrix4f = Matrix4x4<float>;
-	using Matrix4d = Matrix4x4<double>;
+	using Matrix4x4f = Matrix4x4<float>;
+	using Matrix4x4d = Matrix4x4<double>;
 
 	template<typename T>
 	inline Matrix4x4<T>::Matrix4x4()
@@ -180,7 +180,7 @@ namespace CommonUtilities
 	template <typename T>
 	inline Matrix4x4<T> Matrix4x4<T>::CreateScale(const float aScale)
 	{
-		return Matrix4f({
+		return Matrix4x4<T>({
 			aScale, 0.f, 0.f, 0.f,
 			0.f, aScale, 0.f, 0.f,
 			0.f, 0.f, aScale, 0.f,
@@ -191,7 +191,7 @@ namespace CommonUtilities
 	template <typename T>
 	inline Matrix4x4<T> Matrix4x4<T>::CreateScale(const CU::Vector3<T> aScale)
 	{
-		return Matrix4f({
+		return Matrix4x4<T>({
 			aScale.x, 0.f, 0.f, 0.f,
 			0.f, aScale.y, 0.f, 0.f,
 			0.f, 0.f, aScale.z, 0.f,

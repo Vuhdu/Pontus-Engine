@@ -116,10 +116,14 @@ bool CEngine::InternalStart(SCreateParameters* someCreateParameters)
         return EXIT_FAILURE;
     }
 
+    CU::Transform camTransform;
+    camTransform.SetPosition({ 0.0f, 0.0f, -5.0f });
+    camTransform.SetRotation({ 0.0f, 0.0f, 0.0f });
+
     myEditorCamera = myCameraFactory->CreateCamera(90.0f, eOrientation::Perspective);
-    myEditorCamera->SetTransform({ 0.0f, 0.0f, -5.0f }, { 0.0f, 0.0f, 0.0f });
+    myEditorCamera->SetTransform(camTransform);
     myMainCamera = myCameraFactory->CreateCamera(90.0f, eOrientation::Perspective);
-    myMainCamera->SetTransform({ 0.0f, 0.0f, -5.0f }, { 0.0f, 0.0f, 0.0f });
+    myMainCamera->SetTransform(camTransform);
 
     myScene->SetEditorCamera(myEditorCamera);
     myScene->SetMainCamera(myMainCamera);

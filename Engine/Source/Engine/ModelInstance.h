@@ -1,4 +1,5 @@
 #pragma once
+#include "Transform.h"
 
 class CModel;
 
@@ -10,7 +11,7 @@ public:
 
 	void Init(const std::vector<CModel*>& aModelVector);
 
-	void SetTransform(const CU::Vector3f aPosition, CU::Vector3f aRotation);
+	void SetTransform(const CU::Transform& aTransform);
 	void SetRotation(const CU::Vector3f aRotation);
 	void SetPosition(const CU::Vector3f aPosition);
 	void SetScale(const CU::Vector3f aScale);
@@ -19,14 +20,17 @@ public:
 	void Rotate(const CU::Vector3f aRotation);
 
 public:
-	const CU::Vector3f GetPosition() const { return CU::Vector3f{ myTransform(4, 1), myTransform(4, 2), myTransform(4, 3) }; };
-	const std::vector<CModel*>&		GetModelVector() const { return myModelVector; };
-	const CU::Matrix4x4f&			GetTransform() const { return myTransform; };
+	const CU::Vector3f&				GetPosition() const { return myTransform.GetPosition(); }
+	const CU::Vector3f&				GetRotation() const { return myTransform.GetRotation(); }
+	const CU::Vector3f&				GetScale() const { return myTransform.GetScale(); }
+
+	const std::vector<CModel*>&		GetModelVector() const { return myModelVector; }
+	const CU::Transform&			GetTransform() const { return myTransform; }
 
 private:
 	std::vector<CModel*> myModelVector;
 
-	CU::Matrix4x4f myTransform;
+	CU::Transform myTransform;
 
 };
 

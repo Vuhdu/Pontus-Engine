@@ -139,7 +139,7 @@ void CDeferredRenderer::Render(const std::vector<CPointLight*>& somePointLights,
 
 	myEnvironmentLightBufferData.myDirectionalLightDirection = myEnvironmentLight->GetDirection();
 	myEnvironmentLightBufferData.myDirectionalLightColorAndIntensity = myEnvironmentLight->GetColor();
-	myEnvironmentLightBufferData.myLightView = CU::Matrix4x4f::GetFastInverse(myEnvironmentLight->GetShadowCamera()->GetTransform());
+	myEnvironmentLightBufferData.myLightView = CU::Matrix4x4f::GetFastInverse(myEnvironmentLight->GetShadowCamera()->GetTransform().ToMatrix());
 	myEnvironmentLightBufferData.myLightProjection = myEnvironmentLight->GetShadowCamera()->GetProjection();
 
 	ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
@@ -191,7 +191,7 @@ void CDeferredRenderer::Render(const std::vector<CPointLight*>& somePointLights,
 
 	for (auto& light : someSpotLights)
 	{
-		mySpotLightBufferData.myLightView = CU::Matrix4x4f::GetFastInverse(light->GetTransform());
+		mySpotLightBufferData.myLightView = CU::Matrix4x4f::GetFastInverse(light->GetTransform().ToMatrix());
 		mySpotLightBufferData.myLightProjection = light->GetShadowCamera()->GetProjection();
 
 		mySpotLightBufferData.myColorAndIntensity = {
@@ -202,7 +202,7 @@ void CDeferredRenderer::Render(const std::vector<CPointLight*>& somePointLights,
 		};
 		mySpotLightBufferData.myRange = light->GetRange();
 
-		const auto& dir = light->GetTransform().Forward();
+		const auto& dir = light->GetTransform().ToMatrix().GetForward();
 		mySpotLightBufferData.myDirection = {
 			dir.x,
 			dir.y,
@@ -227,7 +227,7 @@ void CDeferredRenderer::Render(const std::vector<CPointLight*>& somePointLights,
 		memcpy(bufferData.pData, &mySpotLightBufferData, sizeof(SpotLightBufferData));
 		myContext->Unmap(mySpotLightBuffer, 0);
 
-		// light->GetShadowMap().SetAsResourceOnSlot(8);
+		light->GetShadowMap().SetAsResourceOnSlot(8);
 
 		myContext->PSSetConstantBuffers(1, 1, &mySpotLightBuffer);
 		myContext->PSSetShader(mySpotLightShader, nullptr, 0);
@@ -240,7 +240,7 @@ void CDeferredRenderer::GenerateGBuffer(const std::vector<CModelInstance*>& aMod
 	HRESULT result;
 
 	D3D11_MAPPED_SUBRESOURCE bufferdata;
-	myFrameBufferData.myToCamera = CU::Matrix4x4f::GetFastInverse(myRenderCamera->GetTransform());
+	myFrameBufferData.myToCamera = CU::Matrix4x4f::GetFastInverse(myRenderCamera->GetTransform().ToMatrix());
 	myFrameBufferData.myToProjection = myRenderCamera->GetProjection();
 	myFrameBufferData.myCameraPosition = {
 		myRenderCamera->GetPosition().x,
@@ -269,7 +269,7 @@ void CDeferredRenderer::GenerateGBuffer(const std::vector<CModelInstance*>& aMod
 		{
 			CModel::SModelData modelData = models[i]->GetModelData();
 
-			myObjectBufferData.myToWorld = instance->GetTransform();
+			myObjectBufferData.myToWorld = instance->GetTransform().ToMatrix();
 			myObjectBufferData.myUVScale = { 1.0f, 1.0f };
 
 			ZeroMemory(&bufferdata, sizeof(D3D11_MAPPED_SUBRESOURCE));

@@ -2,7 +2,6 @@
 #include "SceneHierarchy.h"
 
 #include "Scene.h"
-#include "GameObject.h"
 
 void Editor::CSceneHierarchy::Draw()
 {

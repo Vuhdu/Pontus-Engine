@@ -44,7 +44,7 @@ void CShadowRenderer::Render(const std::vector<CModelInstance*>& aModelList)
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE bufferdata;
 
-	myFrameBufferData.myToCamera = CU::Matrix4x4f::GetFastInverse(myShadowCamera->GetTransform());
+	myFrameBufferData.myToCamera = CU::Matrix4x4f::GetFastInverse(myShadowCamera->GetTransform().ToMatrix());
 	myFrameBufferData.myToProjection = myShadowCamera->GetProjection();
 
 	ZeroMemory(&bufferdata, sizeof(D3D11_MAPPED_SUBRESOURCE));
@@ -65,7 +65,7 @@ void CShadowRenderer::Render(const std::vector<CModelInstance*>& aModelList)
 		{
 			const auto& modelData = model[i]->GetModelData();
 
-			myObjectBufferData.myToWorld = modelInstance->GetTransform();
+			myObjectBufferData.myToWorld = modelInstance->GetTransform().ToMatrix();
 			ZeroMemory(&bufferdata, sizeof(D3D11_MAPPED_SUBRESOURCE));
 			result = myFramework->GetContext()->Map(myObjectBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferdata);
 			if (FAILED(result))

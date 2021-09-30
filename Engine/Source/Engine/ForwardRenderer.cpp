@@ -78,7 +78,7 @@ void CForwardRenderer::Render(const std::vector<CModelInstance*>& aModelList, st
 	HRESULT result;
 	
 	D3D11_MAPPED_SUBRESOURCE bufferdata;
-	myFrameBufferData.myToCamera = CU::Matrix4x4f::GetFastInverse(myRenderCamera->GetTransform());
+	myFrameBufferData.myToCamera = CU::Matrix4x4f::GetFastInverse(myRenderCamera->GetTransform().ToMatrix());
 	myFrameBufferData.myToProjection = myRenderCamera->GetProjection();
 
 	myFrameBufferData.myCameraPosition = {
@@ -121,7 +121,7 @@ void CForwardRenderer::Render(const std::vector<CModelInstance*>& aModelList, st
 		{
 			CModel::SModelData modelData = models[i]->GetModelData();
 
-			myObjectBufferData.myToWorld = instance->GetTransform();
+			myObjectBufferData.myToWorld = instance->GetTransform().ToMatrix();
 			int pointLightSize = static_cast<unsigned int>(somePointLights.size());
 			int spotLightSize = static_cast<unsigned int>(someSpotLights.size());
 			
@@ -152,7 +152,7 @@ void CForwardRenderer::Render(const std::vector<CModelInstance*>& aModelList, st
 			for (int j = 0; j < spotLightSize; j++)
 			{
 				auto pos = someSpotLights[j]->GetPosition();
-				auto dir = someSpotLights[j]->GetDirection();
+				const auto& dir = someSpotLights[j]->GetDirection();
 				auto color = someSpotLights[j]->GetColor();
 				auto intensity = someSpotLights[j]->GetIntensity();
 

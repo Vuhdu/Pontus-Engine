@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Scene.h"
-#include "GameObject.h"
 #include "ModelInstance.h"
 #include "EnvironmentLight.h"
 #include "PointLight.h"

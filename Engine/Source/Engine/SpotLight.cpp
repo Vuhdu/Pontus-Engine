@@ -3,14 +3,16 @@
 
 #include "Camera.h"
 
-void CSpotLight::SetTransform(const CU::Matrix4x4f& aTransform)
+void CSpotLight::SetTransform(const CU::Transform& aTransform)
 {
 	myTransform = aTransform;
+	assert(myShadowCamera && "No shadow camera was found on SpotLight!");
+	myShadowCamera->SetTransform(aTransform);
 }
 
-void CSpotLight::SetDirection(const CU::Vector3f& aDirection)
+void CSpotLight::SetRotation(const CU::Vector3f& aDirection)
 {
-	myTransform.SetRotationRad(aDirection);
+	myTransform.SetRotation(aDirection);
 	assert(myShadowCamera && "No shadow camera was found on SpotLight!");
 	myShadowCamera->SetRotation(aDirection);
 }

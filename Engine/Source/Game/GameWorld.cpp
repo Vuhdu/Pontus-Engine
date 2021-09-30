@@ -32,13 +32,13 @@ void CGameWorld::Init()
 
     CU::Vector3f cameraPos = { 0.0f, 200.0f, -250.0f };
 
-    CU::Matrix4x4f shadowCamera4x4f;
-    shadowCamera4x4f.SetPosition(cameraPos);
-    shadowCamera4x4f.SetRotationRad({ 0.5f, 0.5f, 0.0f });
+    CU::Transform shadowCameraTransform;
+    shadowCameraTransform.SetPosition(cameraPos);
+    shadowCameraTransform.SetRotation({ 0.5f, 0.5f, 0.0f });
 
     auto light = lightFactory->CreateEnvironmentLight(
         L"Assets/Art/CubeMap/cube_1024_preblurred_angle3_Skansen3.dds",
-        shadowCamera4x4f,
+        shadowCameraTransform,
         { 1.0f, 1.0f, 1.0f, 1.0f },
         true
     );
@@ -81,7 +81,7 @@ void CGameWorld::Update(const float [[maybe_unused]] aDeltaTime)
         auto environment = CEngine::GetScene()->GetEnvironmentLight();
         auto camera = environment->GetShadowCamera();
         static CU::Vector3f position = { 0.0f, 500.0f, 0.0f };
-        static CU::Vector3f eulerAngles = { -25.0f, 0.0f, 0.0f };//{ 0.0f, -37.2f, -20.425f };
+        static CU::Vector3f eulerAngles = { -25.0f, 0.0f, 0.0f };
 
         ImGui::DragFloat3("position", &position.x, 1.0f, -2000.0f, 2000.0f);
         ImGui::DragFloat3("rotation", &eulerAngles.x, 0.01f, -180.0f, 180.0f);
@@ -156,7 +156,7 @@ void CGameWorld::InitDefaultScene(CLightFactory* aLightFactory)
     mySpotLight = aLightFactory->CreateSpotLight();
     mySpotLight->SetPosition({ 0.0f, -35.0f, 0.0f });
     mySpotLight->SetColor({ 1.0f, 1.0f, 1.0f });
-    mySpotLight->SetDirection({ 0.0f, 0.0f, 0.0f });
+    mySpotLight->SetRotation({ 0.0f, 0.0f, 0.0f });
     mySpotLight->SetRange(500.0f);
     mySpotLight->SetRadius(0.0f, 0.2f);
     mySpotLight->SetIntensity(100.0f);
@@ -189,48 +189,36 @@ void CGameWorld::DrawSpotLightImguiMenu()
         auto spotColor = mySpotLight->GetColor();
 
         float color[4] = {
-                spotColor.x,
-                spotColor.y,
-                spotColor.z,
-                1.0f
+            spotColor.x,
+            spotColor.y,
+            spotColor.z,
+            1.0f
         };
         
         ImGui::Begin("SpotLight");
         static CU::Vector3f position = mySpotLight->GetPosition();
-        static CU::Vector3f eulerAngles = mySpotLight->GetDirection();
+        static CU::Vector3f rotation = mySpotLight->GetDirection();
         static bool followCamera = false;
 
         if (!followCamera)
         {
             ImGui::DragFloat3("position", &position.x, 1.0f, -2000.0f, 2000.0f);
-            ImGui::DragFloat3("rotation", &eulerAngles.x, 0.01f, -180.0f, 180.0f);
+            ImGui::DragFloat3("rotation", &rotation.x, 0.01f, -180.0f, 180.0f);
 
-            mySpotLight->SetDirection({
-                -eulerAngles.y,
-                eulerAngles.x,
-                eulerAngles.z
-            });
+            mySpotLight->SetRotation(rotation);
             mySpotLight->SetPosition(position);
             
-            //mySpotPos->SetRotation({ eulerAngles.x, eulerAngles.y, eulerAngles.z });
-            //mySpotPos->SetPosition(position);
+            mySpotPos->SetRotation(rotation);
+            mySpotPos->SetPosition(position);
         }
         else
         {
             auto camera = CEngine::GetScene()->GetEditorCamera();
-            eulerAngles = camera->GetTransform().Forward();
-            position = camera->GetTransform().Position();
+            rotation = camera->GetTransform().GetRotation();
+            position = camera->GetTransform().GetPosition();
             
-            mySpotLight->SetDirection({ 
-                -eulerAngles.y, 
-                eulerAngles.x, 
-                eulerAngles.z 
-            });
-
+            mySpotLight->SetRotation(rotation);
             mySpotLight->SetPosition(position);
-            
-            //mySpotPos->SetRotation({ 0, 0, 0 });
-            //mySpotPos->SetPosition({ 0, 0, 0 });
         }
         ImGui::Checkbox("Follow Camera", &followCamera);
 
@@ -274,29 +262,6 @@ void CGameWorld::UpdateDefaultScene(const float [[maybe_unused]] aDeltaTime)
 
     myHead->Rotate({ 0.0f, 0.01f, 0.0f });
     myHead2->Rotate({ 0.0f, -0.01f, 0.0f });
-
-    /*
-    static bool turn = true;
-
-    auto dir = mySpotLight->GetDirection();
-    if (turn)
-    {
-        dir.x += aDeltaTime * .25f;
-        if (dir.x > 0.6f)
-        {
-            turn = !turn;
-        }
-    }
-    else
-    {
-        dir.x -= aDeltaTime * .25f;
-        if (dir.x < -0.6f)
-        {
-            turn = !turn;
-        }
-    }
-    mySpotLight->SetDirection(dir);
-    */
 
     myEmitter->Update(aDeltaTime, CEngine::GetEditorCamera()->GetPosition());
 }

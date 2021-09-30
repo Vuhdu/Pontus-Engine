@@ -36,15 +36,15 @@ void CU::Transform::SetScale(const CU::Vector3f& aScale)
 	myScale = aScale;
 }
 
-CU::Matrix4f CU::Transform::ToMatrix() const
+CU::Matrix4x4f CU::Transform::ToMatrix() const
 {
 	// MUST BE IN THIS ORDER
 	// S * R * T
 	// https://gamedev.stackexchange.com/questions/16719/what-is-the-correct-order-to-multiply-scale-rotation-and-translation-matrices-f
 
-	return CU::Matrix4f::CreateScale(myScale)
-		* CU::Matrix4f::CreateRotationAroundX(myRotation.x)
-		* CU::Matrix4f::CreateRotationAroundY(myRotation.y)
-		* CU::Matrix4f::CreateRotationAroundZ(myRotation.z)
-		* CU::Matrix4f::CreateTranslation(myPosition);
+	return CU::Matrix4x4f::CreateScale(myScale)
+		* CU::Matrix4x4f::CreateRotationAroundX(myRotation.x)
+		* CU::Matrix4x4f::CreateRotationAroundY(myRotation.y)
+		* CU::Matrix4x4f::CreateRotationAroundZ(myRotation.z)
+		* CU::Matrix4x4f::CreateTranslation(myPosition);
 }

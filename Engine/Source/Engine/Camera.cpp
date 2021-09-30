@@ -41,10 +41,9 @@ void CCamera::Init(const float aFieldOfView, const CU::Vector2ui aResolution, eO
 	}
 }
 
-void CCamera::SetTransform(const CU::Vector3f aPosition, const CU::Vector3f aRotation)
+void CCamera::SetTransform(const CU::Transform& aTransform)
 {
-	SetRotation(aRotation);
-	SetPosition(aPosition);
+	myTransform = aTransform;
 }
 
 void CCamera::SetRotation(const CU::Vector3f aRotation)
@@ -116,6 +115,9 @@ void CCamera::HandleMovement(CU::InputHandler& anInputHandler, const float aDelt
 
 void CCamera::Move(const CU::Vector3f aMovement)
 {
+	myTransform.SetPosition(myTransform.GetPosition() + aMovement);
+
+	/*
 	CU::Vector3f position = {
 		myTransform(4, 1),
 		myTransform(4, 2),
@@ -127,10 +129,12 @@ void CCamera::Move(const CU::Vector3f aMovement)
 	position.z += aMovement.z;
 
 	SetPosition(position);
+	*/
 }
 
 void CCamera::Rotate(const CU::Vector3f aRotation)
 {
+	/*
 	const CU::Vector3f position = {
 		myTransform(4, 1),
 		myTransform(4, 2),
@@ -142,4 +146,5 @@ void CCamera::Rotate(const CU::Vector3f aRotation)
 	myTransform *= CU::Matrix4x4f::CreateRotationAroundZ(aRotation.z);
 
 	SetPosition(position);
+	*/
 }

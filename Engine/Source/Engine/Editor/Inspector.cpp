@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "Inspector.h"
 
-#include "GameObject.h"
-
 void Editor::CInspector::Draw()
 {
 	if (ImGui::Button("Add Component"))

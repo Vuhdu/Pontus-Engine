@@ -45,7 +45,7 @@ void CParticleRenderer::Render(const std::vector<CParticleEmitterInstance*>& som
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE bufferdata;
 
-	myFrameBufferData.myToCamera = CU::Matrix4x4f::GetFastInverse(myRenderCamera->GetTransform());
+	myFrameBufferData.myToCamera = CU::Matrix4x4f::GetFastInverse(myRenderCamera->GetTransform().ToMatrix());
 	myFrameBufferData.myToProjection = myRenderCamera->GetProjection();
 	
     myFrameBufferData.myCameraPosition = {

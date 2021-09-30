@@ -334,7 +334,6 @@
     <ClCompile Include="FullscreenRenderer.cpp" />
     <ClCompile Include="FullscreenTexture.cpp" />
     <ClCompile Include="FullscreenTextureFactory.cpp" />
-    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GBuffer.cpp" />
     <ClCompile Include="GraphicsEngine.cpp" />
     <ClCompile Include="imgui-docking\imgui.cpp" />
@@ -382,7 +381,6 @@
     <ClInclude Include="FullscreenRenderer.h" />
     <ClInclude Include="FullscreenTexture.h" />
     <ClInclude Include="FullscreenTextureFactory.h" />
-    <ClInclude Include="GameObject.h" />
     <ClInclude Include="GBuffer.h" />
     <ClInclude Include="GraphicsEngine.h" />
     <ClInclude Include="imgui-docking\imconfig.h" />

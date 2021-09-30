@@ -16,7 +16,7 @@ namespace CommonUtilities
 		void SetScale(const Vector3f& aScale);
 		void SetScale(const float aScale);
 
-		Matrix4f ToMatrix() const;
+		Matrix4x4f ToMatrix() const;
 
 	private:
 		Vector3f myPosition;

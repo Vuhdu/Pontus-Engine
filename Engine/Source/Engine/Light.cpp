@@ -3,7 +3,7 @@
 
 void CLight::SetPosition(const CU::Vector3f& aPosition)
 {
-	myPosition = aPosition;
+	myTransform.SetPosition(aPosition);
 }
 
 void CLight::SetColor(const CU::Vector3f& aColor)

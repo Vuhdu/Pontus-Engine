@@ -31,11 +31,11 @@ CEnvironmentLight* CLightFactory::CreateEnvironmentLight(const std::wstring& aCu
 	return environmentLight;
 }
 
-CEnvironmentLight* CLightFactory::CreateEnvironmentLight(const std::wstring& aCubeMapPath, const CU::Matrix4x4f& aTransform, const CU::Vector4f& aColorAndIntensity, bool aShouldCastShadows)
+CEnvironmentLight* CLightFactory::CreateEnvironmentLight(const std::wstring& aCubeMapPath, const CU::Transform& aTransform, const CU::Vector4f& aColorAndIntensity, bool aShouldCastShadows)
 {
 	CEnvironmentLight* environmentLight = CreateEnvironmentLight(aCubeMapPath);
 
-	environmentLight->SetDirection(aTransform.Forward());
+	environmentLight->SetDirection(aTransform.GetRotation());
 	environmentLight->SetColor({ aColorAndIntensity.x, aColorAndIntensity.y, aColorAndIntensity.z });
 	environmentLight->SetIntensity(aColorAndIntensity.w);
 	environmentLight->SetShouldCastShadows(aShouldCastShadows);
@@ -44,14 +44,14 @@ CEnvironmentLight* CLightFactory::CreateEnvironmentLight(const std::wstring& aCu
 	{
 		auto shadowCamera = CEngine::GetCameraFactory()->CreateCameraWithoutAddingToScene(
 			90, 
-			{ 2048, 2048 }, 
+			CEngine::GetResolution(), 
 			eOrientation::Orthographic
 		);
-		shadowCamera->SetPosition(aTransform.Position());
-		shadowCamera->SetRotation(aTransform.EulerAngles());
+		shadowCamera->SetPosition(aTransform.GetPosition());
+		shadowCamera->SetRotation(aTransform.GetRotation());
 		environmentLight->SetShadowCamera(shadowCamera);
 		environmentLight->SetShadowMap(
-			CEngine::GetFullscreenTextureFactory()->CreateShadowMap({ 2048, 2048 })
+			CEngine::GetFullscreenTextureFactory()->CreateShadowMap(CEngine::GetResolution())
 		);
 	}
 
@@ -92,12 +92,12 @@ CSpotLight* CLightFactory::CreateSpotLight()
 	auto shadowCamera = 
 		CEngine::GetCameraFactory()->CreateCameraWithoutAddingToScene(
 			90, 
-			{ 2048, 2048 }, 
+			CEngine::GetResolution(),
 			eOrientation::Perspective
 		);
 		spotLight->SetShadowCamera(shadowCamera);
 		spotLight->SetShadowMap(
-		CEngine::GetFullscreenTextureFactory()->CreateShadowMap({ 1280, 720 })
+		CEngine::GetFullscreenTextureFactory()->CreateShadowMap(CEngine::GetResolution())
 	);
 
 	CEngine::GetScene()->AddInstance(spotLight);
