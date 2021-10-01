@@ -11,6 +11,9 @@ CCamera::~CCamera()
 
 void CCamera::Init(const float aFieldOfView, const float aNearPlane, const float aFarPlane, const CU::Vector2ui aResolution, eOrientation anOrientation)
 {
+	myNearPlane = aNearPlane;
+	myFarPlane = aFarPlane;
+
 	if (anOrientation == eOrientation::Perspective)
 	{
 		const float hFoVRad = aFieldOfView * (CU_PI / 180.f);
