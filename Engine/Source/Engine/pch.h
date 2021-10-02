@@ -22,3 +22,8 @@
 
 #include "Engine.h"
 #include "ErrorManager.h"
+
+namespace Utils
+{
+	static const float PI = atanf(1.f) * 4.f;
+}

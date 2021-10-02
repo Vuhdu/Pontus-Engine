@@ -18,11 +18,11 @@ public:
 	void SetShadowMap(CFullscreenTexture aFullscreenTexture);
 
 public:
-	CCamera* GetShadowCamera() const { return myShadowCamera; };
 	const CU::Transform& GetTransform() const { return myTransform; };
 	const CU::Vector3f& GetDirection() const { return myTransform.ToMatrix().GetForward(); };
 	const float GetInnerRadius() const { return myInnerRadius; };
 	const float GetOuterRadius() const { return myOuterRadius; };
+	CCamera* GetShadowCamera() const { return myShadowCamera; };
 	CFullscreenTexture& GetShadowMap() { return myShadowMap; };
 
 private:

@@ -59,48 +59,58 @@ CEnvironmentLight* CLightFactory::CreateEnvironmentLight(const std::wstring& aCu
 	return environmentLight;
 }
 
-CPointLight* CLightFactory::CreatePointLight()
+CPointLight* CLightFactory::CreatePointLight(bool aShouldCastShadows)
 {
 	auto pointLight = new CPointLight();
-	
-	CEngine::GetScene()->AddInstance(pointLight);
-	
-	return pointLight;
-}
+	pointLight->SetShouldRenderShadows(aShouldCastShadows);
 
-CPointLight* CLightFactory::CreatePointLight(const CU::Matrix4x4f& aTransform, bool aShouldCastShadows)
-{
-	auto pointLight = CreatePointLight();
-
-	// TO-DO: Finish point light with 6 cameras
-	/*
 	if (aShouldCastShadows)
 	{
-		auto shadowCamera = CEngine::GetCameraFactory()->CreateCameraWithoutAddingToScene(90, { 2048, 2048 }, eOrientation::Perspective);
-		shadowCamera->SetPosition(aTransform.Position());
-		shadowCamera->SetRotation(aTransform.EulerAngles());
-		pointLight->SetShadowCamera(shadowCamera);
+		for (int i = 0; i < 6; i++)
+		{
+			auto shadowCamera = CEngine::GetCameraFactory()->CreateCameraWithoutAddingToScene(
+				90, 
+				10.0f, 10000.0f,
+				{ 2048, 2048 }, 
+				eOrientation::Perspective
+			);
+			pointLight->SetShadowCameras(shadowCamera, i);
+			pointLight->SetShadowMaps(
+				CEngine::GetFullscreenTextureFactory()->CreateShadowMap({ 2048, 2048 }), i
+			);
+		}
+
+		pointLight->GetShadowCameras()[0]->SetRotation({ 0.0f, 0.0f, 0.0f });
+		pointLight->GetShadowCameras()[1]->SetRotation({ 0.0f, Utils::PI * 0.5f, 0.0f });
+		pointLight->GetShadowCameras()[2]->SetRotation({ 0.0f, Utils::PI * 1.5f, 0.0f });
+		pointLight->GetShadowCameras()[3]->SetRotation({ 0.0f, Utils::PI, 0.0f });
+		pointLight->GetShadowCameras()[4]->SetRotation({ Utils::PI * 0.5f, 0.0f, 0.0f });
+		pointLight->GetShadowCameras()[5]->SetRotation({ Utils::PI * 1.5f, 0.0f, 0.0f });
 	}
-	*/
+
+	CEngine::GetScene()->AddInstance(pointLight);
 
 	return pointLight;
 }
 
-CSpotLight* CLightFactory::CreateSpotLight()
+CSpotLight* CLightFactory::CreateSpotLight(bool aShouldCastShadows)
 {
 	auto spotLight = new CSpotLight();
 
-	auto shadowCamera = 
-		CEngine::GetCameraFactory()->CreateCameraWithoutAddingToScene(
-			90, 
-			10.0f, 10000.0f,
-			CEngine::GetResolution(),
-			eOrientation::Perspective
-		);
+	if (aShouldCastShadows)
+	{
+		auto shadowCamera =
+			CEngine::GetCameraFactory()->CreateCameraWithoutAddingToScene(
+				90,
+				10.0f, 10000.0f,
+				{ 2048, 2048 },
+				eOrientation::Perspective
+			);
 		spotLight->SetShadowCamera(shadowCamera);
 		spotLight->SetShadowMap(
-		CEngine::GetFullscreenTextureFactory()->CreateShadowMap(CEngine::GetResolution())
-	);
+			CEngine::GetFullscreenTextureFactory()->CreateShadowMap({ 2048, 2048 })
+		);
+	}
 
 	CEngine::GetScene()->AddInstance(spotLight);
 

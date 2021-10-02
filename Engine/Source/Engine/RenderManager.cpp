@@ -287,6 +287,29 @@ void CRenderManager::ShadowRender()
 		myShadowRenderer.Render(models);
 	}
 
+	// Pointlight shadow render
+	{
+		std::vector<CPointLight*>& pointLights = scene->CullPointLights();
+
+		for (auto& pointLight : pointLights)
+		{
+			auto& shadowMaps = pointLight->GetShadowMaps();
+			auto& shadowCameras = pointLight->GetShadowCameras();
+
+			for (int i = 0; i < 6; i++)
+			{
+				if (shadowCameras[i])
+				{
+					shadowMaps[i].ClearDepth();
+					shadowMaps[i].SetAsActiveDepth();
+
+					myShadowRenderer.SetRenderCamera(shadowCameras[i]);
+					myShadowRenderer.Render(models);
+				}
+			}
+		}
+	}
+
 	// Spotlight shadow render
 	{
 		std::vector<CSpotLight*>& spotLights = scene->CullSpotLights();

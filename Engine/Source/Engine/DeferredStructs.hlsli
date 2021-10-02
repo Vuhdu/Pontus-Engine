@@ -8,7 +8,7 @@ Texture2D ambientOcclusionTexture : register(t6);
 Texture2D depthTexture : register(t7);
 
 Texture2D ShadowTexture : register(t8);
-TextureCube ShadowPointCube : register(t9);
+Texture2D ShadowTextures[6] : register(t9);
 
 SamplerState defaultSampler : register(s0);
 SamplerState pointSampler : register(s1);

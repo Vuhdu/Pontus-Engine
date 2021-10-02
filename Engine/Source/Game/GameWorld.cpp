@@ -138,25 +138,24 @@ void CGameWorld::Render()
 
 void CGameWorld::InitDefaultScene(CLightFactory* aLightFactory)
 {
-    /*
     CPointLight* redPointLight = aLightFactory->CreatePointLight();
     redPointLight->SetPosition({ -200.0f, 70.0f, 500.0f });
-    redPointLight->SetColor({ 1.0f, 0.0f, 0.0f });
+    redPointLight->SetColor({ 1.0f, 1.0f, 1.0f });
     redPointLight->SetRange(1000.0f);
-    redPointLight->SetIntensity(100000.0f);
+    redPointLight->SetIntensity(1000.0f);
 
-    CPointLight* greenPointLight = aLightFactory->CreatePointLight();
-    greenPointLight->SetPosition({ 0.0f, 70.0f, 350.0f });
-    greenPointLight->SetColor({ 0.0f, 1.0f, 0.0f });
-    greenPointLight->SetRange(1000.0f);
-    greenPointLight->SetIntensity(100000.0f);
+    myPointLight = aLightFactory->CreatePointLight();
+    myPointLight->SetPosition({ 0.0f, 750.0f, 550.0f });
+    myPointLight->SetColor({ 1.0f, 1.0f, 1.0f });
+    myPointLight->SetRange(1000.0f);
+    myPointLight->SetIntensity(10000.0f);
 
     CPointLight* bluePointLight = aLightFactory->CreatePointLight();
     bluePointLight->SetPosition({ 200.0f, 70.0f, 350.0f });
-    bluePointLight->SetColor({ 0.0f, 0.0f, 1.0f });
+    bluePointLight->SetColor({ 1.0f, 1.0f, 1.0f });
     bluePointLight->SetRange(1000.0f);
-    bluePointLight->SetIntensity(100000.0f);
-    */
+    bluePointLight->SetIntensity(1000.0f);
+
     mySpotLight = aLightFactory->CreateSpotLight();
     mySpotLight->SetPosition({ 0.0f, -35.0f, 0.0f });
     mySpotLight->SetColor({ 1.0f, 1.0f, 1.0f });
@@ -199,62 +198,102 @@ void CGameWorld::DrawSpotLightImguiMenu()
             1.0f
         };
         
-        ImGui::Begin("SpotLight");
-        static CU::Vector3f position = mySpotLight->GetPosition();
-        static CU::Vector3f rotation = mySpotLight->GetDirection();
-        static bool followCamera = false;
-
-        if (!followCamera)
+        ImGui::Begin("Spot Light");
         {
-            ImGui::DragFloat3("position", &position.x, 1.0f, -2000.0f, 2000.0f);
-            ImGui::DragFloat3("rotation", &rotation.x, 0.01f, -180.0f, 180.0f);
+            static CU::Vector3f position = mySpotLight->GetPosition();
+            static CU::Vector3f rotation = mySpotLight->GetDirection();
+            static bool followCamera = false;
 
-            mySpotLight->SetRotation(rotation);
-            mySpotLight->SetPosition(position);
+            if (!followCamera)
+            {
+                ImGui::DragFloat3("position##sl", &position.x, 1.0f, -2000.0f, 2000.0f);
+                ImGui::DragFloat3("rotation##sl", &rotation.x, 0.01f, -180.0f, 180.0f);
+
+                mySpotLight->SetRotation(rotation);
+                mySpotLight->SetPosition(position);
             
-            //mySpotPos->SetRotation(rotation);
-            //mySpotPos->SetPosition(position);
-        }
-        else
-        {
-            auto camera = CEngine::GetScene()->GetEditorCamera();
-            rotation = camera->GetTransform().GetRotation();
-            position = camera->GetTransform().GetPosition();
+                //mySpotPos->SetRotation(rotation);
+                //mySpotPos->SetPosition(position);
+            }
+            else
+            {
+                auto camera = CEngine::GetScene()->GetEditorCamera();
+                rotation = camera->GetTransform().GetRotation();
+                position = camera->GetTransform().GetPosition();
             
-            mySpotLight->SetRotation(rotation);
-            mySpotLight->SetPosition(position);
-        }
-        ImGui::Checkbox("Follow Camera", &followCamera);
-        mySpotPos->SetScale({ 0.25f, 0.25f, 0.25f });
+                mySpotLight->SetRotation(rotation);
+                mySpotLight->SetPosition(position);
+            }
+            ImGui::Checkbox("Follow Camera##sl", &followCamera);
+            mySpotPos->SetScale({ 0.25f, 0.25f, 0.25f });
 
-        if (ImGui::SliderFloat("Inner Radius", &innerRadius, 1.0f, 1000.0f))
-        {
-            mySpotLight->SetRadius(innerRadius, outerRadius);
-        }
+            if (ImGui::SliderFloat("Inner Radius##sl", &innerRadius, 1.0f, 1000.0f))
+            {
+                mySpotLight->SetRadius(innerRadius, outerRadius);
+            }
 
-        if (ImGui::SliderFloat("Outer Radius", &outerRadius, 1.0f, 1000.0f))
-        {
-            mySpotLight->SetRadius(innerRadius, outerRadius);
-        }
+            if (ImGui::SliderFloat("Outer Radius##sl", &outerRadius, 1.0f, 1000.0f))
+            {
+                mySpotLight->SetRadius(innerRadius, outerRadius);
+            }
 
-        if (ImGui::SliderFloat("Range", &range, 0.0f, 1000000.0f))
-        {
-            mySpotLight->SetRange(range);
-        }
+            if (ImGui::SliderFloat("Range##sl", &range, 0.0f, 1000000.0f))
+            {
+                mySpotLight->SetRange(range);
+            }
 
-        if (ImGui::SliderFloat("Intensity", &intensity, 0.0f, 20000.0f))
-        {
-            mySpotLight->SetIntensity(intensity);
-        }
+            if (ImGui::SliderFloat("Intensity##sl", &intensity, 0.0f, 20000.0f))
+            {
+                mySpotLight->SetIntensity(intensity);
+            }
         
-        if (ImGui::ColorEdit4("Color", color, ImGuiColorEditFlags_DisplayRGB | ImGuiColorEditFlags_Float | ImGuiColorEditFlags_AlphaPreviewHalf))
-        {
-            spotColor = { color[0], color[1], color[2] };
-            mySpotLight->SetColor(spotColor);
+            if (ImGui::ColorEdit4("Color##sl", color, ImGuiColorEditFlags_DisplayRGB | ImGuiColorEditFlags_Float | ImGuiColorEditFlags_AlphaPreviewHalf))
+            {
+                spotColor = { color[0], color[1], color[2] };
+                mySpotLight->SetColor(spotColor);
+            }
         }
-
         ImGui::End();
         
+        ImGui::Begin("Point Light");
+        {
+            static CU::Vector3f position = myPointLight->GetPosition();
+            static bool followCamera = false;
+
+            if (!followCamera)
+            {
+                ImGui::DragFloat3("position##pl", &position.x, 1.0f, -2000.0f, 2000.0f);
+
+                myPointLight->SetPosition(position);
+            }
+            else
+            {
+                auto camera = CEngine::GetScene()->GetEditorCamera();
+                position = camera->GetTransform().GetPosition();
+
+                myPointLight->SetPosition(position);
+            }
+            ImGui::Checkbox("Follow Camera##pl", &followCamera);
+            mySpotPos->SetScale({ 0.25f, 0.25f, 0.25f });
+
+
+            if (ImGui::SliderFloat("Range##pl", &range, 0.0f, 100000.0f))
+            {
+                myPointLight->SetRange(range);
+            }
+
+            if (ImGui::SliderFloat("Intensity##pl", &intensity, 0.0f, 200000.0f))
+            {
+                myPointLight->SetIntensity(intensity);
+            }
+
+            if (ImGui::ColorEdit4("Color##pl", color, ImGuiColorEditFlags_DisplayRGB | ImGuiColorEditFlags_Float | ImGuiColorEditFlags_AlphaPreviewHalf))
+            {
+                spotColor = { color[0], color[1], color[2] };
+                myPointLight->SetColor(spotColor);
+            }
+        }
+        ImGui::End();
     }
 }
 

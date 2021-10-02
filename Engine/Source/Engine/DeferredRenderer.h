@@ -54,6 +54,8 @@ private:
 
 	struct PointLightBufferData
 	{
+		CU::Matrix4x4f myLightView[6];
+		CU::Matrix4x4f myLightProjection;
 		CU::Vector4f myPosition;
 		CU::Vector4f myColorAndIntensity;
 		float myRange;

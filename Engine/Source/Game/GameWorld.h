@@ -2,6 +2,7 @@
 #include <thread>
 
 class CModelInstance;
+class CPointLight;
 class CSpotLight;
 class CParticleEmitterInstance;
 
@@ -37,6 +38,7 @@ private:
 	CModelInstance* myCameraPos = nullptr;
 	CModelInstance* mySpotPos = nullptr;
 
+	CPointLight* myPointLight = nullptr;
 	CSpotLight* mySpotLight = nullptr;
 	CParticleEmitterInstance* myEmitter = nullptr;
 
