@@ -65,3 +65,8 @@ CDirectX11Framework* CGraphicsEngine::GetFramework()
 {
 	return &myFrameWork;
 }
+
+IDXGISwapChain* CGraphicsEngine::GetSwapChain()
+{
+	return myFrameWork.GetSwapChain();
+}

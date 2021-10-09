@@ -132,6 +132,9 @@
       <AdditionalDependencies>Engine_$(Configuration).lib;Game_$(Configuration).lib;Editor_$(Configuration).lib;DirectXTK_$(Configuration).lib;CommonUtilities_$(Configuration).lib;assimp-vc142-mt_$(Configuration).lib;IrrXML_$(Configuration).lib;zlibstatic_$(Configuration).lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\Lib\</AdditionalLibraryDirectories>
     </Link>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -153,6 +156,9 @@
       <AdditionalDependencies>Engine_$(Configuration).lib;Game_$(Configuration).lib;Editor_$(Configuration).lib;DirectXTK_$(Configuration).lib;CommonUtilities_$(Configuration).lib;assimp-vc142-mt_$(Configuration).lib;IrrXML_$(Configuration).lib;zlibstatic_$(Configuration).lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\Lib\</AdditionalLibraryDirectories>
     </Link>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h" />

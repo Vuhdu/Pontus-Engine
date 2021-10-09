@@ -179,6 +179,11 @@ bool CEngine::InternalRun()
 
         myEditor->EndFrame(myWillUseEditor);
         myGraphicsEngine->EndFrame();
+
+#ifndef _DEBUG
+        throw std::runtime_error("error");
+#endif
+
     }
     CloseConsole();
     return 0;

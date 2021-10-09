@@ -32,6 +32,7 @@ public:
 	ID3D11DeviceContext*	GetContext();
 	ID3D11Device*			GetDevice();
 	ID3D11DepthStencilView* GetDepthBuffer();
+	IDXGISwapChain*			GetSwapChain();
 
 	ID3D11Texture2D*			GetEditorCameraTexture2D();
 	ID3D11ShaderResourceView*	GetEditorCameraRenderResourceView();

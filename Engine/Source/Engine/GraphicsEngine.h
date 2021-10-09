@@ -22,6 +22,7 @@ public:
 	void EndFrame();
 
 	CDirectX11Framework* GetFramework();
+	IDXGISwapChain* GetSwapChain();
 
 private:
 	CWindowHandler myWindowHandler;

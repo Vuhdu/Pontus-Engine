@@ -192,6 +192,11 @@ ID3D11DepthStencilView* CDirectX11Framework::GetDepthBuffer()
 	return myDepthBuffer;
 }
 
+IDXGISwapChain* CDirectX11Framework::GetSwapChain()
+{
+	return mySwapChain;
+}
+
 ID3D11Texture2D* CDirectX11Framework::GetEditorCameraTexture2D()
 {
 	return myEditorCameraTexture;
