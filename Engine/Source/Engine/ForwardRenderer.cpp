@@ -112,7 +112,6 @@ void CForwardRenderer::Render(const std::vector<CModelInstance*>& aModelList, st
 	myContext->PSSetConstantBuffers(0, 1, &myFrameBuffer);
 	myContext->PSSetShaderResources(0, 1, myEnvironmentLight->GetCubeMapConstPtr());
 
-	int modelCount = 0;
 	for (CModelInstance* instance : aModelList)
 	{
 		auto& models = instance->GetModelVector();
@@ -204,6 +203,5 @@ void CForwardRenderer::Render(const std::vector<CModelInstance*>& aModelList, st
 
 			myContext->DrawIndexed(modelData.myMesh.myNumIndices, 0, 0);
 		}
-		modelCount++;
 	}
 }
