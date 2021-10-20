@@ -64,10 +64,7 @@ PixelOutput main(VertexToPixel input)
 		toDirectionalLight.xyz,
 		toEye.xyz
 	);
-	
-	// bcuz position, W needs to be 1
-    //float4 worldPos2 = float4(worldPosition, 1.f);
-	
+
     float4 worldToLightView = mul(lightView, worldPosition);
     float4 lightViewToLightProj = mul(lightProjection, worldToLightView);
 	
@@ -94,9 +91,9 @@ PixelOutput main(VertexToPixel input)
 	
     float3 emissive = albedo * emissiveMask;
     float3 radiance = ambience + directionalLight * directionalLightColor.a + emissive;
-	//float3 radiance = LinearToGamma(albedo) /*+ directionalLight + emissive*/;
 
-    output.myColor.rgb = LinearToGamma(radiance);
+	//output.myColor.rgb = LinearToGamma(radiance);
+    output.myColor.rgb = radiance;
     output.myColor.a = 1.0f;
 
     return output;

@@ -16,34 +16,34 @@ cbuffer SpotLightBuffer : register(b1)
 
 PixelOutput main(VertexToPixel input)
 {
-	float4 albedoData = albedoTexture.Sample(defaultSampler, input.myUV);
+    float4 albedoData = albedoTexture.Sample(defaultSampler, input.myUV);
 
-	if (albedoData.a == 0)
-	{
-		discard;
-	}
+    if (albedoData.a == 0)
+    {
+        discard;
+    }
 
-	float3 albedo = albedoData.rgb;
+    float3 albedo = albedoData.rgb;
 
-	PixelOutput output;
+    PixelOutput output;
 
-	float4 worldPosition = positionTexture.Sample(defaultSampler, input.myUV);
-	float3 normal = normalTexture.Sample(defaultSampler, input.myUV).xyz;
-	float3 vertexNormal = vertexNormalTexture.Sample(defaultSampler, input.myUV).xyz;
-	float4 material = materialTexture.Sample(defaultSampler, input.myUV);
+    float4 worldPosition = positionTexture.Sample(defaultSampler, input.myUV);
+    float3 normal = normalTexture.Sample(defaultSampler, input.myUV).xyz;
+    float3 vertexNormal = vertexNormalTexture.Sample(defaultSampler, input.myUV).xyz;
+    float4 material = materialTexture.Sample(defaultSampler, input.myUV);
 
-	float metalness = material.r;
-	float roughness = material.g;
+    float metalness = material.r;
+    float roughness = material.g;
 
-	float ao = ambientOcclusionTexture.Sample(defaultSampler, input.myUV).r;
-	float depth = depthTexture.Sample(defaultSampler, input.myUV).r;
+    float ao = ambientOcclusionTexture.Sample(defaultSampler, input.myUV).r;
+    float depth = depthTexture.Sample(defaultSampler, input.myUV).r;
 
-	float3 toEye = normalize(FB_CameraPosition.xyz - worldPosition.xyz);
+    float3 toEye = normalize(FB_CameraPosition.xyz - worldPosition.xyz);
 
-	float3 specularColor = lerp((float3)0.04, albedo, metalness);
-	float3 diffuseColor = lerp((float3)0.00, albedo, 1 - metalness);
+    float3 specularColor = lerp((float3) 0.04, albedo, metalness);
+    float3 diffuseColor = lerp((float3) 0.00, albedo, 1 - metalness);
 
-	float3 spotLights = EvaluateSpotLight(
+    float3 spotLights = EvaluateSpotLight(
 		diffuseColor,
 		specularColor,
 		normal,
@@ -84,8 +84,9 @@ PixelOutput main(VertexToPixel input)
 	
     float3 radiance = spotLights;
 
-	output.myColor.rgb = LinearToGamma(radiance);
-	output.myColor.a = 1.0f;
+    //output.myColor.rgb = LinearToGamma(radiance);
+    output.myColor.rgb = radiance;
+    output.myColor.a = 1.0f;
 
-	return output;
+    return output;
 }
